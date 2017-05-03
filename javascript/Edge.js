@@ -7,7 +7,7 @@ function Edge(/* TODO: add arguments for Edge info */){
 /*
  * Example method for an Edge object
  *
-Vertex.prototype.changeSomethingAboutVertex = function(args){
+Edge.prototype.changeSomethingAboutEdge = function(args){
    //this.something = something;
    //return some new info?
 }; */

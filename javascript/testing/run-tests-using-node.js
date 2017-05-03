@@ -32,28 +32,38 @@ console.log('*********** Running GAV tests ***********');
 
 console.log('*** Loading project files ....');
 /* TODO: add javascript files if you create them*/
-processScriptFromFile('../main.js');
+processScriptFromFile('../Index.js');
 processScriptFromFile('../Utils.js');
+processScriptFromFile('../Edge.js');
+processScriptFromFile('../Vertex.js');
+processScriptFromFile('../AlgorithmExecutor.js');
+processScriptFromFile('../CanvasModifier.js');
 console.log('*** Running tests ....');
 
 
 /* TODO: add testing files for your new Javascript files */
-processScriptFromFile('./testingMain.js');
+processScriptFromFile('./testingIndex.js');
 processScriptFromFile('./testingUtils.js');
 processScriptFromFile('./testingVertex.js');
 processScriptFromFile('./testingEdge.js');
+processScriptFromFile('./testingAlgorithmExecutor.js');
+processScriptFromFile('./testingCanvasModifier.js');
 
 
 /* TODO: add more results as you test them */
 var testMessages = [];
-testMessages.push(global.GAVMainResults.testingMainMessage1);
-testMessages.push(global.GAVMainResults.testingMainMessage2);
-testMessages.push(global.GAVUtilsResults.testingUtilsMessage1);
-testMessages.push(global.GAVUtilsResults.testingUtilsMessage2);
-testMessages.push(global.GAVEdgeResults.testingEdgeMessage1);
-testMessages.push(global.GAVEdgeResults.testingEdgeMessage2);
-testMessages.push(global.GAVVertexResults.testingVertexMessage1);
-testMessages.push(global.GAVVertexResults.testingVertexMessage2);
+testMessages.push(global.GAVIndexResults.message1);
+testMessages.push(global.GAVIndexResults.message2);
+testMessages.push(global.GAVUtilsResults.message1);
+testMessages.push(global.GAVUtilsResults.message2);
+testMessages.push(global.GAVEdgeResults.message1);
+testMessages.push(global.GAVEdgeResults.message2);
+testMessages.push(global.GAVVertexResults.message1);
+testMessages.push(global.GAVVertexResults.message2);
+testMessages.push(global.GAVAlgorithmExecutorResults.message1);
+testMessages.push(global.GAVAlgorithmExecutorResults.message2);
+testMessages.push(global.GAVCanvasModifierResults.message1);
+testMessages.push(global.GAVCanvasModifierResults.message2);
 
 var testWorked = true;
 

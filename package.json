@@ -2,7 +2,7 @@
   "name": "GraphicAlgorithmVisualizer",
   "version": "1.0.0",
   "description": "CS194 Senior Project - Visualizing Graphic Algorithms",
-  "main": "./javascript/main.js",
+  "Index": "./javascript/Index.js",
   "dependencies": {
     "jshint": "^2.9.1-rc2"
   },
