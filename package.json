@@ -1,0 +1,20 @@
+{
+  "name": "GraphicAlgorithmVisualizer",
+  "version": "1.0.0",
+  "description": "CS194 Senior Project - Visualizing Graphic Algorithms",
+  "main": "./javascript/main.js",
+  "dependencies": {
+    "jshint": "^2.9.1-rc2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node ./javascript/testing/run-tests-using-node.js",
+    "jshint": "./node_modules/.bin/jshint *.js || exit 0"
+  },
+  "author": "Angel Lopez <mrlopez@stanford.edu> (and teammates)",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dianadkle/cs194-GAV.git"
+  }
+}

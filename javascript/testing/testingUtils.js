@@ -1,0 +1,23 @@
+'use strict';
+
+var testResults = (function() {
+    return {
+        testingUtilsMessage1: 'SUCCESS',
+        testingUtilsMessage2: 'SUCCESS'
+        /* TODO: initialize as many messages as you want to use for testing
+         * various aspects/components of the javscript file you're analyzing */
+    };
+})();
+
+/* TODO: add testing, modify messages for failure cases */
+// failure example:  testResults.testingUtilsMessage2 = 'FAILURE';
+
+/* TODO: Test/write about different parts of the js file you're testing */
+console.log('Test GAV Utils component 1:', testResults.testingUtilsMessage1);
+console.log('Test GAV Utils component 2:', testResults.testingUtilsMessage2);
+
+// Store the result back into the global space called GAVUtilsResults
+window.GAVUtilsResults = {
+    testingUtilsMessage1: testResults.testingUtilsMessage1,
+    testingUtilsMessage2: testResults.testingUtilsMessage2
+};
