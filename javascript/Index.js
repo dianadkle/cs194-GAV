@@ -1,5 +1,6 @@
 'use strict';
 
+
 window.onload = function(){
 
    var jsonCircles = [
