@@ -13,11 +13,11 @@ var testResults = (function() {
 // failure example:  testResults.message2 = 'FAILURE';
 
 /* TODO: Test/write about different parts of the js file you're testing */
-console.log('Test GAV Vertex component 1:', testResults.message1);
-console.log('Test GAV Vertex component 2:', testResults.message2);
+console.log('Test GAV Node component 1:', testResults.message1);
+console.log('Test GAV Node component 2:', testResults.message2);
 
-// Store the result back into the global space called GAVVertexResults
-window.GAVVertexResults = {
+// Store the result back into the global space called GAVNodeResults
+window.GAVNodeResults = {
     message1: testResults.message1,
     message2: testResults.message2
 };
