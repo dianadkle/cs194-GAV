@@ -34,9 +34,9 @@ console.log('*** Loading project files ....');
 /* TODO: add javascript files if you create them*/
 processScriptFromFile('../Index.js');
 processScriptFromFile('../Utils.js');
-processScriptFromFile('../Edge.js');
 processScriptFromFile('../Node.js');
-processScriptFromFile('../AlgorithmExecutor.js');
+processScriptFromFile('../Edge.js');
+processScriptFromFile('../VirtualGraphManager.js');
 processScriptFromFile('../CanvasModifier.js');
 console.log('*** Running tests ....');
 
@@ -46,24 +46,27 @@ processScriptFromFile('./testingIndex.js');
 processScriptFromFile('./testingUtils.js');
 processScriptFromFile('./testingNode.js');
 processScriptFromFile('./testingEdge.js');
-processScriptFromFile('./testingAlgorithmExecutor.js');
+processScriptFromFile('./testingVirtualGraphManager.js');
 processScriptFromFile('./testingCanvasModifier.js');
 
+var testMessages = [];
 
 /* TODO: add more results as you test them */
-var testMessages = [];
-testMessages.push(global.GAVIndexResults.message1);
-testMessages.push(global.GAVIndexResults.message2);
-testMessages.push(global.GAVUtilsResults.message1);
-testMessages.push(global.GAVUtilsResults.message2);
-testMessages.push(global.GAVEdgeResults.message1);
-testMessages.push(global.GAVEdgeResults.message2);
-testMessages.push(global.GAVNodeResults.message1);
-testMessages.push(global.GAVNodeResults.message2);
-testMessages.push(global.GAVAlgorithmExecutorResults.message1);
-testMessages.push(global.GAVAlgorithmExecutorResults.message2);
-testMessages.push(global.GAVCanvasModifierResults.message1);
-testMessages.push(global.GAVCanvasModifierResults.message2);
+var classResults = [
+   global.GAVIndexResults,
+   global.GAVUtilsResults,
+   global.GAVUtilsResults,
+   global.GAVEdgeResults,
+   global.GAVNodeResults,
+   global.GAVVirtualGraphManagerResults,
+   global.GAVCanvasModifierResults
+];
+
+classResults.forEach(function(classResult){
+   for (var message in classResult){
+      testMessages.push(classResult[message]);
+   }
+});
 
 var testWorked = true;
 
