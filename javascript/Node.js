@@ -1,13 +1,13 @@
 'use strict';
 
-function Vertex(/* TODO: add arguments for Vertex info */){
+function Node(/* TODO: add arguments for Node info */){
     // this.args = args;
 }
 
 /*
- * Example method for a Vertex object
+ * Example method for a Node object
  *
-Vertex.prototype.changeSomethingAboutVertex = function(args){
+Node.prototype.changeSomethingAboutNode = function(args){
    //this.something = something;
    //return some new info?
 }; */
