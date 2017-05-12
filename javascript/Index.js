@@ -8,12 +8,7 @@ window.onload = function(){
     height = +svg.attr("height"),
     radius = 32;
 
-var circles = d3.range(20).map(function() {
-  return {
-    x: Math.round(Math.random() * (width - radius * 2) + radius),
-    y: Math.round(Math.random() * (height - radius * 2) + radius)
-  };
-});
+var circles = [];
 
 var color = d3.scaleOrdinal()
     .range(d3.schemeCategory20);
