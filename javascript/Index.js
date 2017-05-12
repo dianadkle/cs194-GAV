@@ -30,6 +30,27 @@ svg.selectAll("circle")
         .on("drag", dragged)
         .on("end", dragended));
 
+svg.on("click",function() {
+	var coords = d3.mouse(this);
+	var newData= {
+            x: Math.round( coords[0]),  // Takes the pixel number to convert to number
+            y: Math.round( coords[1])
+          };
+    circles.push(newData);
+
+    svg.selectAll("circle")
+  .data(circles)
+  .enter().append("circle")
+    .attr("cx", function(d) { return d.x; })
+    .attr("cy", function(d) { return d.y; })
+    .attr("r", radius)
+    .style("fill", function(d, i) { return color(i); })
+    .call(d3.drag()
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+})
+
 function dragstarted(d) {
   d3.select(this).raise().classed("active", true);
 }
