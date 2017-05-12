@@ -1,42 +1,31 @@
 'use strict';
 
-function Edge(a, b, directed){
+//make sure graph has a directed boolean
+
+function Edge(a, b){
    // if(a === b){
    //    ;//TODO: assert error
    // }
-   this.directed = directed;
    this.a = a;
    this.b = b;
 }
 
-Edge.prototype.checkDirected = function(){
-   return this.directed;
-};
 
 Edge.prototype.switchDirection = function(){
+   // this.b = [this.a, this.a = this.b][0];
    var temp = this.a;
    this.a = this.b;
    this.b = temp;
 };
 
 Edge.prototype.getStartNode = function(){
-   if(this.directed){
-      return a;
-   }
-   else {
-      return null;
-   }
+   return this.a;
 };
 
 Edge.prototype.getEndNode = function(){
-   if(this.directed){
-      return b;
-   }
-   else {
-      return null;
-   }
+   return this.b;
 };
 
 Edge.prototype.getNodes = function(){
-   return [a, b];
+   return [this.a, this.b];
 };
