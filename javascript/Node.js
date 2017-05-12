@@ -1,5 +1,4 @@
 'use strict';
-
 function Node(x, y, value, weight, color){
     this.x = x;
     this.y = y;
@@ -99,3 +98,4 @@ Node.prototype.algorithmReset = function(){
    this.intermediateValue = null;
    this.weight = 0;
 };
+>>>>>>> c07a297939c63753ac4d4db8135705c25a619646
