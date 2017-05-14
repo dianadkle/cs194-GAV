@@ -45,7 +45,11 @@ GraphCreator.prototype.removeEdge = function(start, end) {
 };
 
 GraphCreator.prototype.djikstras = function(start){
+	var dist = {};
+	var PriorityQueue = require('priority-heap-queue');
+	var q = new PriorityQueue({kind: 'min'});
 
+	
 };
 
 GraphCreator.prototype.bfs = function(start, goal){
@@ -62,10 +66,11 @@ GraphCreator.prototype.bfs = function(start, goal){
 	stateChanges.push(change);
 
 	while (q.length > 0) {
-		current = q.shift();
+		Node current = q.shift();
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
 		if (current.getID() == goal.getID()){
+			stateChanges.push(change); 
 			return stateChanges;
 		}
 		neighbors = current.getNeighbors()
@@ -82,8 +87,32 @@ GraphCreator.prototype.bfs = function(start, goal){
 	return stateChanges;
 };
 
-GraphCreator.prototype.dfs = function(start){
+GraphCreator.prototype.dfs = function(start, goal){
+	var set = new Set([]);
+	set.push(start);
+	var change = new StateChange();
+	change.addChangedNode(start, "green");
+	var stateChanges = [];
+	stateChanges.push(change);
 
+	while (set.size > 0) {
+		Node current = set.pop();
+		var change = new StateChange();
+		change.addChangedNode(current, "red");
+		if (current.getID() == goal.getID()){
+			stateChanges.push(change); 
+			return stateChanges;
+		}
+		if (!current.isVisited){
+			current.visit();
+			neighbors = current.getNeighbors();
+			for (i = 0; i < neighbors.length; i++){
+				set.push(nodes[neighbors[i]]);
+				change.addChangedNode(nodes[neighbors[i]], "green");
+			}
+		}
+		stateChanges.push(change); 
+	}
 };
 // GraphCreator.prototype.getNextID = function(){
 //    return this.currentID++;
