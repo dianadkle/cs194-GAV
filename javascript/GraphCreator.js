@@ -6,23 +6,23 @@ function GraphCreator(nodes,edges){
    // declare data structures for this graph
    this.nodes = nodes || [];
    this.edges = edges || [];
-
+   this.currentID = 0;
    this.selectedNode = null;
 }
 
-GraphCreator.prototype.helloWorld = function(node){
-   console.log("hello, world!");
-};
-
 // given a Node, adds to the graph
 GraphCreator.prototype.AddNode = function(node) {
-	this.nodes 
+	this.nodes
 };
 
 // given a Node, removes from the graph
 // removeNode ( given Node )
 GraphCreator.prototype.removeNode = function(node) {
 	this.nodes
+}
+
+GraphCreator.prototype.getNextID = function(){
+   return this.currentID++;
 }
 
 
@@ -39,4 +39,3 @@ GraphCreator.prototype.removeNode = function(node) {
 
 // clears graph
 // clearGraph()
-
