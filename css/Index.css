@@ -5,6 +5,10 @@ html, body {
    width:100%;
 }
 
+table{
+   border-collapse:collapse;
+}
+
 #mainTable{
    width:100%;
    height:100%;
@@ -13,17 +17,17 @@ html, body {
 #topBarRow{
    width:100%;
    height:10%;
+   background-color: #ffcccc
 }
 
 #canvasAndSideBarRow{
    width:100%;
    height:90%;
+   background-color: #eaeffa;
 }
 
 
 #toolBox {
-   border-style: solid;
-   border-width: 2px;
    text-align:center;
 }
 
@@ -37,9 +41,8 @@ html, body {
 }
 
 #sideBar{
-   border-style: solid;
-   border-width: 2px;
-   width:20%
+   width:20%;
+   background-color: #cceeff;
 }
 
 #canvasRow{
@@ -76,7 +79,7 @@ html, body {
 }
 
 h1{
-   font-family: monaco;
+   font-family: Futura;
    font-size:150%;
    font-weight:200;
    text-decoration: underline;
@@ -91,7 +94,7 @@ h1{
 }
 
 .algorithm{
-   font-family: monaco;
+   font-family: Futura;
    font-size:75%;
 }
 .algorithm:hover{
@@ -99,9 +102,7 @@ h1{
 }
 
 #gavTitle{
-   border-style: solid;
-   border-width: 2px;
-   font-family: monaco;
+   font-family: "Gill Sans";
    font-size:350%;
    text-align:center;
 }
