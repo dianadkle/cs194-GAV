@@ -1,22 +1,20 @@
 'use strict';
-function Node(x, y, value, weight, color){
-    this.x = x;
-    this.y = y;
+function Node(value, weight, color, id){
+    // this.x = x;
+    // this.y = y;
     this.value = value;
+    this.id = id;
     this.weight = weight;
     this.color = color;
     this.intermediateValue = null;
     this.visited = false;
-    this.starts = new Set([]);
-    this.ends = new Set([]);
+    this.neighbors = new Set([]);
+    this.parent = null;
+    // this.ends = new Set([]);
 }
 
-Node.prototype.getX = function(){
-   return this.x;
-};
-
-Node.prototype.getY = function(){
-   return this.y;
+Node.prototype.getID = function(){
+  return this.id;
 };
 
 Node.prototype.getWeight = function(){
@@ -31,14 +29,6 @@ Node.prototype.getColor = function(){
    return this.color;
 };
 
-Node.prototype.setX = function(x){
-   this.x = x;
-};
-
-Node.prototype.setY = function(y){
-   this.y = y;
-};
-
 Node.prototype.setValue = function(value){
    this.value = value;
 };
@@ -51,21 +41,36 @@ Node.prototype.setColor = function(color){
    this.color = color;
 };
 
-Node.prototype.connectFrom = function(previous){
-   this.starts.add(previous);
+Node.prototype.addNeighbor = function(id){
+  this.neighbors.add(id);
 };
 
-Node.prototype.connectTo = function(next){
-   this.ends.add(next);
+Node.prototype.removeNeighbor = function(id){
+  if (this.neighbors.has(id)){
+    this.neighbors.delete(id)
+  } else {
+    console.log("that neighbor does not exist for that node");
+  }
 };
 
-Node.prototype.getPreviousNodes = function(){
-   return Array.from(this.starts);
-};
+Node.prototype.getNeighbors = function(id){
+  return this.neighbors;
+}
+// Node.prototype.connectFrom = function(previous){
+//    this.starts.add(previous);
+// };
 
-Node.prototype.getNextNodes = function(){
-   return Array.from(this.ends);
-};
+// Node.prototype.connectTo = function(next){
+//    this.ends.add(next);
+// };
+
+// Node.prototype.getPreviousNodes = function(){
+//    return Array.from(this.starts);
+// };
+
+// Node.prototype.getNextNodes = function(){
+//    return Array.from(this.ends);
+// };
 
 /* Functions for algorithm execution usage */
 Node.prototype.setIntermediateValue = function(intermediateValue){
@@ -88,9 +93,17 @@ Node.prototype.unvisit = function(){
    this.visited = false;
 };
 
-Node.prototype.checkVisit = function(){
+Node.prototype.isVisited = function(){
    return this.visited;
-}
+};
+
+Node.prototype.setParent = function(node){
+  this.parent = node;
+};
+
+Node.prototype.getParent = function(){
+  return this.parent;
+};
 
 // clears all values relevant to algorithmic side of things
 Node.prototype.algorithmReset = function(){
@@ -98,4 +111,3 @@ Node.prototype.algorithmReset = function(){
    this.intermediateValue = null;
    this.weight = 0;
 };
->>>>>>> c07a297939c63753ac4d4db8135705c25a619646
