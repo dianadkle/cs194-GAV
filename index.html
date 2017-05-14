@@ -1,31 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
-<html>
-  <head>
-    <style>
-
-.active {
-  stroke: #000;
-  stroke-width: 2px;
-}
-
-</style>
-<svg width="960" height="500"></svg>
-<script src="//d3js.org/d3.v4.min.js"></script>
-    <script src="http://d3js.org/d3.v4.min.js"></script>
-    <script src="./javascript/FileSaver.js"></script>
-    <script src="./javascript/GraphCreator.js"></script>
-    <script src="./javascript/Index.js"></script>
-
-  </head>
-  <body>
-       <div id="toolbox" width="200" height="100">
-         <input type="file" id="hidden-file-upload"/>
-         <input type="image" id="upload-input" title="upload graph" src="./images/upload-icon.png" alt="upload graph"/>
-         <input type="image" id="download-input" title="download graph" src="./images/download-icon.png" alt="download graph"/>
-         <input type="image" id="delete-graph" title="delete graph" src="./images/trash-icon.png" alt="delete graph"/>
-       </div>
-    <div id="ul"/>
-  </body>
+   <head>
+      <script src="./javascript/d3.v4.js"></script>
+      <script src="./javascript/FileSaver.js"></script>
+      <script src="./javascript/GraphCreator.js"></script>
+      <script src="./javascript/Index.js"></script>
+      <link rel="stylesheet" type="text/css" href="./css/Index.css"/>
+   </head>
+   <body>
+      <table id="mainTable">
+         <tr id="topBarRow">
+            <td id="toolBox">
+               <table id="toolBoxTable">
+                  <tr>
+                     <td>
+                        <input type="image" id="upload-input" title="upload graph"
+                           src="./images/upload-icon.png" alt="upload graph" class="tool"/>
+                     </td>
+                     <td>
+                        <input type="image" id="download-input" title="download graph"
+                           src="./images/download-icon.png" alt="download graph" class="tool"/>
+                     </td>
+                     <td>
+                        <input type="image" id="delete-graph" title="delete graph"
+                           src="./images/trash-icon.png" alt="delete graph" class="tool"/>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+            <td id="gavTitle">
+               GRAPHIC ALGORITHM VISUALIZER
+            </td>
+         </tr>
+         <tr id="canvasAndSideBarRow">
+            <td id="sideBar">
+               <table id="sideBarTable">
+                  <tr id="algorithmsRow" valign="top">
+                     <td id="algorithmsColumn">
+                        <h1>Algorithms</h1>
+                        <p class="algorithm">Depth-First Search</p>
+                        <p class="algorithm">Breadth-First Search</p>
+                        <p class="algorithm">Djikstra's Algorithm</p>
+                     </td>
+                  </tr>
+                  <tr id="tipsRow" valign="top">
+                     <td id="tipsColumn">
+                        <h1>Tips</h1>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+            <td>
+               <table id="canvasTable">
+                  <tr id="canvasRow">
+                     <td id="canvasTD">
+                        <svg id="canvasSVG"/>
+                     </td>
+                  </tr>
+                  <tr id="nfaDfaRow">
+                     <td id="nfaDfaTD">
+                        <h1 style="text-align:center">NFA and DFA stuff goes here</h1>
+                     </td>
+                  </tr>
+               </table>
+            </td>
+         </tr>
+      </table>
+   </body>
 </html>

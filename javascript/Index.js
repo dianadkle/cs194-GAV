@@ -3,10 +3,11 @@
 window.onload = function(){
    var graphCreator = new GraphCreator();
    graphCreator.helloWorld();
-   var svg = d3.select("svg"),
-    width = +svg.attr("width"),
-    height = +svg.attr("height"),
-    radius = 32;
+
+   var radius = 32;
+
+   var svg = d3.select("#canvasSVG");
+
 
 var circles = [];
 
