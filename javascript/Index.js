@@ -1,6 +1,7 @@
 'use strict';
 
 window.onload = function(){
+   // TODO: directed vs undirected
    var graphCreator = new GraphCreator();
 
    var radius = 32;
