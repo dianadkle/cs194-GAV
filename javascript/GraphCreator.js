@@ -34,17 +34,16 @@ GraphCreator.prototype.removeNode = function(id) {
 	//
 	if(this.directed) {
 		for (let node of to_remove.out_neighbors) {
+			node.in_neighbors.delete(to_remove);
+			node.in_edges.delete(id);
+		}
+
+		for (let node of to_remove.in_neighbors) {
 			node.out_neighbors.delete(to_remove);
 			node.out_edges.delete(id);
 		}
 	} else {
 		for (let node of to_remove.out_neighbors) {
-			node.in_neighbors.delete(to_remove);
-			node.in_edges.delete(id);
-		}
-
-
-		for (let node of to_remove.in_neighbors) {
 			node.out_neighbors.delete(to_remove);
 			node.out_edges.delete(id);
 		}
