@@ -100,12 +100,43 @@ GraphCreator.prototype.removeEdge = function(start_id, end_id) {
 
 };
 
-GraphCreator.prototype.dijkstras = function(start){
+GraphCreator.prototype.dijkstras = function(start, goal){
 	var dist = {};
 	var PriorityQueue = require('priority-heap-queue');
 	var q = new PriorityQueue({kind: 'min'});
 
-	
+	dist[start] = 0;
+
+	for (let node of this.nodes) {
+		if (node.id !== goal.id) {
+			dist[node.id] = Infinity;
+			prev[node.id] = undefined;
+		}
+		q.insert(node.id, dist[node.id]);
+	}
+
+	var change = new StateChange();
+	change.addChangedNode(start, "red");
+	var stateChanges = [];
+	stateChanges.push(change);
+
+	while (q.minimum() !== undefined) {
+		var current = q.extractMin();
+		var change = new StateChange();
+		change.addChangedNode(current, "red");
+		for (let edge of nodes[current].out_edges) {
+			neighbor = edge.end;
+			var alt = dist[current] + edge.weight;
+			if (alt < dist[neighbor]) {
+				dist[neighbor] = alt;
+				prev[neighbor] = current;
+				q.decreaseKey(neighbor, alt);
+			}
+			change.addChangedNode(neighbor, "green");
+			//TODO: consider also changing node "weight" or "distance" to 
+			//show what the distance is at each point.
+		}
+	}
 };
 
 GraphCreator.prototype.bfs = function(start, goal){

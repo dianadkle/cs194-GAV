@@ -10,6 +10,18 @@ function Automata(regex){
 
 }
 
+//DFA and NFAs are returned in a FSM json object  as defined below:
+// {
+//   initialState: 'id',
+//   acceptState: ['id', ... ] ,
+//   numOfStates: Integer,
+//   type: 'DFA' or 'NFA',
+//   transitions: {
+//     'id': { 'to_id': label, },
+//     ...,
+//   }
+}
+
 Automata.prototype.convertToNFA = function() {
 	var regParser = require('automata.js');
 	var parser = new regParser.RegParser(this.regex);

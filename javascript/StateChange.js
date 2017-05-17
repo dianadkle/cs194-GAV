@@ -4,6 +4,8 @@
 function StateChange(){
    this.nodesChanged = {};
    this.edgesChanged= new Set([]);
+   this.nodeWeightsChanged = {};
+   this.edgeWeightsChanged = {};
 }
 
 // given a Node, adds to the graph
