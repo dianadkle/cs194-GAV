@@ -135,12 +135,13 @@ GraphCreator.prototype.dijkstras = function(start, goal){
 			//TODO: consider also changing node "weight" or "distance" to 
 			//show what the distance is at each point.
 		}
-		stateChanges.push(change);
 	}
-	return stateChanges;
 };
 
-GraphCreator.prototype.bfs = function(start, goal){
+GraphCreator.prototype.bfs = function(start_id, goal_id){
+	
+	var start = this.nodes[start_id];
+	var goal = this.nodes[goal_id];
 	var set = new Set([]);
 	var q = [];
 
@@ -153,13 +154,17 @@ GraphCreator.prototype.bfs = function(start, goal){
 	var stateChanges = [];
 	stateChanges.push(change);
 
+	//console.log("asddsfds");
+//	console.log(stateChanges.length);
 	while (q.length > 0) {
 		var current = q.shift();
+		//console.log("current ID: " + current.id);
 		// TODO: consider the scope of the variable "change"
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
 			stateChanges.push(change); 
+			//console.log(stateChanges.length);
 			return stateChanges;
 		}
 		// TODO: accomodate for directed/undirected graphs
@@ -171,19 +176,11 @@ GraphCreator.prototype.bfs = function(start, goal){
 				change.addChangedNode(node, "green");
 			}
 		}
-		/*
-		neighbors = current.getNeighbors()
-		for (i = 0; i < neighbors.length; i++){
-			if (!set.has(nodes[neighbors[i]])) {
-				set.add(nodes[neighbors[i]]);
-				q.push(nodes[neighbors[i]]);
-				nodes[neighbors[i]].parent = current;
-				change.addChangedNode(nodes[neighbors[i]], "green");
-			}
-		}
-		*/
 		stateChanges.push(change);
+		//console.log("cur len: " + stateChanges.length);
 	}
+	//console.log(stateChanges.length);
+
 	return stateChanges;
 };
 
@@ -215,6 +212,142 @@ GraphCreator.prototype.dfs = function(start, goal){
 		stateChanges.push(change); 
 	}
 };
+
+function Node(value, weight, color, id){
+    // this.x = x;
+    // this.y = y;
+    this.value = value;
+    this.id = id;
+    this.weight = weight;
+    this.color = color;
+    this.intermediateValue = null;
+    this.visited = false;
+    // We require two neighbor sets for directed graphs.
+    // For undirected graphs, we will only use the "out" fields
+    this.in_neighbors = new Set([]);	// nodes pointing to current
+    this.out_neighbors = new Set([]);	// current points to these
+    // the corresponding edges for the above node lists
+    this.in_edges = new Map([]);	// map: node ID -> edge
+    this.out_edges = new Map([]);
+    this.parent = null;
+    // this.ends = new Set([]);
+}
+
+// clears all values relevant to algorithmic side of things
+Node.prototype.node_reset = function(){
+   this.visited = false;
+   this.intermediateValue = null;
+   this.weight = 0;
+};
+
+Node.prototype.out_str = function() {
+	var retval = "";
+	for (let neighbor of this.out_neighbors) {
+		retval += neighbor.value + " ";
+		//retval = retval.concat(neighbor.value + " ");
+	}
+	return retval;
+}
+
+Node.prototype.in_str = function() {
+	var retval = "";
+	for (let neighbor of this.in_neighbors) {
+		retval += neighbor.value + " ";
+		//retval = retval.concat(neighbor.value + " ");
+	}
+	return retval;
+}
+
+function Edge(start, end){
+   // if(a === b){
+   //    ;//TODO: assert error
+   // }
+   this.start = start;
+   this.end = end;
+}
+
+Edge.prototype.switchDirection = function(){
+   var temp = this.start;
+   this.start = this.end;
+   this.end = temp;
+};
+
+
+GraphCreator.prototype.toString = function() {
+	var x = 0;
+	console.log("Node list");
+	for (let node of this.nodes) {
+		if (node !== -1) {
+			x++;
+			console.log(node.id + ": " + node.value);
+		}
+	}
+
+	console.log("Out edge lists");
+	for (let node of this.nodes) {
+		if (node !== -1) {
+			console.log(node.id + ": " + node.out_str());
+		}
+	}
+	console.log("In edge lists");
+	for (let node of this.nodes) {
+		if (node !== -1) {
+			console.log(node.id + ": " + node.in_str());
+		}
+	}
+	console.log("-------------------");
+};
+
+function StateChange(){
+   this.nodesChanged = {};
+   this.edgesChanged= new Set([]);
+   this.nodeWeightsChanged = {};
+   this.edgeWeightsChanged = {};
+}
+
+// given a Node, adds to the graph
+StateChange.prototype.addChangedNode = function(node, color) {
+	this.nodesChanged[node.id] = color;
+};
+
+StateChange.prototype.getChangedNodes = function() {
+	return this.nodesChanged;
+};
+
+StateChange.prototype.addChangedEdge = function(edge) {
+	this.edgesChanged.add(node);
+};
+
+StateChange.prototype.getChangedEdges = function() {
+	return this.edgesChanged;
+}
+
+let x = new GraphCreator(true);
+
+x.addNode("A1", 2, "black");
+x.addNode("B2", 4, "black");
+x.addNode("C3", 8, "black");
+x.addNode("D4", 16, "black");
+x.addNode("E5", 32, "black");
+
+x.addEdge(0, 1);
+x.addEdge(2, 1);
+x.addEdge(1, 4);
+
+x.removeNode(3);
+//x.removeNode(1);
+
+
+x.toString();
+
+var changes = x.bfs(0, 4);
+
+console.log(changes.length + " state changes in alg");
+
+for(let change of changes) {
+	console.log(change);
+}
+
 
 // given a Node, highlights the node/updates graph
 // selectNode (given x,y)

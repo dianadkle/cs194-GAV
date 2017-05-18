@@ -4,11 +4,13 @@
 function StateChange(){
    this.nodesChanged = {};
    this.edgesChanged= new Set([]);
+   this.nodeWeightsChanged = {};
+   this.edgeWeightsChanged = {};
 }
 
 // given a Node, adds to the graph
 StateChange.prototype.addChangedNode = function(node, color) {
-	this.nodesChanged[node] = color;
+	this.nodesChanged[node.id] = color;
 };
 
 StateChange.prototype.getChangedNodes = function() {

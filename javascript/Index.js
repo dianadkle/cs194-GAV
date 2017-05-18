@@ -1,9 +1,6 @@
 'use strict';
 
-
-// var canvasWidth = document.getElementById('canvasRow').offsetWidth,
-//    canvasHeight = document.getElementById('canvasRow').offsetHeight;
-   var circlesArr = [
+var circlesArr = [
       {x:20, y:300, id: 1000, value: 1000, sources: [], targets: []},
       {x:600, y:200, id: 1001, value: 1001, sources: [], targets: [1005, 1007]},
       {x:400, y:100, id: 1002, value: 1002, sources: [1004], targets: [1009]},
@@ -19,7 +16,7 @@
       {x:100, y:320, id: 1012, value: 1012, sources: [], targets: [1009]}
    ];
 
-   var edgesArr = [
+var edgesArr = [
       {source: 1002, target: 1009},
       {source: 1010, target: 1007},
       {source: 1001, target: 1007},

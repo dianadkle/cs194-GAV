@@ -1,35 +1,19 @@
 'use strict';
 
-//make sure graph has a directed boolean
-
-function Edge(start, end, id){
+function Edge(start, end, weight){
    // if(a === b){
    //    ;//TODO: assert error
    // }
-   this.id = id;
    this.start = start;
    this.end = end;
+   this.weight = weight;
 }
 
-Edge.prototype.getID = function(){
-   return this.id;
-};
-
+// NOTE: the switchDirection operation is local to the edge structure.
+// In particular, this does not change the lists in which this edge apears,
+// so the edge must be swapped in any in/out lists it appears in
 Edge.prototype.switchDirection = function(){
-   // this.b = [this.a, this.a = this.b][0];
-   var temp = this.a;
-   this.a = this.b;
-   this.b = temp;
-};
-
-Edge.prototype.getStartNode = function(){
-   return this.start;
-};
-
-Edge.prototype.getEndNode = function(){
-   return this.end;
-};
-
-Edge.prototype.getNodes = function(){
-   return [this.start, this.end];
+   var temp = this.start;
+   this.start = this.end;
+   this.end = temp;
 };
