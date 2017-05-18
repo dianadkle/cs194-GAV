@@ -136,7 +136,9 @@ GraphCreator.prototype.dijkstras = function(start, goal){
 			//TODO: consider also changing node "weight" or "distance" to 
 			//show what the distance is at each point.
 		}
+		stateChanges.push(change);
 	}
+	return stateChanges;
 };
 
 GraphCreator.prototype.bfs = function(start, goal){
