@@ -1,7 +1,5 @@
 'use strict';
 function Node(value, weight, color, id){
-    // this.x = x;
-    // this.y = y;
     this.value = value;
     this.id = id;
     this.weight = weight;
@@ -10,7 +8,6 @@ function Node(value, weight, color, id){
     this.visited = false;
     this.neighbors = new Set([]);
     this.parent = null;
-    // this.ends = new Set([]);
 }
 
 Node.prototype.getID = function(){

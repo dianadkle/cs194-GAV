@@ -118,6 +118,11 @@ h1{
 }
 
 .active {
-  stroke: #000;
+  stroke: #000000;
   stroke-width: 2px;
+}
+
+.dormant {
+   stroke: #ffffff;
+   stroke-width: 2px;
 }
