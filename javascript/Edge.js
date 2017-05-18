@@ -1,12 +1,13 @@
 'use strict';
 
-function Edge(start, end, weight){
+function Edge(start, end, weight, color){
    // if(a === b){
    //    ;//TODO: assert error
    // }
    this.start = start;
    this.end = end;
    this.weight = weight;
+   this.color = color;
 }
 
 // NOTE: the switchDirection operation is local to the edge structure.
@@ -17,3 +18,7 @@ Edge.prototype.switchDirection = function(){
    this.start = this.end;
    this.end = temp;
 };
+
+Edge.prototype.changeColor = function(color) {
+	this.color = color;
+}
