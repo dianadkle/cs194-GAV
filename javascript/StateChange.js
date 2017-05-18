@@ -10,7 +10,7 @@ function StateChange(){
 
 // given a Node, adds to the graph
 StateChange.prototype.addChangedNode = function(node, color) {
-	this.nodesChanged[node] = color;
+	this.nodesChanged[node.id] = color;
 };
 
 StateChange.prototype.getChangedNodes = function() {
