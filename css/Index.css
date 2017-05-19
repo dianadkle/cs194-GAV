@@ -123,6 +123,22 @@ h1{
 }
 
 .dormant {
-   stroke: #ffffff;
+   stroke: #dbb000;
    stroke-width: 2px;
+}
+
+.link{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.nodeCircle{
+   font: 10px sans-serif;
+   fill: #dbdb8d;
+}
+
+.nodeText{
+   font-family: Futura;
+   fill: #db0000;
 }
