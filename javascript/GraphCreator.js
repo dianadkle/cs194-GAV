@@ -140,9 +140,13 @@ GraphCreator.prototype.dijkstras = function(start, goal){
 	return stateChanges;
 };
 
-GraphCreator.prototype.bfs = function(start, goal){
+//requires start_id and goal_id
+GraphCreator.prototype.bfs = function(start_id, goal_id){
 	var set = new Set([]);
 	var q = [];
+
+	var start = nodes[start_id]
+	var goal = nodes[goal_id]
 
 	set.add(start);
 	q.push(start);
