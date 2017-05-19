@@ -1,19 +1,19 @@
 'use strict';
 
 var nodes = [
-   {x:20, y:300, id: 1000, value: "Arlene"},
-   {x:600, y:200, id: 1001, value: "Brett"},
-   {x:400, y:100, id: 1002, value: "Cindy"},
-   {x:200, y:500, id: 1003, value: "Dennis"},
-   {x:300, y:400, id: 1004, value: "Emily"},
-   {x:450, y:250, id: 1005, value: "Frank"},
-   {x:40, y:350, id: 1006, value: "Gilbert"},
-   {x:220, y:450, id: 1007, value: "Harvey"},
-   {x:140, y:550, id: 1008, value: "Irene"},
-   {x:700, y:50, id: 1009, value: "Jose"},
-   {x:600, y:150, id: 1010, value: "Katrina"},
-   {x:360, y:200, id: 1011, value: "Lee"},
-   {x:100, y:320, id: 1012, value: "Maria"}
+   {x:20, y:300, id: 1000, value: "Arlene", weight: 2, color: "yellow"},
+   {x:600, y:200, id: 1001, value: "Brett", weight: 5, color: "yellow"},
+   {x:400, y:100, id: 1002, value: "Cindy", weight: 3, color: "yellow"},
+   {x:200, y:500, id: 1003, value: "Dennis", weight: 6, color: "yellow"},
+   {x:300, y:400, id: 1004, value: "Emily", weight: 4, color: "yellow"},
+   {x:450, y:250, id: 1005, value: "Frank", weight: 1, color: "yellow"},
+   {x:40, y:350, id: 1006, value: "Gilbert", weight: 7, color: "yellow"},
+   {x:220, y:450, id: 1007, value: "Harvey", weight: 9, color: "yellow"},
+   {x:140, y:550, id: 1008, value: "Irene", weight: 8, color: "yellow"},
+   {x:700, y:50, id: 1009, value: "Jose", weight: 11, color: "yellow"},
+   {x:600, y:150, id: 1010, value: "Katrina", weight: 12, color: "yellow"},
+   {x:360, y:200, id: 1011, value: "Lee", weight: 10, color: "yellow"},
+   {x:100, y:320, id: 1012, value: "Maria", weight: 13, color: "yellow"}
 ];
 
 var links = [
@@ -32,14 +32,12 @@ var links = [
    {source: 1009, target: 1003},
    {source: 1000, target: 1012}
 ];
-var radius = 15;
+var radius = 20;
 
 window.onload = function(){
-   var graphCreator = new GraphCreator();
-   var directed = false;
-
    var selectedNode = null, selectedTag = null;
    var clickWasOnNode = false, dblClickWasOnNode = false;
+   var directed = false;
 
    var svg = d3.select("#canvasSVG")
       .on("click", clickedOnSVG)
@@ -57,7 +55,10 @@ window.onload = function(){
    .force("charge", d3.forceManyBody().strength(-10))
    .force("center", d3.forceCenter(width / 2, height / 2));
 
+   //node and link svg data
    var node = null, link = null;
+
+   var graphCreator = new GraphCreator();
 
    updateCanvas();
 
@@ -87,14 +88,16 @@ window.onload = function(){
       node.append("circle")
       .attr("r", radius)
       .attr("class", "nodeCircle")
-      .raise().classed("dormant", true);
+      .raise().classed("dormant", true)
+      .raise().classed("nodeYellow", true);
 
       //apply hover-over text to node
       node.append("title").text(function(d) { return d.id; });
 
       //apply text to node
       node.append("text")
-      .attr("dy", 3)
+      .attr("text-anchor", "middle")
+      .attr("dy", radius / 4)
       .attr("class", "nodeText")
       .text(function(d) { return d.value; });
 
@@ -164,7 +167,16 @@ window.onload = function(){
 
       if(selectedNode !== null) return;
 
+      var valuePromptStr = "Please enter your node's value. ";
+         valuePromptStr += "\nThis could be a number, name, etc.";
+      var weightPromptStr = "Please enter your node's weight. ";
+         weightPromptStr += "\nSet this to 0 if your graph doesn't consider node weights.";
 
+      var value = prompt(valuePromptStr);
+      if (value === null) return;
+
+      var weight = prompt(weightPromptStr);
+      if (weight === null) return;
 
       //create circle
       var coords = d3.mouse(this);
@@ -172,14 +184,15 @@ window.onload = function(){
          x: Math.round( coords[0]),  // Takes the pixel number to convert to number
          y: Math.round( coords[1]),
          id: idCount++,//graphCreator.addNode('test_value', idCount++, 'yellow'),
-         value: idCount - 1
+         value: value,
+         weight: weight,
+         color: "yellow"
       };
       nodes.push(newNode);
       updateCanvas();
    }
 
-   /** update function, called every time canvas needs to be updated**/
-
+   /** updating function, called every time canvas needs to be updated**/
    function ticked() {
       link
       .attr("x1", function(d) { return d.source.x; })

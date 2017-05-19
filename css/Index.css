@@ -135,10 +135,21 @@ h1{
 
 .nodeCircle{
    font: 10px sans-serif;
+}
+
+.nodeYellow{
    fill: #dbdb8d;
+}
+
+.nodeRed{
+   fill: #d62728;
+}
+
+.nodeGreen{
+   fill: #98df8a;
 }
 
 .nodeText{
    font-family: Futura;
-   fill: #db0000;
+   fill: #000000;
 }
