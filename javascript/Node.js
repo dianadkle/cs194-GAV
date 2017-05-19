@@ -1,8 +1,6 @@
 'use strict';
 
 function Node(value, weight, color, id){
-    // this.x = x;
-    // this.y = y;
     this.value = value;
     this.id = id;
     this.weight = weight;
@@ -17,7 +15,6 @@ function Node(value, weight, color, id){
     this.in_edges = new Map([]);	// map: node ID -> edge
     this.out_edges = new Map([]);
     this.parent = null;
-    // this.ends = new Set([]);
 }
 
 // clears all values relevant to algorithmic side of things

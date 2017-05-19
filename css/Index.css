@@ -118,6 +118,38 @@ h1{
 }
 
 .active {
-  stroke: #000;
+  stroke: #000000;
   stroke-width: 2px;
+}
+
+.dormant {
+   stroke: #dbb000;
+   stroke-width: 2px;
+}
+
+.link{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
+
+.nodeCircle{
+   font: 10px sans-serif;
+}
+
+.nodeYellow{
+   fill: #dbdb8d;
+}
+
+.nodeRed{
+   fill: #d62728;
+}
+
+.nodeGreen{
+   fill: #98df8a;
+}
+
+.nodeText{
+   font-family: Futura;
+   fill: #000000;
 }
