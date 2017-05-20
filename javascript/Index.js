@@ -1,37 +1,49 @@
 'use strict';
 
+var GraphCreator = require('./GraphCreator');
+
+/***********************************Index.js***********************************/
+
+
 var nodes = [
-   {x:20, y:300, id: 1000, value: "Arlene", weight: 2, color: "yellow"},
-   {x:600, y:200, id: 1001, value: "Brett", weight: 5, color: "yellow"},
-   {x:400, y:100, id: 1002, value: "Cindy", weight: 3, color: "yellow"},
-   {x:200, y:500, id: 1003, value: "Dennis", weight: 6, color: "yellow"},
-   {x:300, y:400, id: 1004, value: "Emily", weight: 4, color: "yellow"},
-   {x:450, y:250, id: 1005, value: "Frank", weight: 1, color: "yellow"},
-   {x:40, y:350, id: 1006, value: "Gilbert", weight: 7, color: "yellow"},
-   {x:220, y:450, id: 1007, value: "Harvey", weight: 9, color: "yellow"},
-   {x:140, y:550, id: 1008, value: "Irene", weight: 8, color: "yellow"},
-   {x:700, y:50, id: 1009, value: "Jose", weight: 11, color: "yellow"},
-   {x:600, y:150, id: 1010, value: "Katrina", weight: 12, color: "yellow"},
-   {x:360, y:200, id: 1011, value: "Lee", weight: 10, color: "yellow"},
-   {x:100, y:320, id: 1012, value: "Maria", weight: 13, color: "yellow"}
+   {x:20, y:300, id: 0, value: "Arlene", weight: 2, color: "yellow"},
+   {x:600, y:200, id: 1, value: "Brett", weight: 5, color: "yellow"},
+   {x:400, y:100, id: 2, value: "Cindy", weight: 3, color: "yellow"},
+   {x:200, y:500, id: 3, value: "Dennis", weight: 6, color: "yellow"},
+   {x:300, y:400, id: 4, value: "Emily", weight: 4, color: "yellow"},
+   {x:450, y:250, id: 5, value: "Frank", weight: 1, color: "yellow"},
+   {x:40, y:350, id: 6, value: "Gilbert", weight: 7, color: "yellow"},
+   {x:220, y:450, id: 7, value: "Harvey", weight: 9, color: "yellow"},
+   {x:140, y:550, id: 8, value: "Irene", weight: 8, color: "yellow"},
+   {x:700, y:50, id: 9, value: "Jose", weight: 11, color: "yellow"},
+   {x:600, y:150, id: 10, value: "Katrina", weight: 12, color: "yellow"},
+   {x:360, y:200, id: 11, value: "Lee", weight: 10, color: "yellow"},
+   {x:100, y:320, id: 12, value: "Maria", weight: 13, color: "yellow"}
 ];
 
 var links = [
-   {source: 1002, target: 1009},
-   {source: 1010, target: 1007},
-   {source: 1001, target: 1007},
-   {source: 1001, target: 1005},
-   {source: 1007, target: 1006},
-   {source: 1004, target: 1002},
-   {source: 1006, target: 1003},
-   {source: 1005, target: 1004},
-   {source: 1012, target: 1009},
-   {source: 1008, target: 1007},
-   {source: 1005, target: 1003},
-   {source: 1005, target: 1011},
-   {source: 1009, target: 1003},
-   {source: 1000, target: 1012}
+   {source: 2, target: 9},
+   {source: 0, target: 7},
+   {source: 1, target: 7},
+   {source: 1, target: 5},
+   {source: 7, target: 6},
+   {source: 4, target: 2},
+   {source: 6, target: 3},
+   {source: 5, target: 4},
+   {source: 2, target: 9},
+   {source: 8, target: 7},
+   {source: 5, target: 3},
+   {source: 5, target: 1},
+   {source: 9, target: 3},
+   {source: 0, target: 2}
 ];
+
+var algorithms = [
+   "Depth-First Search",
+   "Breadth-First Search",
+   "Dijkstra's Algorithm"
+];
+
 var radius = 20;
 
 window.onload = function(){
@@ -58,7 +70,10 @@ window.onload = function(){
    //node and link svg data
    var node = null, link = null;
 
-   var graphCreator = new GraphCreator();
+   var graphCreator = new GraphCreator(false);
+
+   importData();
+   initializeAlgorithmButtons();
 
    updateCanvas();
 
@@ -89,7 +104,9 @@ window.onload = function(){
       .attr("r", radius)
       .attr("class", "nodeCircle")
       .raise().classed("dormant", true)
-      .raise().classed("nodeYellow", true);
+      .raise().classed("nodeYellow", function(d){return d.color === "yellow"})
+      .raise().classed("nodeGreen", function(d){return d.color === "green"})
+      .raise().classed("nodeRed", function(d){return d.color === "red"});
 
       //apply hover-over text to node
       node.append("title").text(function(d) { return d.id; });
@@ -137,6 +154,7 @@ window.onload = function(){
       }
       if(edges === undefined){
          links.push({source: sourceID, target: targetID});
+         graphCreator.addEdge(sourceID, targetID);
       }
    }
 
@@ -180,13 +198,14 @@ window.onload = function(){
 
       //create circle
       var coords = d3.mouse(this);
+      var newNodeObj = graphCreator.addNode(value, weight, "yellow");
       var newNode= {
          x: Math.round( coords[0]),  // Takes the pixel number to convert to number
          y: Math.round( coords[1]),
-         id: idCount++,//graphCreator.addNode('test_value', idCount++, 'yellow'),
          value: value,
          weight: weight,
-         color: "yellow"
+         color: "yellow",
+         id: graphCreator.addNode(value, weight, "yellow").id
       };
       nodes.push(newNode);
       updateCanvas();
@@ -242,5 +261,75 @@ window.onload = function(){
          circleTag.raise().classed("dormant", true);
       }
       textTag.raise().classed("nodeText", true);
+   }
+
+
+   /*loads test/imported data to graphCreator*/
+   function importData(){
+      nodes.forEach(function(node){
+         graphCreator.addNode(node.value, node.weight, node.color);
+      });
+
+      links.forEach(function(edge){
+         graphCreator.addEdge(edge.source, edge.target);
+      });
+   }
+
+
+   /*Creates Algorithm Tags*/
+   function initializeAlgorithmButtons(){
+      var pTags = algorithms.map(function(algorithm){
+         var elem = document.createElement('p');
+         elem.className = "algorithm";
+         elem.innerHTML = algorithm;
+         //elem.onclick = prepareForAlgorithm(algorithm);
+         return elem;
+      });
+
+      var algColumn = document.getElementById("algorithmsColumn");
+      pTags.forEach(function(p){
+         var tag = algColumn.appendChild(p);
+         tag.onclick = function(){runAlgorithm(p.innerHTML)};
+      });
+   }
+
+   function runAlgorithm(algorithm){
+      var start = prompt("What start node?");
+      var goal = prompt("what goal node?");
+
+      var func = getAlgorithmFunction(algorithm);
+      var stateChanges = func(graphCreator.getNode(start), graphCreator.getNode(goal));
+
+      for(var i = 0; i < stateChanges.length; i++){
+         var change = stateChanges[i];
+         var colorChanges = change["nodesChanged"];
+         Object.keys(colorChanges).forEach(function(d){
+            var id = Number(d);
+            var color = colorChanges[d];
+            var index = nodes.findIndex(node => node.id === id);
+            nodes[index].color = color;
+         });
+         updateCanvas();
+         sleep(2000);
+         console.log("slept ", i, " times");
+      }
+   }
+
+   function sleep(milliseconds) {
+      var start = new Date().getTime();
+      for (var i = 0; i < 1e7; i++) {
+         if ((new Date().getTime() - start) > milliseconds){
+            break;
+         }
+      }
+   }
+
+   function getAlgorithmFunction(algorithm){
+      switch(algorithm){
+         case "Breadth-First Search": return graphCreator.bfs;
+         case "Depth-First Search": return graphCreator.dfs;
+         case "Dijkstra's Algorithm": return graphCreator.dijkstras;
+      }
+      return null;
    }
 }
