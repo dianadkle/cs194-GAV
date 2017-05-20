@@ -144,7 +144,7 @@ GraphCreator.prototype.dijkstras = function(start_id){
     }
 
     var change = new StateChange();
-    change.addChangedNode(this.nodes[start_id], "red");
+    change.addChangedNode(this.nodes[start_id], "green");
     var stateChanges = [];
     stateChanges.push(change);
 
