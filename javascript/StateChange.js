@@ -23,4 +23,12 @@ StateChange.prototype.addChangedEdge = function(edge) {
 
 StateChange.prototype.getChangedEdges = function() {
 	return this.edgesChanged;
+};
+
+StateChange.prototype.changeNodeWeight = function(node, weight) {
+	this.nodeWeightsChanged[node.id] = weight;
+};
+
+StateChange.prototype.getChangedNodeWeights = function() {
+	return this.nodeWeightsChanged;
 }

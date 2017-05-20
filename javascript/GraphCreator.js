@@ -1,4 +1,32 @@
 "use strict";
+function PriorityQueue(){
+    this.array = new Map([]);
+}
+
+PriorityQueue.prototype.insert = function(key, value){
+    this.array.set(key, value);
+};
+
+PriorityQueue.prototype.decreaseKey = function(key, value){
+    if (this.array.get(key) > value) {
+        this.array.set(key, value);
+    } else {
+        console.log("Error: new key value is larger than current key");
+    }
+};
+
+PriorityQueue.prototype.extractMin = function(){
+    var minvalue = Infinity;
+    var minindex = 0;
+    for (var key of this.array.keys()){
+        if (this.array.get(key) < minvalue){
+            minvalue = this.array.get(key);
+            minindex = key;
+        }
+    }
+    this.array.delete(minindex);
+    return minindex;
+};
 
 // must be given an array of nodes, and an array of edges or null for both
 function GraphCreator(nodes,edges){
@@ -45,45 +73,44 @@ GraphCreator.prototype.removeEdge = function(start, end) {
 };
 
 GraphCreator.prototype.dijkstras = function(start_id){
-        var dist = [];
-        var prev = [];
-        var PriorityQueue = require('priority-heap-queue');
-        var q = new PriorityQueue({kind: 'min'});
+    var dist = [];
+    var prev = [];
+    var q = new PriorityQueue();
 
-        // initialize graph values
-        dist[start_id] = 0;
-        for (let node of this.nodes) {
-                if (node.id !== start_id) {
-                        dist[node.id] = Infinity;
-                        prev[node.id] = undefined;
-                }
-                q.insert(dist[node.id], node.id);
+    // initialize graph values
+    dist[start_id] = 0;
+    for (let node of this.nodes) {
+        if (node.id !== start_id) {
+                dist[node.id] = Infinity;
+                prev[node.id] = undefined;
         }
-        q.insert(dist[start_id], start_id);
+        q.insert(node.id, dist[node.id]);
+    }
 
+    var change = new StateChange();
+    change.addChangedNode(this.nodes[start_id], "red");
+    var stateChanges = [];
+    stateChanges.push(change);
+
+    // TODO: unconnected graph (minimum = Infinity)
+    while (q.minimum() !== undefined) {
+        var current_id = q.extractMin();
         var change = new StateChange();
-        change.addChangedNode(this.nodes[start_id], "red");
-        var stateChanges = [];
-        stateChanges.push(change);
-
-        // TODO: unconnected graph (minimum = Infinity)
-        while (q.minimum() !== undefined) {
-                var current_id = q.extractMin();
-                var change = new StateChange();
-                change.addChangedNode(this.nodes[current_id], "red");
-                for (let edge of this.nodes[current_id].out_edges.values()) {
-                        var neighbor = edge.end;
-                        var alt = dist[current_id] + edge.weight;
-                        if (alt < dist[neighbor.id]) {
-                                dist[neighbor.id] = alt;
-                                prev[neighbor.id] = current_id;
-                                q.decreaseKey(neighbor.id, alt);
-                        }
-                        change.addChangedNode(neighbor, "green");
-                        //TODO: consider also changing node "weight" or "distance" to
-                        //show what the distance is at each point.
-                }
+        change.addChangedNode(this.nodes[current_id], "red");
+        for (let edge of this.nodes[current_id].out_edges.values()) {
+            var neighbor = edge.end;
+            var alt = dist[current_id] + edge.weight;
+            if (alt < dist[neighbor.id]) {
+                dist[neighbor.id] = alt;
+                prev[neighbor.id] = current_id;
+                q.decreaseKey(neighbor.id, alt);
+                change.changeNodeWeight(neighbor, alt);
+            }
+            change.addChangedNode(neighbor, "green");
         }
+        stateChanges.push(change);
+    }
+    return stateChanges;
 };
 
 
@@ -396,21 +423,3 @@ function isConnected(start, end) {
  	return false;
 };
 
-// GraphCreator.prototype.getNextID = function(){
-//    return this.currentID++;
-// }
-
-
-
-
-// given a Node, highlights the node/updates graph
-// selectNode (given x,y)
-
-// Moved to index?
-// dragGraph (given x,y)
-
-// Moved to node?
-// editNodeName ( given name )
-
-// clears graph
-// clearGraph()
