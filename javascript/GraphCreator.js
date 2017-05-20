@@ -28,6 +28,10 @@ PriorityQueue.prototype.extractMin = function(){
     return minindex;
 };
 
+PriorityQueue.prototype.minimum = function(){
+    return this.array.size > 0;
+}
+
 // always create an empty graph
 function GraphCreator(is_directed){
         // An undirected graph will only make use of the "out" Node fields
@@ -149,7 +153,7 @@ GraphCreator.prototype.dijkstras = function(start_id){
     stateChanges.push(change);
 
     // TODO: unconnected graph (minimum = Infinity)
-    while (q.minimum() !== undefined) {
+    while (q.minimum()) {
         var current_id = q.extractMin();
         var change = new StateChange();
         change.addChangedNode(this.nodes[current_id], "red");
