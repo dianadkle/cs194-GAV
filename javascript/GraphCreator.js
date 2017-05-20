@@ -44,46 +44,48 @@ GraphCreator.prototype.removeEdge = function(start, end) {
 	}
 };
 
-GraphCreator.prototype.dijkstras = function(start, goal){
-	var dist = {};
-	var PriorityQueue = require('priority-heap-queue');
-	var q = new PriorityQueue({kind: 'min'});
+GraphCreator.prototype.dijkstras = function(start_id){
+        var dist = [];
+        var prev = [];
+        var PriorityQueue = require('priority-heap-queue');
+        var q = new PriorityQueue({kind: 'min'});
 
-	dist[start] = 0;
+        // initialize graph values
+        dist[start_id] = 0;
+        for (let node of this.nodes) {
+                if (node.id !== start_id) {
+                        dist[node.id] = Infinity;
+                        prev[node.id] = undefined;
+                }
+                q.insert(dist[node.id], node.id);
+        }
+        q.insert(dist[start_id], start_id);
 
-	for (let node of this.nodes) {
-		if (node.id !== goal.id) {
-			dist[node.id] = Infinity;
-			prev[node.id] = undefined;
-		}
-		q.insert(node.id, dist[node.id]);
-	}
+        var change = new StateChange();
+        change.addChangedNode(this.nodes[start_id], "red");
+        var stateChanges = [];
+        stateChanges.push(change);
 
-	var change = new StateChange();
-	change.addChangedNode(start, "red");
-	var stateChanges = [];
-	stateChanges.push(change);
-
-	while (q.minimum() !== undefined) {
-		var current = q.extractMin();
-		var change = new StateChange();
-		change.addChangedNode(current, "red");
-		for (let edge of nodes[current].out_edges) {
-			neighbor = edge.end;
-			var alt = dist[current] + edge.weight;
-			if (alt < dist[neighbor]) {
-				dist[neighbor] = alt;
-				prev[neighbor] = current;
-				q.decreaseKey(neighbor, alt);
-			}
-			change.addChangedNode(neighbor, "green");
-			//TODO: consider also changing node "weight" or "distance" to 
-			//show what the distance is at each point.
-		}
-		stateChanges.push(change);
-	}
-	return stateChanges;
+        // TODO: unconnected graph (minimum = Infinity)
+        while (q.minimum() !== undefined) {
+                var current_id = q.extractMin();
+                var change = new StateChange();
+                change.addChangedNode(this.nodes[current_id], "red");
+                for (let edge of this.nodes[current_id].out_edges.values()) {
+                        var neighbor = edge.end;
+                        var alt = dist[current_id] + edge.weight;
+                        if (alt < dist[neighbor.id]) {
+                                dist[neighbor.id] = alt;
+                                prev[neighbor.id] = current_id;
+                                q.decreaseKey(neighbor.id, alt);
+                        }
+                        change.addChangedNode(neighbor, "green");
+                        //TODO: consider also changing node "weight" or "distance" to
+                        //show what the distance is at each point.
+                }
+        }
 };
+
 
 //requires start_id and goal_id
 GraphCreator.prototype.bfs = function(start_id, goal_id){
@@ -124,33 +126,36 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	return stateChanges;
 };
 
-GraphCreator.prototype.dfs = function(start, goal){
-	var set = new Set([]);
-	set.push(start);
-	var change = new StateChange();
-	change.addChangedNode(start, "green");
-	var stateChanges = [];
-	stateChanges.push(change);
+GraphCreator.prototype.dfs = function(start_id, goal_id){
+        var start = this.nodes[start_id];
+        var goal = this.nodes[goal_id];
+        var stack = [];
 
-	while (set.size > 0) {
-		var current = set.pop();
-		var change = new StateChange();
-		change.addChangedNode(current, "red");
-		if (current.getID() == goal.getID()){
-			stateChanges.push(change);
-			return stateChanges;
-		}
-		if (!current.isVisited){
-			current.visit();
-			neighbors = current.getNeighbors();
-			for (i = 0; i < neighbors.length; i++){
-				set.push(nodes[neighbors[i]]);
-				change.addChangedNode(nodes[neighbors[i]], "green");
-			}
-		}
-		stateChanges.push(change);
-	}
+        stack.push(start);
+        var change = new StateChange();
+        change.addChangedNode(start, "green");
+        var stateChanges = [];
+        stateChanges.push(change);
+
+        while (stack.length > 0) {
+                var current = stack.pop();
+                var change = new StateChange();
+                change.addChangedNode(current, "red");
+                if (current.id === goal.id) {
+                        stateChanges.push(change);
+                        return stateChanges;
+                }
+                if (!current.visited) {
+                        current.visited = true;
+                        for (let node of current.out_neighbors) {
+                                stack.push(node);
+                                change.addChangedNode(node, "green");
+                        }
+                }
+                stateChanges.push(change);
+        }
 };
+
 
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
