@@ -23,3 +23,5 @@ Node.prototype.node_reset = function(){
    this.intermediateValue = null;
    this.weight = 0;
 };
+
+module.exports = Node;

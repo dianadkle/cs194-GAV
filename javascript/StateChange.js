@@ -32,3 +32,5 @@ StateChange.prototype.changeNodeWeight = function(node, weight) {
 StateChange.prototype.getChangedNodeWeights = function() {
 	return this.nodeWeightsChanged;
 }
+
+module.exports = StateChange;

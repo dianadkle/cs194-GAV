@@ -22,3 +22,5 @@ Edge.prototype.switchDirection = function(){
 Edge.prototype.changeColor = function(color) {
 	this.color = color;
 }
+
+module.exports = Edge;
