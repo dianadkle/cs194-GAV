@@ -60,10 +60,10 @@ GraphCreator.prototype.getNode = function(id) {
 
 // adds an edge: start node -> end node
 // possible TODO: change params to node objs (opposed to node ids) if better
-GraphCreator.prototype.addEdge = function(start_id, end_id) {
+GraphCreator.prototype.addEdge = function(start_id, end_id, weight) {
 	var start_node = this.nodes[start_id];
 	var end_node = this.nodes[end_id];
-	var new_edge = new Edge(start_node, end_node);
+	var new_edge = new Edge(start_node, end_node, weight);
 	
 	start_node.out_neighbors.add(end_node);
 	start_node.out_edges.set(end_id, new_edge);
@@ -99,37 +99,40 @@ GraphCreator.prototype.removeEdge = function(start_id, end_id) {
 
 };
 
-GraphCreator.prototype.dijkstras = function(start, goal){
-	var dist = {};
+GraphCreator.prototype.dijkstras = function(start_id){
+	var dist = [];
+	var prev = [];
 	var PriorityQueue = require('priority-heap-queue');
 	var q = new PriorityQueue({kind: 'min'});
 
-	dist[start] = 0;
-
+	// initialize graph values
+	dist[start_id] = 0;
 	for (let node of this.nodes) {
-		if (node.id !== goal.id) {
+		if (node.id !== start_id) {
 			dist[node.id] = Infinity;
 			prev[node.id] = undefined;
 		}
-		q.insert(node.id, dist[node.id]);
+		q.insert(dist[node.id], node.id);
 	}
+	q.insert(dist[start_id], start_id);
 
 	var change = new StateChange();
-	change.addChangedNode(start, "red");
+	change.addChangedNode(this.nodes[start_id], "red");
 	var stateChanges = [];
 	stateChanges.push(change);
 
+	// TODO: unconnected graph (minimum = Infinity)
 	while (q.minimum() !== undefined) {
-		var current = q.extractMin();
+		var current_id = q.extractMin();
 		var change = new StateChange();
-		change.addChangedNode(current, "red");
-		for (let edge of nodes[current].out_edges) {
-			neighbor = edge.end;
-			var alt = dist[current] + edge.weight;
-			if (alt < dist[neighbor]) {
-				dist[neighbor] = alt;
-				prev[neighbor] = current;
-				q.decreaseKey(neighbor, alt);
+		change.addChangedNode(this.nodes[current_id], "red");
+		for (let edge of this.nodes[current_id].out_edges.values()) {
+			var neighbor = edge.end;
+			var alt = dist[current_id] + edge.weight;
+			if (alt < dist[neighbor.id]) {
+				dist[neighbor.id] = alt;
+				prev[neighbor.id] = current_id;
+				q.decreaseKey(neighbor.id, alt);
 			}
 			change.addChangedNode(neighbor, "green");
 			//TODO: consider also changing node "weight" or "distance" to 
@@ -139,7 +142,6 @@ GraphCreator.prototype.dijkstras = function(start, goal){
 };
 
 GraphCreator.prototype.bfs = function(start_id, goal_id){
-	
 	var start = this.nodes[start_id];
 	var goal = this.nodes[goal_id];
 	var set = new Set([]);
@@ -154,17 +156,12 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	var stateChanges = [];
 	stateChanges.push(change);
 
-	//console.log("asddsfds");
-//	console.log(stateChanges.length);
 	while (q.length > 0) {
 		var current = q.shift();
-		//console.log("current ID: " + current.id);
-		// TODO: consider the scope of the variable "change"
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
 			stateChanges.push(change); 
-			//console.log(stateChanges.length);
 			return stateChanges;
 		}
 		// TODO: accomodate for directed/undirected graphs
@@ -177,35 +174,34 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 			}
 		}
 		stateChanges.push(change);
-		//console.log("cur len: " + stateChanges.length);
 	}
-	//console.log(stateChanges.length);
 
 	return stateChanges;
 };
 
-// Possible TODO: use IDs as parameters (instead of nodes)
-GraphCreator.prototype.dfs = function(start, goal){
-	var set = new Set([]);
-	set.push(start);
+GraphCreator.prototype.dfs = function(start_id, goal_id){
+	var start = this.nodes[start_id];
+	var goal = this.nodes[goal_id];
+	var stack = [];
+
+	stack.push(start);
 	var change = new StateChange();
 	change.addChangedNode(start, "green");
 	var stateChanges = [];
 	stateChanges.push(change);
 
-	while (set.size > 0) {
-		var current = set.pop();
-		// TODO: consider the scope of the variable "change"
+	while (stack.length > 0) {
+		var current = stack.pop();
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id) {
 			stateChanges.push(change); 
 			return stateChanges;
 		}
-		if (!current.visited){
+		if (!current.visited) {
 			current.visited = true;
 			for (let node of current.out_neighbors) {
-				set.push(node);
+				stack.push(node);
 				change.addChangedNode(node, "green");
 			}
 		}
@@ -258,12 +254,13 @@ Node.prototype.in_str = function() {
 	return retval;
 }
 
-function Edge(start, end){
+function Edge(start, end, weight){
    // if(a === b){
    //    ;//TODO: assert error
    // }
    this.start = start;
    this.end = end;
+   this.weight = weight;
 }
 
 Edge.prototype.switchDirection = function(){
@@ -271,7 +268,6 @@ Edge.prototype.switchDirection = function(){
    this.start = this.end;
    this.end = temp;
 };
-
 
 GraphCreator.prototype.toString = function() {
 	var x = 0;
@@ -324,27 +320,59 @@ StateChange.prototype.getChangedEdges = function() {
 
 let x = new GraphCreator(true);
 
-x.addNode("A1", 2, "black");
-x.addNode("B2", 4, "black");
-x.addNode("C3", 8, "black");
-x.addNode("D4", 16, "black");
-x.addNode("E5", 32, "black");
+/* dfs/bfs test *************
+x.addNode("A0", 2, "black");
+x.addNode("B1", 4, "black");
+x.addNode("C2", 8, "black");
+x.addNode("D3", 16, "black");
+x.addNode("E4", 32, "black");
+x.addNode("F5", 64, "black");
+x.addNode("G6", 128, "black");
 
 x.addEdge(0, 1);
-x.addEdge(2, 1);
+x.addEdge(0, 2);
+x.addEdge(1, 3);
 x.addEdge(1, 4);
-
-x.removeNode(3);
-//x.removeNode(1);
-
+x.addEdge(2, 5);
+x.addEdge(2, 6);
 
 x.toString();
 
 var changes = x.bfs(0, 4);
+************ end of dfs/bfs */
+
+x.addNode("A0", 2, "black");
+x.addNode("B1", 4, "black");
+x.addNode("C2", 8, "black");
+x.addNode("D3", 16, "black");
+x.addNode("E4", 32, "black");
+x.addNode("F5", 64, "black");
+x.addNode("G6", 128, "black");
+x.addNode("H7", 256, "black");
+x.addNode("I8", 512, "black");
+x.addNode("J9", 1024, "black");
+
+x.addEdge(0, 2, 2);
+x.addEdge(1, 3, 8);
+x.addEdge(2, 5, 3);
+x.addEdge(2, 6, 3);
+x.addEdge(3, 7, 7);
+x.addEdge(5, 7, 1);
+x.addEdge(6, 8, 3);
+x.addEdge(7, 9, 4);
+// optimal 0 to 9 path
+x.addEdge(0, 1, 1);
+x.addEdge(1, 4, 1);
+x.addEdge(4, 8, 1);
+x.addEdge(8, 9, 1);
+
+x.toString();
+
+var changes = x.dijkstras(0, 9);
 
 console.log(changes.length + " state changes in alg");
 
-for(let change of changes) {
+for (let change of changes) {
 	console.log(change);
 }
 
