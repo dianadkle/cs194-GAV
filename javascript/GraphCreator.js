@@ -199,6 +199,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	while (q.length > 0) {
 		var current = q.shift();
 		var change = new StateChange();
+        current.color = "red";
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
 			stateChanges.push(change);
