@@ -210,7 +210,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 				set.add(neighbor);
 				q.push(neighbor);
 				neighbor.parent = current;
-				change.addChangedNode(neighbor, "green");
+				change.addChangedNode(this.nodes[neighbors[i]], "green");
 			}
 		}
 		stateChanges.push(change);
@@ -233,6 +233,7 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 var current = stack.pop();
                 var change = new StateChange();
                 change.addChangedNode(current, "red");
+                current.color = "red"
                 if (current.id === goal.id) {
                         stateChanges.push(change);
                         return stateChanges;
@@ -240,15 +241,16 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 if (!current.visited) {
                         current.visited = true;
                         for (let node of current.out_neighbors) {
-                                if (node.visited !== true){
+                                if (node.color === "yellow"){
                                     stack.push(node);
-                                    node.visited = true;
+                                    node.color = "green";
                                     change.addChangedNode(node, "green");
                                 }
                         }
                 }
                 stateChanges.push(change);
         }
+        return stateChanges;
 };
 
 
