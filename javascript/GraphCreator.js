@@ -204,8 +204,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 			stateChanges.push(change);
 			return stateChanges;
 		}
-		for (let edge of current.out_edges.values()){
-            var neighbor = edge.end;
+		for (let neighbor of current.out_neighbors){
 			if (neighbor.color === "yellow") {
 				// set.add(neighbor);
 				q.push(neighbor);
