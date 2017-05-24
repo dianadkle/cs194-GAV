@@ -200,7 +200,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		var current = q.shift();
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
-		if (current.id == goal.id){
+		if (current.id === goal.id){
 			stateChanges.push(change);
 			return stateChanges;
 		}
