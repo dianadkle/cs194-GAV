@@ -1,0 +1,8 @@
+#to run this, make sure you are in root directory
+#then type in commandline 'bash browserifyScript'
+#this will generate bundle.js in javascript directory
+#make sure to deleted this generated bundle.js before any commits
+#because it will change as we make code changes. Testing
+#requires bundle.js be regenerated every time.
+
+browserify javascript/Index.js  -o javascript/bundle.js

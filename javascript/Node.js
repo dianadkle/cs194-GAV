@@ -23,3 +23,9 @@ Node.prototype.node_reset = function(){
    this.intermediateValue = null;
    this.weight = 0;
 };
+
+Node.prototype.getID = function(){
+   return this.id;
+};
+
+module.exports = Node;
