@@ -200,7 +200,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		var current = q.shift();
 		var change = new StateChange();
 		change.addChangedNode(current, "red");
-		if (current.getID() == goal.getID()){
+		if (current.id == goal.id){
 			stateChanges.push(change);
 			return stateChanges;
 		}
@@ -240,8 +240,11 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 if (!current.visited) {
                         current.visited = true;
                         for (let node of current.out_neighbors) {
-                                stack.push(node);
-                                change.addChangedNode(node, "green");
+                                if (node.visited !== true){
+                                    stack.push(node);
+                                    node.visited = true;
+                                    change.addChangedNode(node, "green");
+                                }
                         }
                 }
                 stateChanges.push(change);
