@@ -290,9 +290,26 @@ function CanvasSVGHandler(algorithms){
       });
    }
 
+   function getNodeIDByValue(val){
+      return nodes.findIndex(node => node.value === val);
+   }
+
    function prepareAlgorithm(algorithm){
+      for(var i = 0; i < nodes.length; i++){
+         nodes[i].color = "yellow";
+      }
       var start = prompt("What start node?");
+      start = getNodeIDByValue(start);
+      while(start === -1){
+         start = getNodeIDByValue(start);
+      }
+
       var goal = prompt("what goal node?");
+      goal = getNodeIDByValue(goal);
+      while(goal === -1){
+         goal = getNodeIDByValue(goal);
+      }
+
       current_algorithm = algorithm;
       stateChanges = getStateChanges(start, goal);
       current_state_change = 0;
