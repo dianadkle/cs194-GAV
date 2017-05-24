@@ -2,6 +2,7 @@
 
 var Node = require('./Node');
 var Edge = require('./Edge');
+var StateChange = require('./StateChange');
 
 function PriorityQueue(){
     this.array = new Map([]);
@@ -183,8 +184,8 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	var set = new Set([]);
 	var q = [];
 
-	var start = nodes[start_id]
-	var goal = nodes[goal_id]
+	var start = this.nodes[start_id]
+	var goal = this.nodes[goal_id]
 
 	set.add(start);
 	q.push(start);
@@ -205,11 +206,11 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		}
 		neighbors = current.getNeighbors()
 		for (i = 0; i < neighbors.length; i++){
-			if (!set.has(nodes[neighbors[i]])) {
-				set.add(nodes[neighbors[i]]);
-				q.push(nodes[neighbors[i]]);
-				nodes[neighbors[i]].parent = current;
-				change.addChangedNode(nodes[neighbors[i]], "green");
+			if (!set.has(this.nodes[neighbors[i]])) {
+				set.add(this.nodes[neighbors[i]]);
+				q.push(this.nodes[neighbors[i]]);
+				this.nodes[neighbors[i]].parent = current;
+				change.addChangedNode(this.nodes[neighbors[i]], "green");
 			}
 		}
 		stateChanges.push(change);
