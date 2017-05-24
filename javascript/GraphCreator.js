@@ -210,7 +210,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 				set.add(neighbor);
 				q.push(neighbor);
 				neighbor.parent = current;
-				change.addChangedNode(this.nodes[neighbors[i]], "green");
+				change.addChangedNode(neighbor, "green");
 			}
 		}
 		stateChanges.push(change);
