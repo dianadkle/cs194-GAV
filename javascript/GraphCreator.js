@@ -204,13 +204,13 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 			stateChanges.push(change);
 			return stateChanges;
 		}
-		neighbors = current.getNeighbors()
-		for (i = 0; i < neighbors.length; i++){
-			if (!set.has(this.nodes[neighbors[i]])) {
-				set.add(this.nodes[neighbors[i]]);
-				q.push(this.nodes[neighbors[i]]);
-				this.nodes[neighbors[i]].parent = current;
-				change.addChangedNode(this.nodes[neighbors[i]], "green");
+		for (let edge of current.out_edges.values()){
+            var neighbor = edge.end;
+			if (!set.has(neighbor)) {
+				set.add(neighbor);
+				q.push(neighbor);
+				neighbor.parent = current;
+				change.addChangedNode(neighbor, "green");
 			}
 		}
 		stateChanges.push(change);
