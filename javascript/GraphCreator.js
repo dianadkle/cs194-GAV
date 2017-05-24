@@ -181,13 +181,13 @@ GraphCreator.prototype.dijkstras = function(start_id){
 
 //requires start_id and goal_id
 GraphCreator.prototype.bfs = function(start_id, goal_id){
-	var set = new Set([]);
+	// var set = new Set([]);
 	var q = [];
 
 	var start = this.nodes[start_id]
 	var goal = this.nodes[goal_id]
 
-	set.add(start);
+	// set.add(start);
 	q.push(start);
 	start.visited = true;
 
@@ -206,10 +206,11 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		}
 		for (let edge of current.out_edges.values()){
             var neighbor = edge.end;
-			if (!set.has(neighbor)) {
-				set.add(neighbor);
+			if (neighbor.color === "yellow") {
+				// set.add(neighbor);
 				q.push(neighbor);
-				neighbor.parent = current;
+				// neighbor.parent = current;
+                neighbor.color = "green";
 				change.addChangedNode(neighbor, "green");
 			}
 		}
