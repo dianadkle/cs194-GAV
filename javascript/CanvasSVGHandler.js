@@ -53,6 +53,10 @@ function CanvasSVGHandler(algorithms){
    var width = document.getElementById('canvasRow').offsetWidth,
       height = document.getElementById('canvasRow').offsetHeight;
 
+   var stateChanges = null;
+   var current_state_change = 0;
+   var current_algorithm = null;
+
 
    //force simulation
    var simulation = d3.forceSimulation()
@@ -282,19 +286,34 @@ function CanvasSVGHandler(algorithms){
       var algColumn = document.getElementById("algorithmsColumn");
       pTags.forEach(function(p){
          var tag = algColumn.appendChild(p);
-         tag.onclick = function(){runAlgorithm(p.innerHTML)};
+         tag.onclick = function(){prepareAlgorithm(p.innerHTML)};
       });
    }
 
-   function runAlgorithm(algorithm){
+   function prepareAlgorithm(algorithm){
       var start = prompt("What start node?");
       var goal = prompt("what goal node?");
+      current_algorithm = algorithm;
+      stateChanges = getStateChanges(start, goal);
+      current_state_change = 0;
+   }
 
-      var func = getAlgorithmFunction(algorithm);
-      var stateChanges = func(graphCreator.getNode(start), graphCreator.getNode(goal));
+   function getStateChanges(start, goal){
+      switch(current_algorithm){
+         case "Breadth-First Search": return graphCreator.bfs(start, goal);
+         case "Depth-First Search": return graphCreator.dfs(start, goal);
+         case "Dijkstra's Algorithm": return graphCreator.dijkstras(start, goal);
+      }
+      return null;
+   }
 
-      for(var i = 0; i < stateChanges.length; i++){
-         var change = stateChanges[i];
+   CanvasSVGHandler.prototype.getCurrentAlgorithm = function(){
+      return current_algorithm;
+   };
+
+   CanvasSVGHandler.prototype.runNextAlgorithmStep = function(){
+      if(stateChanges !== null && current_state_change < stateChanges.length){
+         var change = stateChanges[current_state_change++];
          var colorChanges = change["nodesChanged"];
          Object.keys(colorChanges).forEach(function(d){
             var id = Number(d);
@@ -303,10 +322,14 @@ function CanvasSVGHandler(algorithms){
             nodes[index].color = color;
          });
          updateCanvas();
-         sleep(2000);
-         console.log("slept ", i, " times");
+         return 'SUCCESS';
+      } else {
+         stateChanges = null;
+         current_state_change = 0;
+         current_algorithm = null;
+         return 'FAILURE';
       }
-   }
+   };
 
    function sleep(milliseconds) {
       var start = new Date().getTime();
@@ -315,15 +338,6 @@ function CanvasSVGHandler(algorithms){
             break;
          }
       }
-   }
-
-   function getAlgorithmFunction(algorithm){
-      switch(algorithm){
-         case "Breadth-First Search": return graphCreator.bfs;
-         case "Depth-First Search": return graphCreator.dfs;
-         case "Dijkstra's Algorithm": return graphCreator.dijkstras;
-      }
-      return null;
    }
 }
 
