@@ -318,7 +318,6 @@ StateChange.prototype.getChangedEdges = function() {
 	return this.edgesChanged;
 }
 
-let x = new GraphCreator(true);
 
 /* dfs/bfs test *************
 x.addNode("A0", 2, "black");
@@ -341,16 +340,17 @@ x.toString();
 var changes = x.bfs(0, 4);
 ************ end of dfs/bfs */
 
-x.addNode("A0", 2, "black");
-x.addNode("B1", 4, "black");
-x.addNode("C2", 8, "black");
-x.addNode("D3", 16, "black");
-x.addNode("E4", 32, "black");
-x.addNode("F5", 64, "black");
-x.addNode("G6", 128, "black");
-x.addNode("H7", 256, "black");
-x.addNode("I8", 512, "black");
-x.addNode("J9", 1024, "black");
+var x = new GraphCreator(true);
+x.addNode("A0", 2, "yellow");
+x.addNode("B1", 4, "yellow");
+x.addNode("C2", 8, "yellow");
+x.addNode("D3", 16, "yellow");
+x.addNode("E4", 32, "yellow");
+x.addNode("F5", 64, "yellow");
+x.addNode("G6", 128, "yellow");
+x.addNode("H7", 256, "yellow");
+x.addNode("I8", 512, "yellow");
+x.addNode("J9", 1024, "yellow");
 
 x.addEdge(0, 2, 2);
 x.addEdge(1, 3, 8);
@@ -366,15 +366,14 @@ x.addEdge(1, 4, 1);
 x.addEdge(4, 8, 1);
 x.addEdge(8, 9, 1);
 
-x.toString();
 
-var changes = x.dijkstras(0, 9);
-
-console.log(changes.length + " state changes in alg");
+var changes = x.dfs(0, 9);
 
 for (let change of changes) {
-	console.log(change);
+    console.log(change);
 }
+
+console.log(x.nodes);
 
 
 // given a Node, highlights the node/updates graph
