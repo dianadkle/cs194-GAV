@@ -4,7 +4,7 @@ var Viz = require("viz.js");
 // always create an empty graph
 function Automata(regex){
 	console.log("Created Automata object");
-	// a removed node will be replaced by the value -1
+	
 	this.regex = regex;
 	this.nfa = null;
 	this.dfa = null;
@@ -40,7 +40,7 @@ Automata.prototype.convertToDFA = function() {
 	var regParser = require('automata.js');
 	var parser = new regParser.RegParser(this.regex);
 
-	var dfa = parser.parseTODFA();
+	var dfa = parser.parseToDFA();
 
 	this.dfa = dfa;
 
@@ -57,7 +57,8 @@ Automata.prototype.stringMatches = function(text) {
 
 // var x = new Automata("a*b");
 
-// var nfa = x.convertToNFA();
+// var nfa = x.convertToDFA();
+// console.log(x.stringMatches("ab"));
 
 // var result = Viz(nfa.toDotScript(), 'svg', 'dot');
 
