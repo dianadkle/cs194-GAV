@@ -45,7 +45,6 @@ function GraphCreator(is_directed){
         } else {
                 this.directed = false;
         }
-        console.log("created new GraphCreator");
         // a removed node will be replaced by the value -1
         this.nodes = []
         this.currentID = 0;
@@ -197,7 +196,6 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	change.addChangedNode(start, "green");
 	var stateChanges = [];
 	stateChanges.push(change);
-    console.log("before");
 	while (q.length > 0) {
 		var current = q.shift();
 		var change = new StateChange();
@@ -270,7 +268,6 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
         return stateChanges;
 };
 
-console.log(x.nodes);
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
 	var edges = {};
