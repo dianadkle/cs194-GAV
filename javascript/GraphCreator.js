@@ -174,6 +174,9 @@ GraphCreator.prototype.dijkstras = function(start_id){
         }
         stateChanges.push(change);
     }
+    for (let node of this.nodes){
+        node.color = "yellow";
+    }
     return stateChanges;
 };
 
@@ -194,7 +197,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	change.addChangedNode(start, "green");
 	var stateChanges = [];
 	stateChanges.push(change);
-
+    console.log("before");
 	while (q.length > 0) {
 		var current = q.shift();
 		var change = new StateChange();
@@ -202,6 +205,9 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
 			stateChanges.push(change);
+            for (let node of this.nodes){
+                node.color = "yellow";
+            }
 			return stateChanges;
 		}
 		for (let neighbor of current.out_neighbors){
@@ -215,6 +221,10 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		}
 		stateChanges.push(change);
 	}
+
+	for (let node of this.nodes){
+        node.color = "yellow";
+    }
 	return stateChanges;
 };
 
@@ -236,6 +246,9 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 current.color = "red"
                 if (current.id === goal.id) {
                         stateChanges.push(change);
+                        for (let node of this.nodes){
+                            node.color = "yellow";
+                        }
                         return stateChanges;
                 }
                 if (!current.visited) {
@@ -250,10 +263,14 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 }
                 stateChanges.push(change);
         }
+
+        for (let node of this.nodes){
+            node.color = "yellow";
+        }
         return stateChanges;
 };
 
-
+console.log(x.nodes);
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
 	var edges = {};
