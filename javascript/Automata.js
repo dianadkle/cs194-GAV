@@ -1,5 +1,6 @@
 "use strict";
 
+var Viz = require("viz.js");
 // always create an empty graph
 function Automata(regex){
 	console.log("Created Automata object");
@@ -20,7 +21,6 @@ function Automata(regex){
 //     'id': { 'to_id': label, },
 //     ...,
 //   }
-}
 
 Automata.prototype.convertToNFA = function() {
 	var regParser = require('automata.js');
@@ -30,7 +30,7 @@ Automata.prototype.convertToNFA = function() {
 
 	this.nfa = nfa;
 
-	console.log(nfa);
+	// console.log(nfa);
 
 	return nfa;
 };
@@ -44,7 +44,7 @@ Automata.prototype.convertToDFA = function() {
 
 	this.dfa = dfa;
 
-	console.log(dfa);
+	// console.log(dfa);
 
 	return dfa;
 	
@@ -54,5 +54,15 @@ Automata.prototype.convertToDFA = function() {
 Automata.prototype.stringMatches = function(text) {
 	return this.dfa.match(text);
 };
+
+// var x = new Automata("a*b");
+
+// var nfa = x.convertToNFA();
+
+// var result = Viz(nfa.toDotScript(), 'svg', 'dot');
+
+
+
+// console.log(nfa);
 
 
