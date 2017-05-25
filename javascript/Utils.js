@@ -6,21 +6,6 @@ var StateChange = require('./StateChange');
 
 
 module.exports = {
-   initializeAlgorithmButtons: function(algorithms){
-      var pTags = algorithms.map(function(algorithm){
-         var elem = document.createElement('p');
-         elem.className = "algorithm";
-         elem.innerHTML = algorithm;
-         return elem;
-      });
-
-      var algColumn = document.getElementById("algorithmsColumn");
-      pTags.forEach(function(p){
-         var tag = algColumn.appendChild(p);
-         tag.onclick = function(){prepareAlgorithm(p.innerHTML)};
-      });
-   },
-
    getNodeIDByValue: function(val, nodes){
       return nodes.findIndex(
          node => node.value.toLowerCase() === val.toLowerCase()
@@ -33,22 +18,21 @@ module.exports = {
       start = this.getNodeIDByValue(start, nodes);
       while(start === -1){
          start = prompt("That isn't a valid node.\nEnter a valid node to start from.");
-         start = getNodeIDByValue(start, nodes);
          if(start === null) return null;
-         start = getNodeIDByValue(start, nodes);
+         start = this.getNodeIDByValue(start, nodes);
       }
 
       var goal = prompt("what is your goal node?");
       if(goal === null) return null;
-      goal = getNodeIDByValue(goal, nodes);
+      goal = this.getNodeIDByValue(goal, nodes);
       while(goal === -1){
          goal = prompt("That isn't a valid goal node.\nEnter a valid goal node.");
          if(goal === null) return null;
-         goal = getNodeIDByValue(goal, nodes);
+         goal = this.getNodeIDByValue(goal, nodes);
          while(start === goal){
             goal = prompt("Please choose a goal node that's different from the start node.");
             if(goal === null) return null;
-            goal = getNodeIDByValue(goal, nodes);
+            goal = this.getNodeIDByValue(goal, nodes);
          }
       }
       return [start, goal];

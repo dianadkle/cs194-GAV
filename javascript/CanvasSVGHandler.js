@@ -55,7 +55,7 @@ function CanvasSVGHandler(algorithms){
       height = document.getElementById('canvasRow').offsetHeight;
 
    var stateChanges = null;
-   var current_state_change = 0;
+   var current_state_change = -1;
    var current_algorithm = null;
 
 
@@ -71,7 +71,7 @@ function CanvasSVGHandler(algorithms){
    var graphCreator = new GraphCreator(false);
 
    importData();
-   Utils.initializeAlgorithmButtons(algorithms);
+   initializeAlgorithmButtons();
 
    updateCanvas();
 
@@ -82,8 +82,20 @@ function CanvasSVGHandler(algorithms){
       svg.selectAll("*").remove();
 
       //links consist of lines, classed "link"
-      link = svg.selectAll("link").data(links, function(d) { return d.target.id; })
-      link = link.enter().append("line").attr("class", "link");
+      var linkGroup = svg.selectAll("link").data(links, function(d) { return d.target.id; })
+      linkGroup = linkGroup.enter().append("g");
+      link = linkGroup.append("line").attr("class", "link");
+      linkGroup.append('svg:marker')
+        .attr('markerHeight', 5)
+        .attr('markerWidth', 5)
+        .attr('markerUnits', 'strokeWidth')
+        .attr('orient', 'auto')
+        .attr('refX', 0)
+        .attr('refY', 0)
+        .attr('viewBox', function(){ return '-20 -20 20 20'; })
+        .append('svg:path')
+            .attr('d', function(){ return 'M 0,0 m -5,-5 L 5,0 L -5,5 Z';})
+            .attr('fill', function() { return 'black';});
 
       //nodes are bound with nodes from the nodes array
       node = svg.selectAll("node").data(nodes, function(d) { return d.id; });
@@ -266,17 +278,34 @@ function CanvasSVGHandler(algorithms){
       });
    }
 
-   function prepareAlgorithm(algorithm){
+   function initializeAlgorithmButtons(){
+      var pTags = algorithms.map(function(algorithm){
+         var elem = document.createElement('p');
+         elem.className = "algorithm";
+         elem.innerHTML = algorithm;
+         return elem;
+      });
 
-      for(var i = 0; i < nodes.length; i++){
-         nodes[i].color = "yellow";
-      }
+      var algColumn = document.getElementById("algorithmsColumn");
+      pTags.forEach(function(p){
+         var tag = algColumn.appendChild(p);
+         tag.onclick = function(){prepareAlgorithm(p.innerHTML)};
+      });
+   }
+
+   function prepareAlgorithm(algorithm){
+      clearNodeColors();
+      updateCanvas();
       var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
       if(startAndGoal === null) return;
       var start = startAndGoal[0], goal = startAndGoal[1];
+      console.log(start);
+      console.log(goal);
       current_algorithm = algorithm;
+      console.log(current_algorithm);
       stateChanges = getStateChangeSequence(start, goal);
-      current_state_change = 0;
+      console.log(stateChanges);
+      alert("Start clicking the arrow buttons to run algorithm steps!");
    }
 
    function getStateChangeSequence(start, goal){
@@ -299,25 +328,67 @@ function CanvasSVGHandler(algorithms){
    //returns 'SUCCESS' if next step was animated, 'END' if that step was the last
    // step, and 'FAILURE' otherwise
    CanvasSVGHandler.prototype.runNextAlgorithmStep = function(){
-      if(stateChanges !== null && stateChanges !== undefined && current_state_change < stateChanges.length){
-         var change = stateChanges[current_state_change++];
-         console.log(change);
-         var colorChanges = change["nodesChanged"];
-         Object.keys(colorChanges).forEach(function(d){
-            var id = Number(d);
-            var color = colorChanges[d];
-            var index = nodes.findIndex(node => node.id === id);
-            nodes[index].color = color;
-         });
+      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
+      if(current_state_change < stateChanges.length - 1){
+         var change = stateChanges[++current_state_change];
+         changeNodeColors(change);
+         //TODO: update other changes
          updateCanvas();
-         if(current_state_change >= stateChanges.length) return 'END';
-         return 'SUCCESS';
-      } else {
-         stateChanges = null;
-         current_state_change = 0;
-         current_algorithm = null;
-         return 'FAILURE';
+         if(current_state_change < stateChanges.length) return 'SUCCESS';
       }
+      return 'END';
+   };
+
+   CanvasSVGHandler.prototype.runPreviousAlgorithmStep = function(){
+      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
+      if(current_state_change  > 0){
+         var change = stateChanges[current_state_change--];
+         reverseNodeColors(change);
+         updateCanvas();
+         if(current_state_change < stateChanges.length) return 'SUCCESS';
+      }
+      return 'END';
+   };
+
+   function reverseNodeColors(change){
+      var colorChanges = change["nodesChanged"];
+      Object.keys(colorChanges).forEach(function(d){
+         var id = Number(d);
+         var color = colorChanges[d];
+         if(color === "green"){
+            var index = nodes.findIndex(node => node.id === id);
+            nodes[index].color = "yellow";
+         }
+
+         if(color === "red"){
+            var index = nodes.findIndex(node => node.id === id);
+            nodes[index].color = "green";
+         }
+      });
+   }
+
+   function changeNodeColors(change){
+      var colorChanges = change["nodesChanged"];
+      Object.keys(colorChanges).forEach(function(d){
+         var id = Number(d);
+         var color = colorChanges[d];
+         var index = nodes.findIndex(node => node.id === id);
+         nodes[index].color = color;
+      });
+   }
+
+   function clearNodeColors(){
+      for(var i = 0; i < nodes.length; i++){
+         nodes[i].color = "yellow";
+      }
+   }
+
+   CanvasSVGHandler.prototype.clearAlgorithm = function(){
+      stateChanges = null;
+      current_state_change = -1;
+      current_algorithm = null;
+      clearNodeColors();
+      updateCanvas();
    };
 }
 
