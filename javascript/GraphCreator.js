@@ -56,8 +56,7 @@ function GraphCreator(is_directed){
 // creates new node and adds it to graph
 GraphCreator.prototype.addNode = function(value, weight, color) {
         this.nodes[this.currentID] = new Node(value, weight, color, this.currentID);
-        this.currentID++;
-        return this.nodes[this.currentID];
+        return this.nodes[this.currentID++];
 };
 
 // remove node from graph by ID

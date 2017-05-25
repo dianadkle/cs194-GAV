@@ -1,6 +1,7 @@
 'use strict';
 
 var GraphCreator = require('./GraphCreator');
+var Utils = require('./Utils');
 
 /***********************************Index.js***********************************/
 
@@ -70,7 +71,7 @@ function CanvasSVGHandler(algorithms){
    var graphCreator = new GraphCreator(false);
 
    importData();
-   initializeAlgorithmButtons();
+   Utils.initializeAlgorithmButtons(algorithms);
 
    updateCanvas();
 
@@ -182,16 +183,9 @@ function CanvasSVGHandler(algorithms){
 
       if(selectedNode !== null) return;
 
-      var valuePromptStr = "Please enter your node's value. ";
-         valuePromptStr += "\nThis could be a number, name, etc.";
-      var weightPromptStr = "Please enter your node's weight. ";
-         weightPromptStr += "\nSet this to 0 if your graph doesn't consider node weights.";
-
-      var value = prompt(valuePromptStr);
-      if (value === null) return;
-
-      var weight = prompt(weightPromptStr);
-      if (weight === null) return;
+      var weightVal = Utils.getWeightValueNewNode(nodes);
+      if(weightVal === null) return;
+      var weight = weightVal[0], value = weightVal[1];
 
       //create circle
       var coords = d3.mouse(this);
@@ -202,7 +196,7 @@ function CanvasSVGHandler(algorithms){
          value: value,
          weight: weight,
          color: "yellow",
-         id: graphCreator.addNode(value, weight, "yellow").id
+         id: newNodeObj.id
       };
       nodes.push(newNode);
       updateCanvas();
@@ -272,50 +266,20 @@ function CanvasSVGHandler(algorithms){
       });
    }
 
-
-   /*Creates Algorithm Tags*/
-   function initializeAlgorithmButtons(){
-      var pTags = algorithms.map(function(algorithm){
-         var elem = document.createElement('p');
-         elem.className = "algorithm";
-         elem.innerHTML = algorithm;
-         //elem.onclick = prepareForAlgorithm(algorithm);
-         return elem;
-      });
-
-      var algColumn = document.getElementById("algorithmsColumn");
-      pTags.forEach(function(p){
-         var tag = algColumn.appendChild(p);
-         tag.onclick = function(){prepareAlgorithm(p.innerHTML)};
-      });
-   }
-
-   function getNodeIDByValue(val){
-      return nodes.findIndex(node => node.value === val);
-   }
-
    function prepareAlgorithm(algorithm){
+
       for(var i = 0; i < nodes.length; i++){
          nodes[i].color = "yellow";
       }
-      var start = prompt("What start node?");
-      start = getNodeIDByValue(start);
-      while(start === -1){
-         start = getNodeIDByValue(start);
-      }
-
-      var goal = prompt("what goal node?");
-      goal = getNodeIDByValue(goal);
-      while(goal === -1){
-         goal = getNodeIDByValue(goal);
-      }
-
+      var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
+      if(startAndGoal === null) return;
+      var start = startAndGoal[0], goal = startAndGoal[1];
       current_algorithm = algorithm;
-      stateChanges = getStateChanges(start, goal);
+      stateChanges = getStateChangeSequence(start, goal);
       current_state_change = 0;
    }
 
-   function getStateChanges(start, goal){
+   function getStateChangeSequence(start, goal){
       switch(current_algorithm){
          case "Breadth-First Search": return graphCreator.bfs(start, goal);
          case "Depth-First Search": return graphCreator.dfs(start, goal);
@@ -324,13 +288,20 @@ function CanvasSVGHandler(algorithms){
       return null;
    }
 
+
+   /************************* To be used in Index.js *************************/
+
+   // returns current algorithm or null if one is not selected
    CanvasSVGHandler.prototype.getCurrentAlgorithm = function(){
       return current_algorithm;
    };
 
+   //returns 'SUCCESS' if next step was animated, 'END' if that step was the last
+   // step, and 'FAILURE' otherwise
    CanvasSVGHandler.prototype.runNextAlgorithmStep = function(){
-      if(stateChanges !== null && current_state_change < stateChanges.length){
+      if(stateChanges !== null && stateChanges !== undefined && current_state_change < stateChanges.length){
          var change = stateChanges[current_state_change++];
+         console.log(change);
          var colorChanges = change["nodesChanged"];
          Object.keys(colorChanges).forEach(function(d){
             var id = Number(d);
@@ -339,6 +310,7 @@ function CanvasSVGHandler(algorithms){
             nodes[index].color = color;
          });
          updateCanvas();
+         if(current_state_change >= stateChanges.length) return 'END';
          return 'SUCCESS';
       } else {
          stateChanges = null;
@@ -347,15 +319,6 @@ function CanvasSVGHandler(algorithms){
          return 'FAILURE';
       }
    };
-
-   function sleep(milliseconds) {
-      var start = new Date().getTime();
-      for (var i = 0; i < 1e7; i++) {
-         if ((new Date().getTime() - start) > milliseconds){
-            break;
-         }
-      }
-   }
 }
 
 module.exports = CanvasSVGHandler;
