@@ -271,43 +271,6 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
         return stateChanges;
 };
 
-var x = new GraphCreator(true);
-x.addNode("A0", 2, "yellow");
-x.addNode("B1", 4, "yellow");
-x.addNode("C2", 8, "yellow");
-x.addNode("D3", 16, "yellow");
-x.addNode("E4", 32, "yellow");
-x.addNode("F5", 64, "yellow");
-x.addNode("G6", 128, "yellow");
-x.addNode("H7", 256, "yellow");
-x.addNode("I8", 512, "yellow");
-x.addNode("J9", 1024, "yellow");
-
-x.addEdge(0, 2, 2);
-x.addEdge(1, 3, 8);
-x.addEdge(2, 5, 3);
-x.addEdge(2, 6, 3);
-x.addEdge(3, 7, 7);
-x.addEdge(5, 7, 1);
-x.addEdge(6, 8, 3);
-x.addEdge(7, 9, 4);
-// optimal 0 to 9 path
-x.addEdge(0, 1, 1);
-x.addEdge(1, 4, 1);
-x.addEdge(4, 8, 1);
-x.addEdge(8, 9, 1);
-
-// console.log(x.nodes);
-var changes = x.dfs(0, 9);
-
-console.log(changes.length);
-
-// console.log(x.nodes);
-
-var changes_2 = x.dfs(0, 9);
-
-console.log(changes_2.length);
-
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
 	var edges = {};
