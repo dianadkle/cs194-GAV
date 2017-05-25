@@ -50,8 +50,10 @@ Automata.prototype.convertToDFA = function() {
 	
 };
 
-// IN ORDER TO USE THIS FUNCTION, YOU MUST FIRST CONVERT THE REGEX TO A DFA
 Automata.prototype.stringMatches = function(text) {
+	if (this.dfa === null){
+		this.convertToDFA();
+	}
 	return this.dfa.match(text);
 };
 
