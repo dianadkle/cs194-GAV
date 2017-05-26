@@ -224,6 +224,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 
 	for (let node of this.nodes){
         node.color = "yellow";
+        node.visited = false;
     }
 	return stateChanges;
 };
@@ -267,9 +268,11 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
 
         for (let node of this.nodes){
             node.color = "yellow";
+            node.visited = false;
         }
         return stateChanges;
 };
+
 
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
