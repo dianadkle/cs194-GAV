@@ -29,15 +29,17 @@ var links = [
    {source: 1, target: 5},
    {source: 7, target: 6},
    {source: 4, target: 2},
-   {source: 6, target: 3},
+   {source: 11, target: 10},
    {source: 5, target: 4},
    {source: 2, target: 9},
    {source: 8, target: 7},
    {source: 5, target: 3},
    {source: 5, target: 1},
-   {source: 9, target: 3},
-   {source: 0, target: 2}
+   {source: 9, target: 10},
+   {source: 10, target: 12}
 ];
+
+var linksArr = JSON.parse(JSON.stringify(links));
 
 function CanvasSVGHandler(algorithms){
    var radius = 20;
@@ -61,9 +63,9 @@ function CanvasSVGHandler(algorithms){
 
    //force simulation
    var simulation = d3.forceSimulation()
-   .force("link", d3.forceLink().distance(radius * 5).id(function(d) { return d.id; }))
-   .force("charge", d3.forceManyBody().strength(-10))
-   .force("center", d3.forceCenter(width / 2, height / 2));
+   .force("link", d3.forceLink().distance(radius * 7).id(function(d) { return d.id; }));
+   //.force("charge", d3.forceManyBody().strength(-10))
+   //.force("center", d3.forceCenter(width / 2, height / 2));
 
    //node and link svg data
    var node = null, link = null;
@@ -81,21 +83,19 @@ function CanvasSVGHandler(algorithms){
       //clear SVG
       svg.selectAll("*").remove();
 
+      //define arrow marker
+      svg.append("defs").append("marker")
+      .attr("id", "arrow").attr("viewBox", "0 -5 10 10")
+      .attr("refX", 22).attr("refY", 0)
+      .attr("markerWidth", 8).attr("markerHeight", 8)
+      .attr("orient", "auto")
+      .append("svg:path").attr("d", "M0,-5L10,0L0,5").style("fill", "2196F3");
+
       //links consist of lines, classed "link"
       var linkGroup = svg.selectAll("link").data(links, function(d) { return d.target.id; })
       linkGroup = linkGroup.enter().append("g");
-      link = linkGroup.append("line").attr("class", "link");
-      linkGroup.append('svg:marker')
-        .attr('markerHeight', 5)
-        .attr('markerWidth', 5)
-        .attr('markerUnits', 'strokeWidth')
-        .attr('orient', 'auto')
-        .attr('refX', 0)
-        .attr('refY', 0)
-        .attr('viewBox', function(){ return '-20 -20 20 20'; })
-        .append('svg:path')
-            .attr('d', function(){ return 'M 0,0 m -5,-5 L 5,0 L -5,5 Z';})
-            .attr('fill', function() { return 'black';});
+      link = linkGroup.append("line").attr("class", "link")
+      if(directed) link.attr("marker-end", "url(#arrow)");
 
       //nodes are bound with nodes from the nodes array
       node = svg.selectAll("node").data(nodes, function(d) { return d.id; });
@@ -273,7 +273,9 @@ function CanvasSVGHandler(algorithms){
          graphCreator.addNode(node.value, node.weight, node.color);
       });
 
-      links.forEach(function(edge){
+      console.log(links);
+      linksArr.forEach(function(edge){
+         console.log(edge);
          graphCreator.addEdge(edge.source, edge.target);
       });
    }
@@ -299,12 +301,10 @@ function CanvasSVGHandler(algorithms){
       var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
       if(startAndGoal === null) return;
       var start = startAndGoal[0], goal = startAndGoal[1];
-      console.log(start);
-      console.log(goal);
       current_algorithm = algorithm;
-      console.log(current_algorithm);
       stateChanges = getStateChangeSequence(start, goal);
-      console.log(stateChanges);
+      current_state_change = -1;
+
       alert("Start clicking the arrow buttons to run algorithm steps!");
    }
 
@@ -332,7 +332,10 @@ function CanvasSVGHandler(algorithms){
       if(current_state_change < stateChanges.length - 1){
          var change = stateChanges[++current_state_change];
          changeNodeColors(change);
-         //TODO: update other changes
+         updateWeights(change);
+         // TODO: update other changes, console.log(change);
+         // updateEdges(change);
+         // updateEdgeWeights(change);
          updateCanvas();
          if(current_state_change < stateChanges.length) return 'SUCCESS';
       }
@@ -349,6 +352,17 @@ function CanvasSVGHandler(algorithms){
       }
       return 'END';
    };
+
+
+   function updateWeights(change){
+      var weightChanges = change["nodeWeightsChanged"];
+      Object.keys(weightChanges).forEach(function(d){
+         var id = Number(d);
+         var weight = weightChanges[d];
+         var index = nodes.findIndex(node => node.id === id);
+         nodes[index].weight = weight;
+      });
+   }
 
    function reverseNodeColors(change){
       var colorChanges = change["nodesChanged"];
@@ -381,6 +395,20 @@ function CanvasSVGHandler(algorithms){
       for(var i = 0; i < nodes.length; i++){
          nodes[i].color = "yellow";
       }
+   }
+
+   CanvasSVGHandler.prototype.toggleDirection = function(){
+      if(directed){
+         directed = false;
+         link.attr("marker-end", null);
+      } else {
+         directed = true;
+         link.attr("marker-end", "url(#arrow)");
+      }
+      graphCreator = new GraphCreator(directed);
+      importData();
+      if(current_algorithm !== null) prepareAlgorithm(current_algorithm);
+      return directed;
    }
 
    CanvasSVGHandler.prototype.clearAlgorithm = function(){
