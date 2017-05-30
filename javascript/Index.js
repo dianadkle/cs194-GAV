@@ -1,6 +1,6 @@
 'use strict';
 
-var CanvasSVGHandler = require('./CanvasSVGHandler');
+var GraphSVGHandler = require('./GraphSVGHandler');
 
 /***********************************Index.js***********************************/
 
@@ -13,7 +13,7 @@ var algorithms = [
 var radius = 20;
 
 window.onload = function(){
-   var canvasSVGHandler = new CanvasSVGHandler(algorithms);
+   var graphSVGHandler = new GraphSVGHandler(algorithms);
 
    var initializeForwardReverseButtons = function(){
       var reverseButton = document.getElementById("reverseButton");
@@ -21,7 +21,7 @@ window.onload = function(){
       var forwardButton = document.getElementById("forwardButton");
 
       reverseButton.onclick = function(){
-         var runPreviousStep = canvasSVGHandler.runPreviousAlgorithmStep();
+         var runPreviousStep = graphSVGHandler.runPreviousAlgorithmStep();
          if(runPreviousStep === 'FAILURE'){
             alert("You haven't selected an algorithm to run");
          } else if (runPreviousStep === 'END'){
@@ -30,11 +30,11 @@ window.onload = function(){
       };
 
       clearButton.onclick = function(){
-         canvasSVGHandler.clearAlgorithm();
+         graphSVGHandler.clearAlgorithm();
       };
 
       forwardButton.onclick = function(){
-         var runNextStep = canvasSVGHandler.runNextAlgorithmStep();
+         var runNextStep = graphSVGHandler.runNextAlgorithmStep();
          if(runNextStep === 'FAILURE'){
             alert("You haven't selected an algorithm to run");
          } else if(runNextStep === 'END'){
@@ -47,7 +47,7 @@ window.onload = function(){
       var directionToggler = document.getElementById("directionToggler");
       var directionText = document.getElementById("toggledText");
       directionToggler.onclick = function(){
-         if(canvasSVGHandler.toggleDirection()){
+         if(graphSVGHandler.toggleDirection()){
             directionText.innerHTML = "directed";
             directionText.style.color = "#2196F3";
             directionText.style.left = "94.8%";

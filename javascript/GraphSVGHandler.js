@@ -41,13 +41,13 @@ var links = [
 
 var linksArr = JSON.parse(JSON.stringify(links));
 
-function CanvasSVGHandler(algorithms){
+function GraphSVGHandler(algorithms){
    var radius = 20;
    var selectedNode = null, selectedTag = null;
    var clickWasOnNode = false, dblClickWasOnNode = false;
    var directed = false;
 
-   var svg = d3.select("#canvasSVG")
+   var svg = d3.select("#graphSVG")
       .on("click", clickedOnSVG)
       .on("dblclick", dblClickedOnSVG);
 
@@ -321,13 +321,13 @@ function CanvasSVGHandler(algorithms){
    /************************* To be used in Index.js *************************/
 
    // returns current algorithm or null if one is not selected
-   CanvasSVGHandler.prototype.getCurrentAlgorithm = function(){
+   GraphSVGHandler.prototype.getCurrentAlgorithm = function(){
       return current_algorithm;
    };
 
    //returns 'SUCCESS' if next step was animated, 'END' if that step was the last
    // step, and 'FAILURE' otherwise
-   CanvasSVGHandler.prototype.runNextAlgorithmStep = function(){
+   GraphSVGHandler.prototype.runNextAlgorithmStep = function(){
       if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
       if(current_state_change < stateChanges.length - 1){
          var change = stateChanges[++current_state_change];
@@ -342,7 +342,7 @@ function CanvasSVGHandler(algorithms){
       return 'END';
    };
 
-   CanvasSVGHandler.prototype.runPreviousAlgorithmStep = function(){
+   GraphSVGHandler.prototype.runPreviousAlgorithmStep = function(){
       if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
       if(current_state_change  > 0){
          var change = stateChanges[current_state_change--];
@@ -397,7 +397,7 @@ function CanvasSVGHandler(algorithms){
       }
    }
 
-   CanvasSVGHandler.prototype.toggleDirection = function(){
+   GraphSVGHandler.prototype.toggleDirection = function(){
       if(directed){
          directed = false;
          link.attr("marker-end", null);
@@ -411,7 +411,7 @@ function CanvasSVGHandler(algorithms){
       return directed;
    }
 
-   CanvasSVGHandler.prototype.clearAlgorithm = function(){
+   GraphSVGHandler.prototype.clearAlgorithm = function(){
       stateChanges = null;
       current_state_change = -1;
       current_algorithm = null;
@@ -420,4 +420,4 @@ function CanvasSVGHandler(algorithms){
    };
 }
 
-module.exports = CanvasSVGHandler;
+module.exports = GraphSVGHandler;
