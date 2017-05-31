@@ -52,14 +52,13 @@
             <td>
                <table id="canvasTable">
                   <tr id="canvasRow">
-                     <td id="canvasTD">
+                     <td id="graphTD">
                         <svg id="graphSVG"/>
-
-                        <input type="image" id = "reverseButton" title="next step"
+                        <input type="image" id="reverseButton" title="next step"
                            src="./images/reverse-icon.png" alt="next step"/>
-                        <input type="image" id = "clearButton" title="clear algorithm"
+                        <input type="image" id="clearButton" title="clear algorithm"
                            src="./images/clear-icon.png" alt="clear algorithm" />
-                        <input type="image" id = "forwardButton" title="previous step"
+                        <input type="image" id="forwardButton" title="previous step"
                            src="./images/forward-icon.png" alt="previous step" />
                         <label class="switch">
                            <input type="checkbox" id="directionToggler">
@@ -67,9 +66,12 @@
                         </label>
                         <p class="toggledText" id="toggledText">undirected</p>
                      </td>
+                     <td id="DfaNfaTD">
+                        <svg id="DfaNfaSVG"/>
+                     </td>
                   </tr>
-                  <tr id="nfaDfaRow">
-                     <td id="nfaDfaTD">
+                  <tr id="DfaNfaInputRow">
+                     <td id="DfaNfaInputTD">
                         <h1 style="text-align:center">NFA and DFA stuff goes here</h1>
                      </td>
                   </tr>

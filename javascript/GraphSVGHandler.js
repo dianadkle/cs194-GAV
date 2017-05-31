@@ -273,10 +273,13 @@ function GraphSVGHandler(algorithms){
          graphCreator.addNode(node.value, node.weight, node.color);
       });
 
-      console.log(links);
-      linksArr.forEach(function(edge){
-         console.log(edge);
-         graphCreator.addEdge(edge.source, edge.target);
+      links.forEach(function(edge){
+         var source = edge['source'], target = edge['target'];
+         if((typeof source) === "number"){
+            graphCreator.addEdge(source, target);
+         } else {
+            graphCreator.addEdge(source.id, target.id);
+         }
       });
    }
 

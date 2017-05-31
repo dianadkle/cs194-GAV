@@ -50,11 +50,11 @@ window.onload = function(){
          if(graphSVGHandler.toggleDirection()){
             directionText.innerHTML = "directed";
             directionText.style.color = "#2196F3";
-            directionText.style.left = "94.8%";
+            directionText.style.left = "84%";
          } else {
             directionText.innerHTML = "undirected";
             directionText.style.color = "#ccc";
-            directionText.style.left = "94%";
+            directionText.style.left = "83%";
          }
       }
 
@@ -76,16 +76,16 @@ function resizeButtons(){
    clearButton.style.position = "absolute";
    forwardButton.style.position = "absolute";
    directionToggler.style.position = "absolute";
-   reverseButton.style.top = "75%";
-   clearButton.style.top = "75%";
-   forwardButton.style.top = "75%";
-   directionToggler.style.top = "78%";
-   directionText.style.top = "79%";
-   reverseButton.style.left = "25%";
-   clearButton.style.left = "30%";
-   forwardButton.style.left = "35%";
-   directionToggler.style.left = "95%";
-   directionText.style.left = "94%";
+   reverseButton.style.top = "85%";
+   clearButton.style.top = "85%";
+   forwardButton.style.top = "85%";
+   directionToggler.style.top = "88%";
+   directionText.style.top = "90%";
+   reverseButton.style.left = "1%";
+   clearButton.style.left = "11%";
+   forwardButton.style.left = "21%";
+   directionToggler.style.left = "85%";
+   directionText.style.left = "83%";
 }
 
 

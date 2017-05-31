@@ -52,15 +52,27 @@ table{
    width:100%
 }
 
-#nfaDfaRow{
+#DfaNfaInputRow{
    height:15%;
    width:100%
 }
 
-#nfaDfaTD, #canvasTD{
+#DfaNfaInputTD, #graphTD, #DfaNfaTD{
    border-style: solid;
    border-width: 2px;
 }
+
+#graphTD{
+   width: 60%;
+   height:100%;
+   position: relative;
+}
+
+#DfaNfaTD{
+   width: 40%;
+   height:100%;
+}
+
 
 #canvasTable{
    width:100%;
@@ -73,6 +85,11 @@ table{
    border:"1px solid black";
 }
 
+#DfaNfaSVG{
+   width:100%;
+   height:100%;
+   border:"1px solid black";
+}
 
 #sideBarTable{
    width:100%;
