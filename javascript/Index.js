@@ -1,7 +1,9 @@
 'use strict';
 
 var GraphSVGHandler = require('./GraphSVGHandler');
-
+var AutomataVisualizer = require('./AutomataVisualizer');
+var DOMParser = require('xmldom').DOMParser;
+var domParser = new DOMParser();
 /***********************************Index.js***********************************/
 
 var algorithms = [
@@ -14,6 +16,7 @@ var radius = 20;
 
 window.onload = function(){
    var graphSVGHandler = new GraphSVGHandler(algorithms);
+   var automataVisualizer = new AutomataVisualizer("a*b");
 
    var initializeForwardReverseButtons = function(){
       var reverseButton = document.getElementById("reverseButton");
@@ -60,12 +63,40 @@ window.onload = function(){
 
    };
 
+   var initializeDfaSVG = function(){
+      var cell = document.getElementById("DfaSVG");
+      var svgXML = automataVisualizer.generateDFA();
+      var doc = domParser.parseFromString(svgXML);
+      var svg = doc.getElementsByTagName('svg')[0];
+      window.svgg = svg;
+      cell.setAttribute("width", svg.getAttribute("width"));
+      cell.setAttribute("height", svg.getAttribute("height"));
+      cell.innerHTML = svg.getElementsByTagName("g")[0].toString();
+   };
+
+   var initializeNfaSVG = function(){
+      var cell = document.getElementById("NfaSVG");
+      var svgXML = automataVisualizer.generateNFA();
+      var doc = domParser.parseFromString(svgXML);
+      var svg = doc.getElementsByTagName('svg')[0];
+
+      cell.setAttribute("width", svg.getAttribute("width"));
+      cell.setAttribute("height", svg.getAttribute("height"));
+      cell.innerHTML = svg.getElementsByTagName("g")[0].toString();
+   };
+
+
+   //initialize buttons, togglers, and other things
    initializeForwardReverseButtons();
    intializeDirectedToggler();
+   initializeDfaSVG();
+   initializeNfaSVG();
    resizeButtons();
 
 };
 
+
+/* add button resizing function */
 function resizeButtons(){
    var reverseButton = document.getElementById("reverseButton");
    var clearButton = document.getElementById("clearButton");
@@ -88,5 +119,5 @@ function resizeButtons(){
    directionText.style.left = "83%";
 }
 
-
+/* add event listener for resizing window */
 window.addEventListener("resize", resizeButtons, false);
