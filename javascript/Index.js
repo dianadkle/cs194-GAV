@@ -4,6 +4,8 @@ var GraphSVGHandler = require('./GraphSVGHandler');
 var AutomataVisualizer = require('./AutomataVisualizer');
 var DOMParser = require('xmldom').DOMParser;
 var domParser = new DOMParser();
+var Utils = require('./Utils');
+var doT = require('dot');
 /***********************************Index.js***********************************/
 
 var algorithms = [
@@ -63,19 +65,9 @@ window.onload = function(){
 
    };
 
-   var initializeDfaSVG = function(){
-      var cell = document.getElementById("DfaSVG");
-      var svgXML = automataVisualizer.generateDFA();
-      var doc = domParser.parseFromString(svgXML);
-      var svg = doc.getElementsByTagName('svg')[0];
-      window.svgg = svg;
-      cell.setAttribute("width", svg.getAttribute("width"));
-      cell.setAttribute("height", svg.getAttribute("height"));
-      cell.innerHTML = svg.getElementsByTagName("g")[0].toString();
-   };
-
-   var initializeNfaSVG = function(){
-      var cell = document.getElementById("NfaSVG");
+   var initializeAutomataSVG = function(automata_type){
+      var aut_id = (automata_type === "NFA") ? "NfaSVG" : "DfaSVG";
+      var cell = document.getElementById(aut_id);
       var svgXML = automataVisualizer.generateNFA();
       var doc = domParser.parseFromString(svgXML);
       var svg = doc.getElementsByTagName('svg')[0];
@@ -85,13 +77,69 @@ window.onload = function(){
       cell.innerHTML = svg.getElementsByTagName("g")[0].toString();
    };
 
+   var initializeNodeModals = function(){
+      var modal = document.getElementById('nodeModal');
+      var modalX = document.getElementsByClassName("modalClose")[0];
+      modalX.onclick = function() {
+         modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+         if (event.target === modal) {
+            modal.style.display = "none";
+         }
+      }
+      var valueInputTag = document.getElementById("valueChangeInput");
+      var weightInputTag = document.getElementById("weightChangeInput");
+
+      var submitChangeButton = document.getElementById("submitNodeChange");
+      submitChangeButton.onclick = function(){
+         if(Utils.submitNodeChanges(valueInputTag.value, weightInputTag.value)){
+            modal.style.display = "none";
+            graphSVGHandler.updateCanvas();
+         }
+      };
+   };
+
+   var initializeAlgorithmModals = function(){
+      var modal = document.getElementById('algorithmModal');
+
+      var modalX = document.getElementsByClassName("modalClose")[1];
+      modalX.onclick = function() {
+         modal.style.display = "none";
+      }
+
+      // When the user clicks anywhere outside of the modal, close it
+      window.onclick = function(event) {
+         if (event.target === modal) {
+            modal.style.display = "none";
+         }
+      }
+      var startInputTag = document.getElementById("startNodeInput");
+      var goalInputTag = document.getElementById("goalNodeInput");
+
+      var runAlgorithmButton = document.getElementById("runAlgorithmButton");
+      runAlgorithmButton.onclick = function(){
+         if(graphSVGHandler.runAlgorithm()){
+            modal.style.display = "none";
+            graphSVGHandler.updateCanvas();
+            startInputTag.value = "";
+            goalInputTag.value = "";
+         }
+      };
+   };
+
 
    //initialize buttons, togglers, and other things
    initializeForwardReverseButtons();
    intializeDirectedToggler();
-   initializeDfaSVG();
-   initializeNfaSVG();
+   initializeAutomataSVG("DFA");
+   initializeAutomataSVG("NFA");
    resizeButtons();
+
+   initializeNodeModals();
+   initializeAlgorithmModals();
 
 };
 

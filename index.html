@@ -4,11 +4,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
    <head>
       <script src="./javascript/d3.v4.js"></script>
+      <script src="./javascript/d3.tip.js"></script>
       <script src="./javascript/FileSaver.js"></script>
       <script src="./javascript/bundle.js"></script>
       <link rel="stylesheet" type="text/css" href="./css/Index.css"/>
    </head>
    <body>
+      <div id="nodeModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Change Value: </br>
+               <input id="valueChangeInput" type="text"></input>
+            </p><br/>
+            <p>Change Weight: </br>
+               <input id="weightChangeInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="submitNodeChange">submit change</button>
+         </div>
+      </div>
+
+      <div id="algorithmModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Start Node Value:</br>
+               <input id="startNodeInput" type="text"></input>
+            </p><br/>
+            <p>Goal Node Value:</br>
+               <input id="goalNodeInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="runAlgorithmButton">run algorithm</button>
+         </div>
+      </div>
       <table id="mainTable">
          <tr id="topBarRow">
             <td id="toolBox">

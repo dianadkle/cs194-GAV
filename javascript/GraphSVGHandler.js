@@ -39,7 +39,22 @@ var links = [
    {source: 10, target: 12}
 ];
 
-var linksArr = JSON.parse(JSON.stringify(links));
+var contextMenu = [
+   {
+      title: 'Header',
+   },
+   {
+      title: 'Normal item',
+      action: function() {console.log("first item!");}
+   },
+   {
+      divider: true
+   },
+   {
+      title: 'Last item',
+      action: function() {console.log("last item!");}
+   }
+];
 
 function GraphSVGHandler(algorithms){
    var radius = 20;
@@ -64,8 +79,6 @@ function GraphSVGHandler(algorithms){
    //force simulation
    var simulation = d3.forceSimulation()
    .force("link", d3.forceLink().distance(radius * 7).id(function(d) { return d.id; }));
-   //.force("charge", d3.forceManyBody().strength(-10))
-   //.force("center", d3.forceCenter(width / 2, height / 2));
 
    //node and link svg data
    var node = null, link = null;
@@ -91,6 +104,15 @@ function GraphSVGHandler(algorithms){
       .attr("orient", "auto")
       .append("svg:path").attr("d", "M0,-5L10,0L0,5").style("fill", "2196F3");
 
+      //define toolTip
+      var toolTip = d3.tip().attr('class', 'd3-tip').offset([-10, 0])
+      .html(function(d) {
+         var htmlStr = "<strong>Value:</strong> <span style='color:red'>" + d.value + "</span><br/>";
+         htmlStr += "<strong>Weight:</strong> <span style='color:red'>" + d.weight + "</span>";
+         return htmlStr;
+      });
+      svg.call(toolTip);
+
       //links consist of lines, classed "link"
       var linkGroup = svg.selectAll("link").data(links, function(d) { return d.target.id; })
       linkGroup = linkGroup.enter().append("g");
@@ -103,11 +125,12 @@ function GraphSVGHandler(algorithms){
       //node consists of circle and text
       node = node.enter().append("g")
       .on("click", clickedOnNode)
-      .on("dblClick", dblClickedOnNode)
+      .on("dblclick", dblClickedOnNode)
       .call(d3.drag()
-      .on("start", dragstarted)
-      .on("drag", dragged)
-      .on("end", dragended));
+         .on("start", function(d){dragstarted(d); toolTip.hide();})
+         .on("drag", function(d){dragged(d); toolTip.hide();})
+         .on("end", function(d){dragended(d); toolTip.hide();}))
+      .on('mouseenter', toolTip.show).on('mouseleave', toolTip.hide);
 
       //create node
       node.append("circle")
@@ -117,9 +140,6 @@ function GraphSVGHandler(algorithms){
       .raise().classed("nodeYellow", function(d){return d.color === "yellow"})
       .raise().classed("nodeGreen", function(d){return d.color === "green"})
       .raise().classed("nodeRed", function(d){return d.color === "red"});
-
-      //apply hover-over text to node
-      node.append("title").text(function(d) { return d.id; });
 
       //apply text to node
       node.append("text")
@@ -171,7 +191,7 @@ function GraphSVGHandler(algorithms){
    /* update state variables to prevent new nodes from being created on db click*/
    function dblClickedOnNode(d){
       dblClickWasOnNode = true;
-      //TODO: prompt for new value
+      Utils.promptNodeChanges(nodes, d);
    }
 
    /*high level logic for handling SVG clicks*/
@@ -301,14 +321,8 @@ function GraphSVGHandler(algorithms){
    function prepareAlgorithm(algorithm){
       clearNodeColors();
       updateCanvas();
-      var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
-      if(startAndGoal === null) return;
-      var start = startAndGoal[0], goal = startAndGoal[1];
       current_algorithm = algorithm;
-      stateChanges = getStateChangeSequence(start, goal);
-      current_state_change = -1;
-
-      alert("Start clicking the arrow buttons to run algorithm steps!");
+      Utils.promptAlgorithmInputs();
    }
 
    function getStateChangeSequence(start, goal){
@@ -319,43 +333,6 @@ function GraphSVGHandler(algorithms){
       }
       return null;
    }
-
-
-   /************************* To be used in Index.js *************************/
-
-   // returns current algorithm or null if one is not selected
-   GraphSVGHandler.prototype.getCurrentAlgorithm = function(){
-      return current_algorithm;
-   };
-
-   //returns 'SUCCESS' if next step was animated, 'END' if that step was the last
-   // step, and 'FAILURE' otherwise
-   GraphSVGHandler.prototype.runNextAlgorithmStep = function(){
-      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
-      if(current_state_change < stateChanges.length - 1){
-         var change = stateChanges[++current_state_change];
-         changeNodeColors(change);
-         updateWeights(change);
-         // TODO: update other changes, console.log(change);
-         // updateEdges(change);
-         // updateEdgeWeights(change);
-         updateCanvas();
-         if(current_state_change < stateChanges.length) return 'SUCCESS';
-      }
-      return 'END';
-   };
-
-   GraphSVGHandler.prototype.runPreviousAlgorithmStep = function(){
-      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
-      if(current_state_change  > 0){
-         var change = stateChanges[current_state_change--];
-         reverseNodeColors(change);
-         updateCanvas();
-         if(current_state_change < stateChanges.length) return 'SUCCESS';
-      }
-      return 'END';
-   };
-
 
    function updateWeights(change){
       var weightChanges = change["nodeWeightsChanged"];
@@ -400,6 +377,61 @@ function GraphSVGHandler(algorithms){
       }
    }
 
+
+
+   /************************* To be used in Index.js *************************/
+
+   GraphSVGHandler.prototype.runAlgorithm = function(){
+      var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
+      if(startAndGoal === "EMPTY_VALUES"){
+         alert("Make sure you enter both a start and goal value");
+      } else if(startAndGoal === "SAME_VALUES"){
+         alert("Make sure you enter different values");
+      } else if(startAndGoal === "NONEXISTENT_VALUES"){
+         alert("Make sure you enter values that already exist");
+      } else if (startAndGoal !== null) {
+         var start = startAndGoal[0], goal = startAndGoal[1];
+         stateChanges = getStateChangeSequence(start, goal);
+         current_state_change = -1;
+         alert("start clicking the arrow buttons!");
+         return true;
+      }
+      return false;
+   }
+
+   // returns current algorithm or null if one is not selected
+   GraphSVGHandler.prototype.getCurrentAlgorithm = function(){
+      return current_algorithm;
+   };
+
+   //returns 'SUCCESS' if next step was animated, 'END' if that step was the last
+   // step, and 'FAILURE' otherwise
+   GraphSVGHandler.prototype.runNextAlgorithmStep = function(){
+      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
+      if(current_state_change < stateChanges.length - 1){
+         var change = stateChanges[++current_state_change];
+         changeNodeColors(change);
+         updateWeights(change);
+         // TODO: update other changes, console.log(change);
+         // updateEdges(change);
+         // updateEdgeWeights(change);
+         updateCanvas();
+         if(current_state_change < stateChanges.length) return 'SUCCESS';
+      }
+      return 'END';
+   };
+
+   GraphSVGHandler.prototype.runPreviousAlgorithmStep = function(){
+      if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
+      if(current_state_change  > 0){
+         var change = stateChanges[current_state_change--];
+         reverseNodeColors(change);
+         updateCanvas();
+         if(current_state_change < stateChanges.length) return 'SUCCESS';
+      }
+      return 'END';
+   };
+
    GraphSVGHandler.prototype.toggleDirection = function(){
       if(directed){
          directed = false;
@@ -419,6 +451,10 @@ function GraphSVGHandler(algorithms){
       current_state_change = -1;
       current_algorithm = null;
       clearNodeColors();
+      updateCanvas();
+   };
+
+   GraphSVGHandler.prototype.updateCanvas = function(){
       updateCanvas();
    };
 }

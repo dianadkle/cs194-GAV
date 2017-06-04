@@ -12,29 +12,27 @@ module.exports = {
       );
    },
 
-   getStartAndGoalNodeIDs: function (nodes){
-      var start = prompt("What is your start node?");
-      if(start === null) return null;
-      start = this.getNodeIDByValue(start, nodes);
-      while(start === -1){
-         start = prompt("That isn't a valid node.\nEnter a valid node to start from.");
-         if(start === null) return null;
-         start = this.getNodeIDByValue(start, nodes);
-      }
+   promptAlgorithmInputs: function(){
+      var modal = document.getElementById('algorithmModal');
+      modal.style.display = "block";
 
-      var goal = prompt("what is your goal node?");
-      if(goal === null) return null;
-      goal = this.getNodeIDByValue(goal, nodes);
-      while(goal === -1){
-         goal = prompt("That isn't a valid goal node.\nEnter a valid goal node.");
-         if(goal === null) return null;
-         goal = this.getNodeIDByValue(goal, nodes);
-         while(start === goal){
-            goal = prompt("Please choose a goal node that's different from the start node.");
-            if(goal === null) return null;
-            goal = this.getNodeIDByValue(goal, nodes);
-         }
-      }
+      var startInputTag = document.getElementById("startNodeInput");
+      var goalInputTag = document.getElementById("goalNodeInput");
+   },
+
+   getStartAndGoalNodeIDs: function (nodes){
+      var startInput = document.getElementById("startNodeInput").value;
+      var goalInput = document.getElementById("goalNodeInput").value;
+
+      if(startInput === null || startInput === undefined
+         || goalInput === null || goalInput === undefined) return "EMPTY_VALUES";
+
+      var start = this.getNodeIDByValue(startInput, nodes);
+      var goal = this.getNodeIDByValue(goalInput, nodes);
+
+      if(start === -1 || goal === -1) return "NONEXISTENT_VALUES";
+      if (start === goal) return "SAME_VALUES";
+
       return [start, goal];
    },
 
@@ -60,5 +58,41 @@ module.exports = {
          if (weight === null) return null;
       }
       return [weight, value];
+   },
+
+   promptNodeChanges: function(nodes, d){
+      var modal = document.getElementById('nodeModal');
+      modal.style.display = "block";
+
+      var valueInputTag = document.getElementById("valueChangeInput");
+      var weightInputTag = document.getElementById("weightChangeInput");
+      valueInputTag.value = d.value;
+      weightInputTag.value = d.weight;
+      this.nodes = nodes;
+      this.nodeToChange = d;
+   },
+
+   submitNodeChanges: function(value, weight){
+      if (value !== null && value !== this.nodeToChange.value){
+         var nodeID = this.getNodeIDByValue(value, this.nodes);
+         if(nodeID !== -1){
+            alert("That value is already taken. Please enter a different value.");
+            return false;
+         }
+      }
+
+      if (isNaN(weight) && weight !== null && weight !== undefined){
+            alert("Please enter a valid number for a weight.");
+            return false;
+      }
+
+      var index = this.nodes.findIndex(node => node.id === this.nodeToChange.id);
+      if(value !== null && value !== undefined){
+         this.nodes[index].value = value;
+      }
+      if(weight !== null && weight !== undefined){
+         this.nodes[index].weight = weight;
+      }
+      return true;
    }
 };
