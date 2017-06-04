@@ -312,3 +312,10 @@ input:checked + .slider:before {
     text-decoration: none;
     cursor: pointer;
 }
+
+._login{
+   text-align: center;
+   horizontal-align: middle;
+   vertical-align: middle;
+   font-family:futura;
+}

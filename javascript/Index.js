@@ -5,7 +5,6 @@ var AutomataVisualizer = require('./AutomataVisualizer');
 var DOMParser = require('xmldom').DOMParser;
 var domParser = new DOMParser();
 var Utils = require('./Utils');
-var doT = require('dot');
 /***********************************Index.js***********************************/
 
 var algorithms = [
