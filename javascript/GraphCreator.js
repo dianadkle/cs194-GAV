@@ -35,7 +35,7 @@ PriorityQueue.prototype.extractMin = function(){
 
 PriorityQueue.prototype.minimum = function(){
     return this.array.size > 0;
-}
+};
 
 // always create an empty graph
 function GraphCreator(is_directed){
@@ -46,10 +46,10 @@ function GraphCreator(is_directed){
                 this.directed = false;
         }
         // a removed node will be replaced by the value -1
-        this.nodes = []
+        this.nodes = [];
         this.currentID = 0;
         this.selectedNode = null;
-}
+};
 
 
 // creates new node and adds it to graph
@@ -158,7 +158,7 @@ GraphCreator.prototype.dijkstras = function(start_id){
     // TODO: unconnected graph (minimum = Infinity)
     while (q.minimum()) {
         var current_id = q.extractMin();
-        var change = new StateChange();
+        change = new StateChange();
         change.addChangedNode(this.nodes[current_id], "red");
         for (let edge of this.nodes[current_id].out_edges.values()) {
             var neighbor = edge.end;
@@ -185,8 +185,8 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	// var set = new Set([]);
 	var q = [];
 
-	var start = this.nodes[start_id]
-	var goal = this.nodes[goal_id]
+	var start = this.nodes[start_id];
+	var goal = this.nodes[goal_id];
 
 	// set.add(start);
 	q.push(start);
@@ -198,7 +198,7 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 	stateChanges.push(change);
 	while (q.length > 0) {
 		var current = q.shift();
-		var change = new StateChange();
+		change = new StateChange();
         current.color = "red";
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
@@ -239,9 +239,9 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
 
         while (stack.length > 0) {
                 var current = stack.pop();
-                var change = new StateChange();
+                change = new StateChange();
                 change.addChangedNode(current, "red");
-                current.color = "red"
+                current.color = "red";
                 if (current.id === goal.id) {
                         stateChanges.push(change);
                         for (let node of this.nodes){
@@ -306,7 +306,7 @@ GraphCreator.prototype.prims = function(start) {
  	}
 
  	return stateChanges;
-}
+};
 
 GraphCreator.prototype.kruskals = function() {
 	var set = disjointSet();
@@ -336,7 +336,7 @@ GraphCreator.prototype.kruskals = function() {
  	}
 
  	return stateChanges;
-}
+};
 
 GraphCreator.prototype.bellmanFord = function(start) {
 	var distance = {};
@@ -374,7 +374,7 @@ GraphCreator.prototype.bellmanFord = function(start) {
  	}
 
  	return stateChanges;
-}
+};
 
 GraphCreator.prototype.floydWarshall = function(start, end) {
  	var stateChanges = [];
@@ -403,16 +403,29 @@ GraphCreator.prototype.floydWarshall = function(start, end) {
  		}
  	}
 
+   function findPath(u, v, next) {
+    	if (next[u][v] === null) {
+   		return [];
+    	}
+   	var path = [u];
+   	while (start !== end) {
+    		u = next[u][v];
+    		path.push(u);
+    	}
+
+    	return path;
+   }
+
  	var path = findPath(start, end, next);
  	for (var index = 0; index < path.length; index++) {
  		var nodeId = path[index];
- 		var node = this.nodes[nodeId]
+ 		var node = this.nodes[nodeId];
 
  		var change = new StateChange();
  		change.addChangedNode(node, "green");
  		stateChanges.push(change);
 
- 		if (nodeId != end) {
+ 		if (nodeId !== end) {
  			var nextNodeId = path[index+1];
  			change = new StateChange();
  			change.addChangedEdge(node.out_edges[nextNodeId], "green");
@@ -421,20 +434,7 @@ GraphCreator.prototype.floydWarshall = function(start, end) {
  	}
 
  	return stateChanges;
-}
-
-function findPath(u, v, next) {
- 	if (next[u][v] === null) {
-		return [];
- 	}
-	var path = [u];
-	while (start !== end) {
- 		u = next[u][v];
- 		path.push(u);
- 	}
-
- 	return path;
-}
+};
 
 //http://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript/966938#966938
 /*
@@ -450,36 +450,6 @@ function createArray(length) {
     return arr;
 }
 */
-
-GraphCreator.prototype.reverseDelete = function() {
-	var PriorityQueue = require('priority-heap-queue');
-	var pq = new PriorityQueue();
- 	var stateChanges = [];
-
- 	for (let edge in this.edges) {
- 		pq.insert(edge.weight, edge);
- 	}
-
- 	while (pq.minimum() !== undefined) {
- 		var maxEdge = pq.extractMax();
- 		var change = new StateChange();
- 		change.addChangedEdge(maxEdge, "green");
- 		stateChanges.push(change);
-
- 		maxEdge.changeColor("red");
-
- 		if (!isConnected(maxEdge.start, maxEdge.end)) {
- 			maxEdge.changeColor("green");
- 		}
- 		else {
- 			change = new StateChange();
- 			change.addChangedEdge(maxEdge, "red");
- 			stateChanges.push(change);
- 		}
- 	}
-
- 	return stateChanges;
-}
 
 function isConnected(start, end) {
  	var done = new Set([]);
@@ -507,41 +477,98 @@ function isConnected(start, end) {
  		}
  	}
  	return false;
+}
+
+GraphCreator.prototype.reverseDelete = function() {
+   function isConnected(start, end) {
+    	var done = new Set([]);
+    	var toDo = [];
+
+   	done.add(start);
+    	toDo.push(start);
+
+   	if (start === end) return true;
+
+    	while (toDo.length > 0) {
+   		var current = toDo.shift();
+
+    		for (let node of current.out_neighbors) {
+    			if (current.out_edges[node.id].color !== "red") {
+    				if (node.id === end.id){
+    					return true;
+    				}
+
+    				if (!set.has(node)) {
+    					q.push(node);
+    				}
+    			}
+
+    		}
+    	}
+    	return false;
+   }
+	var PriorityQueue = require('priority-heap-queue');
+	var pq = new PriorityQueue();
+ 	var stateChanges = [];
+
+ 	for (let edge in this.edges) {
+ 		pq.insert(edge.weight, edge);
+ 	}
+
+ 	while (pq.minimum() !== undefined) {
+ 		var maxEdge = pq.extractMax();
+ 		var change = new StateChange();
+ 		change.addChangedEdge(maxEdge, "green");
+ 		stateChanges.push(change);
+
+ 		maxEdge.changeColor("red");
+
+ 		if (!isConnected(maxEdge.start, maxEdge.end)) {
+ 			maxEdge.changeColor("green");
+ 		}
+ 		else {
+ 			change = new StateChange();
+ 			change.addChangedEdge(maxEdge, "red");
+ 			stateChanges.push(change);
+ 		}
+ 	}
+
+ 	return stateChanges;
 };
 
 // returns string representation of graph
 GraphCreator.prototype.toString = function() {
-	var str_rep = "";
-	if (this.directed) {
-		str_rep += "1\n";
-	} else {
-		str_rep += "0\n";
-	}
-	str_rep += this.currentID + "\n";
+   var str_rep = "";
+   if (this.directed) {
+      str_rep += "1\n";
+   } else {
+      str_rep += "0\n";
+   }
+   str_rep += this.currentID + "\n";
 
-	// nodes
-	str_rep += "---\n";
-	var x = 0;
-	for (let node of this.nodes) {
-		if (node !== -1) {
-			x++;
-			str_rep += node.id + " " + node.value + " " 
-					+ node.weight + "\n";
-		}
-	}
+   // nodes
+   str_rep += "---\n";
+   var x = 0;
+   for (let node of this.nodes) {
+      if (node !== -1) {
+         x++;
+         str_rep += node.id + " " + node.value + " " + node.weight + "\n";
+      }
+   }
 
-	str_rep += "---\n";
+   str_rep += "---\n";
 
-	// edge format: "start ID" "end ID" properties...
-	for (let node of this.nodes) {
-		if (node !== -1) {
-		//str_rep += node.id + " " + node.out_edges.size + "\n";
-			for (let edge of node.out_edges.values()) {
-				str_rep += edge.start.id + " " + edge.end.id + " " + edge.weight + " " + edge.color + "\n";
-		}
-	}
+   // edge format: "start ID" "end ID" properties...
+   for (let node of this.nodes) {
+      if (node !== -1) {
+         //str_rep += node.id + " " + node.out_edges.size + "\n";
+         for (let edge of node.out_edges.values()) {
+            str_rep += edge.start.id + " " + edge.end.id + " " + edge.weight + " " + edge.color + "\n";
+         }
+      }
 
-	return str_rep;
+      return str_rep;
+   }
 };
 
 // constructs graph from string
@@ -555,7 +582,7 @@ GraphCreator.prototype.fromString = function(graph_str) {
 	} else {
 		this.directed = false;
 	}
-	this.currentID = graph_properties[1]; 
+	this.currentID = graph_properties[1];
 
 	// initialize list as empty nodes
 	this.nodes = [];
