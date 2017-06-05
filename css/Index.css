@@ -166,6 +166,38 @@ h1{
    fill: #000000;
 }
 
+/**************************** directional buttons ****************************/
+
+#reverseButton{
+   position: absolute;
+   top: 85%;
+   left:1%
+}
+
+#clearButton{
+   position: absolute;
+   top: 85%;
+   left: 11%
+}
+
+#forwardButton{
+   position: absolute;
+   top: 85%;
+   left: 21%
+}
+
+#directionTogglerLabel{
+   position:absolute;
+   top:88%;
+   left:85%;
+}
+
+#directionText{
+   top:90%;
+   left:83%;
+}
+
+
 /**************************** toggle button stuff ****************************/
 
 .switch {

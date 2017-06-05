@@ -94,5 +94,10 @@ module.exports = {
          this.nodes[index].weight = weight;
       }
       return true;
+   },
+   getCredential: function(cred){
+      var elem = document.getElementById(cred);
+      if(elem === null || elem === undefined) return null;
+      return elem.value;
    }
 };

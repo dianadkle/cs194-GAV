@@ -20,3 +20,8 @@
 .register_input{
    width: 30%;
 }
+
+.invalidError{
+   color: red;
+   display: none;
+}
