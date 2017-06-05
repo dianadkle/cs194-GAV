@@ -592,30 +592,3 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-
-
-
-let x = new GraphCreator(true);
-
-x.addNode("A1", 2, "black");
-x.addNode("B2", 4, "black");
-x.addNode("C3", 8, "black");
-x.addNode("D4", 16, "black");
-x.addNode("E5", 32, "black");
-
-x.addEdge(0, 1, 3);
-x.addEdge(2, 1, 7);
-x.addEdge(1, 4, 13);
-
-x.removeNode(3);
-
-var graph_str = x.toString();
-console.log(graph_str);
-
-console.log("###########");
-
-let y = new GraphCreator();
-
-y.fromString(graph_str);
-console.log("reconstructed graph");
-console.log(y.toString());
