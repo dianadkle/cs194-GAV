@@ -1,0 +1,18 @@
+#loginTable{
+   font-family: futura;
+   font-size: 20;
+   text-align: center;
+}
+
+#switchToRegister{
+   cursor: pointer;
+}
+
+#switchToRegister:hover{
+   text-decoration: underline;
+   color:#000efe;
+}
+
+.login_input{
+   width:40%;
+}

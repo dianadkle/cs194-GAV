@@ -1,0 +1,22 @@
+#registerTable{
+   font-family: futura;
+   font-size: 20;
+   text-align: center;
+}
+
+#switchToLogin{
+   cursor: pointer;
+}
+
+#switchToLogin:hover{
+   text-decoration: underline;
+   color:#000efe;
+}
+
+.register_label{
+   margin:3px;
+}
+
+.register_input{
+   width: 30%;
+}

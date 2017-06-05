@@ -68,9 +68,6 @@ function GraphSVGHandler(algorithms){
 
    var idCount = 0;
 
-   var width = document.getElementById('canvasRow').offsetWidth,
-      height = document.getElementById('canvasRow').offsetHeight;
-
    var stateChanges = null;
    var current_state_change = -1;
    var current_algorithm = null;

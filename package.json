@@ -4,6 +4,7 @@
   "description": "CS194 Senior Project - Visualizing Graphic Algorithms",
   "Index": "./javascript/Index.js",
   "dependencies": {
+    "handlebars": "^4.0.10",
     "jshint": "^2.9.1-rc2"
   },
   "devDependencies": {
