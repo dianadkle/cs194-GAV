@@ -174,7 +174,6 @@ GraphCreator.prototype.dijkstras = function(start_id){
         stateChanges.push(change);
     }
     for (let node of this.nodes){
-        node.visited = false;
         node.color = "yellow";
     }
     return stateChanges;
@@ -205,7 +204,6 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		if (current.id === goal.id){
 			stateChanges.push(change);
             for (let node of this.nodes){
-                node.visited = false;
                 node.color = "yellow";
             }
 			return stateChanges;
@@ -224,7 +222,6 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 
 	for (let node of this.nodes){
         node.color = "yellow";
-        node.visited = false;
     }
 	return stateChanges;
 };
@@ -249,7 +246,6 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                         stateChanges.push(change);
                         for (let node of this.nodes){
                             node.color = "yellow";
-                            node.visited = false;
                         }
                         return stateChanges;
                 }
@@ -268,11 +264,9 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
 
         for (let node of this.nodes){
             node.color = "yellow";
-            node.visited = false;
         }
         return stateChanges;
 };
-
 
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
@@ -443,6 +437,7 @@ function findPath(u, v, next) {
 }
 
 //http://stackoverflow.com/questions/966225/how-can-i-create-a-two-dimensional-array-in-javascript/966938#966938
+/*
 function createArray(length) {
     var arr = new Array(length || 0),
         i = length;
@@ -454,6 +449,7 @@ function createArray(length) {
 
     return arr;
 }
+*/
 
 GraphCreator.prototype.reverseDelete = function() {
 	var PriorityQueue = require('priority-heap-queue');
@@ -513,4 +509,113 @@ function isConnected(start, end) {
  	return false;
 };
 
+// returns string representation of graph
+GraphCreator.prototype.toString = function() {
+	var str_rep = "";
+	if (this.directed) {
+		str_rep += "1\n";
+	} else {
+		str_rep += "0\n";
+	}
+	str_rep += this.currentID + "\n";
+
+	// nodes
+	str_rep += "---\n";
+	var x = 0;
+	for (let node of this.nodes) {
+		if (node !== -1) {
+			x++;
+			str_rep += node.id + " " + node.value + " " 
+					+ node.weight + "\n";
+		}
+	}
+
+	str_rep += "---\n";
+
+	// edge format: "start ID" "end ID" properties...
+	for (let node of this.nodes) {
+		if (node !== -1) {
+		//str_rep += node.id + " " + node.out_edges.size + "\n";
+			for (let edge of node.out_edges.values()) {
+				str_rep += edge.start.id + " " + edge.end.id + " " + edge.weight + " " + edge.color + "\n";
+		}
+	}
+
+	return str_rep;
+};
+
+// constructs graph from string
+// TODO: clear graph before constructing (maybe make separate function)
+GraphCreator.prototype.fromString = function(graph_str) {
+	var strings = graph_str.split("---");
+	// populate graph properties (directed, current ID)
+	var graph_properties = strings[0].split("\n");
+	if(parseInt(graph_properties[0]) === 1) {
+		this.directed = true;
+	} else {
+		this.directed = false;
+	}
+	this.currentID = graph_properties[1]; 
+
+	// initialize list as empty nodes
+	this.nodes = [];
+	for (let i = 0; i < this.currentID; i++) {
+		this.nodes[i] = -1;
+	}
+
+	// add nodes to graph
+	var node_list = strings[1].split("\n");
+	for (let node_str of node_list) {
+		let node_split = node_str.split(" ");
+		let id = parseInt(node_split[0]);
+		let value = node_split[1];
+		let weight = parseInt(node_split[2]);
+		let color = node_split[3];
+		// TODO: add node properties
+		this.nodes[id] = new Node(value, weight, color, id);
+	}
+
+	// add edges to graph
+	var edge_list = strings[2].split("\n");
+	for (let edge_str of edge_list) {
+		let edge_split = edge_str.split(" ");
+
+		let start_node_id = parseInt(edge_split[0]);
+		let end_node_id = parseInt(edge_split[1]);
+		let weight = parseInt(edge_split[2]);
+		let color = edge_split[3];
+
+		this.addEdge(start_node_id, end_node_id, weight);
+	}
+
+	this.selectedNode = null;
+};
+
 module.exports = GraphCreator;
+
+
+
+let x = new GraphCreator(true);
+
+x.addNode("A1", 2, "black");
+x.addNode("B2", 4, "black");
+x.addNode("C3", 8, "black");
+x.addNode("D4", 16, "black");
+x.addNode("E5", 32, "black");
+
+x.addEdge(0, 1, 3);
+x.addEdge(2, 1, 7);
+x.addEdge(1, 4, 13);
+
+x.removeNode(3);
+
+var graph_str = x.toString();
+console.log(graph_str);
+
+console.log("###########");
+
+let y = new GraphCreator();
+
+y.fromString(graph_str);
+console.log("reconstructed graph");
+console.log(y.toString());
