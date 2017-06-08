@@ -245,6 +245,7 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 if (current.id === goal.id) {
                         stateChanges.push(change);
                         for (let node of this.nodes){
+			    if (node === -1) continue;
                             node.color = "yellow";
                         }
                         return stateChanges;
@@ -264,6 +265,7 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
         }
 
         for (let node of this.nodes){
+	    if (node === -1) continue;
             node.color = "yellow";
         }
         return stateChanges;
