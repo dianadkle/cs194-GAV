@@ -252,6 +252,7 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 if (!current.visited) {
                         current.visited = true;
                         for (let node of current.out_neighbors) {
+				if (node === -1) continue;	// skip deleted nodes
                                 if (node.color === "yellow"){
                                     stack.push(node);
                                     node.color = "green";
