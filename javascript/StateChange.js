@@ -6,6 +6,9 @@ function StateChange(){
    this.edgesChanged= new Set([]);
    this.nodeWeightsChanged = {};
    this.edgeWeightsChanged = {};
+   this.comment = "";
+   // Line Of PseudoCode corresponding to algorithm execution (0 = no line)
+   this.executed_lopc = 0;
 }
 
 // given a Node, adds to the graph
@@ -31,6 +34,14 @@ StateChange.prototype.changeNodeWeight = function(node, weight) {
 
 StateChange.prototype.getChangedNodeWeights = function() {
 	return this.nodeWeightsChanged;
+}
+
+StateChange.prototype.addComment = function(str_comment) {
+	this.comment = str_comment;
+}
+
+StateChange.prototype.lopc = function(line_no) {
+	this.executed_lopc = line_no;
 }
 
 module.exports = StateChange;
