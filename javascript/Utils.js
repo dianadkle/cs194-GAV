@@ -36,32 +36,42 @@ module.exports = {
       return [start, goal];
    },
 
-   getWeightValueNewNode: function(nodes){
-      var valuePromptStr = "Please enter your node's value. ";
-         valuePromptStr += "\nThis could be a number, name, etc.";
-      var weightPromptStr = "Please enter your node's weight. ";
-         weightPromptStr += "\nSet this to 0 if your graph doesn't consider node weights.";
+   displayNewNodeModal: function(nodes, coords){
+      var modal = document.getElementById('newNodeModal');
+      modal.style.display = "block";
+      this.nodes = nodes;
+      this.newNodeCoords = coords;
+   },
 
-      var value = prompt(valuePromptStr);
-      if (value === null) return null;
-      var nodeID = this.getNodeIDByValue(value, nodes);
-      while(nodeID !== -1){
-         value = prompt("That value is already taken. Please enter a different value.");
-         if(value === null) return null;
-         nodeID = this.getNodeIDByValue(value, nodes);
+   submitNewNode: function(){
+      var valueNewInputTag = document.getElementById("valueNewInput");
+      var weightNewInputTag = document.getElementById("weightNewInput");
+      var value = valueNewInputTag.value, weight = weightNewInputTag.value;
+
+      if (value !== null){
+         var nodeID = this.getNodeIDByValue(value, this.nodes);
+         if(nodeID !== -1){
+            alert("That value is already taken. Please enter a different value.");
+            return false;
+         }
       }
 
-      var weight = prompt(weightPromptStr);
-      if (weight === null) return null;
-      while(isNaN(weight)){
-         weight = prompt("Please enter a valid number for a weight.");
-         if (weight === null) return null;
+      if (isNaN(weight) && weight !== null && weight !== undefined){
+            alert("Please enter a valid number for a weight.");
+            return false;
       }
-      return [weight, value];
+
+      this.newNodeInfo = [weight, value, this.newNodeCoords];
+
+      return true;
+   },
+
+   getNewNodeInfo: function(){
+      return this.newNodeInfo;
    },
 
    promptNodeChanges: function(nodes, d){
-      var modal = document.getElementById('nodeModal');
+      var modal = document.getElementById('nodeChangeModal');
       modal.style.display = "block";
 
       var valueInputTag = document.getElementById("valueChangeInput");
@@ -70,6 +80,28 @@ module.exports = {
       weightInputTag.value = d.weight;
       this.nodes = nodes;
       this.nodeToChange = d;
+   },
+
+   promptEdgeChanges: function(links, d){
+      var modal = document.getElementById('edgeChangeModal');
+      modal.style.display = "block";
+
+      var weightInputTag = document.getElementById("edgeWeightChangeInput");
+      weightInputTag.value = d.weight;
+      this.links = links;
+      this.linkToChange = d;
+   },
+
+   getChangingEdge: function(){
+      return this.linkToChange;
+   },
+
+   getNewWeight: function(){
+      var weightNewInputTag = document.getElementById("edgeWeightChangeInput");
+      var newWeight = weightNewInputTag.value;
+      if(newWeight === "undefined") return undefined;
+      if(isNaN(newWeight)) return null;
+      return newWeight;
    },
 
    submitNodeChanges: function(value, weight){
@@ -95,6 +127,11 @@ module.exports = {
       }
       return true;
    },
+
+   getChangingNodeID: function(){
+      return this.nodeToChange.id;
+   },
+
    getCredential: function(cred){
       var elem = document.getElementById(cred);
       if(elem === null || elem === undefined) return null;

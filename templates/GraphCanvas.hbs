@@ -1,97 +1,14 @@
-<div id="nodeModal" class="modal">
-   <div class="modal-content">
-      <span class="modalClose">&times;</span>
-      <p>Change Value: </br>
-         <input id="valueChangeInput" type="text"></input>
-      </p><br/>
-      <p>Change Weight: </br>
-         <input id="weightChangeInput" type="text"></input>
-      </p><br/>
-      <button type="button" id="submitNodeChange">submit change</button>
-   </div>
+<div id="graphDiv">
+   <svg id="graphSVG"/>
+   <input type="image" id="reverseButton" title="next step"
+   src="./images/reverse-icon.png" alt="next step" width="30"/>
+   <input type="image" id="clearButton" title="clear algorithm"
+   src="./images/clear-icon.png" alt="clear algorithm" width="30"/>
+   <input type="image" id="forwardButton" title="previous step"
+   src="./images/forward-icon.png" alt="previous step" width="30"/>
+   <label class="switch" id="directionTogglerLabel">
+      <input type="checkbox" id="directionToggler">
+      <div class="slider round"></div>
+   </label>
+   <p class="toggledText" id="directionText">undirected</p>
 </div>
-
-<div id="algorithmModal" class="modal">
-   <div class="modal-content">
-      <span class="modalClose">&times;</span>
-      <p>Start Node Value:</br>
-         <input id="startNodeInput" type="text"></input>
-      </p><br/>
-      <p>Goal Node Value:</br>
-         <input id="goalNodeInput" type="text"></input>
-      </p><br/>
-      <button type="button" id="runAlgorithmButton">run algorithm</button>
-   </div>
-</div>
-
-<table id="mainTable">
-   <tr id="topBarRow">
-      <td id="toolBox">
-         <table id="toolBoxTable">
-            <tr>
-               <td>
-                  <input type="image" id="upload-input" title="upload graph"
-                     src="./images/upload-icon.png" alt="upload graph" class="tool"/>
-               </td>
-               <td>
-                  <input type="image" id="download-input" title="download graph"
-                     src="./images/download-icon.png" alt="download graph" class="tool"/>
-               </td>
-               <td>
-                  <input type="image" id="delete-graph" title="delete graph"
-                     src="./images/trash-icon.png" alt="delete graph" class="tool"/>
-               </td>
-            </tr>
-         </table>
-      </td>
-      <td id="gavTitle">
-         GRAPHIC ALGORITHM VISUALIZER
-      </td>
-   </tr>
-   <tr id="canvasAndSideBarRow">
-      <td id="sideBar">
-         <table id="sideBarTable">
-            <tr id="algorithmsRow" valign="top">
-               <td id="algorithmsColumn">
-                  <h1>Algorithms</h1>
-               </td>
-            </tr>
-            <tr id="tipsRow" valign="top">
-               <td id="tipsColumn">
-                  <h1>Tips</h1>
-
-               </td>
-            </tr>
-         </table>
-      </td>
-      <td>
-         <table id="canvasTable">
-            <tr id="canvasRow">
-               <td id="graphTD">
-                  <svg id="graphSVG"/>
-                  <input type="image" id="reverseButton" title="next step"
-                  src="./images/reverse-icon.png" alt="next step"/>
-                  <input type="image" id="clearButton" title="clear algorithm"
-                  src="./images/clear-icon.png" alt="clear algorithm" />
-                  <input type="image" id="forwardButton" title="previous step"
-                  src="./images/forward-icon.png" alt="previous step" />
-                  <label class="switch" id="directionTogglerLabel">
-                     <input type="checkbox" id="directionToggler">
-                     <div class="slider round"></div>
-                  </label>
-                  <p class="toggledText" id="toggledText">undirected</p>
-               </td>
-               <td id="DfaNfaTD">
-                  <svg id="DfaSVG"/>
-                  <svg id="NfaSVG"/>
-               </td>
-            </tr>
-            <tr id="DfaNfaInputRow">
-               <td id="DfaNfaInputTD">
-                  <h1 style="text-align:center">NFA and DFA stuff goes here</h1>
-               </td>
-            </tr>
-         </table>
-      </td>
-   </tr>
-</table>

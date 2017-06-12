@@ -1,0 +1,43 @@
+#userProfile{
+   text-align: center;
+   font-family:futura;
+}
+
+#sideColumn{
+   display:none;
+}
+
+#sideBar{
+   width:20%;
+   background-color: #cceeff;
+}
+#userProfile{
+   display:none;
+}
+
+#algorithmsRow{
+   height:60%;
+   text-align: center;
+}
+
+#tipsRow{
+   height:40%;
+}
+
+.algorithm{
+   font-family: Futura;
+   font-size:75%;
+}
+.algorithm:hover{
+   text-decoration: underline;
+}
+
+#sideColumn{
+   border-style: solid;
+   border-width: 2px;
+   height:95%;
+}
+#tipsColumn{
+   border-style: solid;
+   border-width: 2px;
+}

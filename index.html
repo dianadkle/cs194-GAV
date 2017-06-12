@@ -9,9 +9,94 @@
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
       <script src="./javascript/bundle.js"></script>
       <link rel="stylesheet" type="text/css" href="./css/Index.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/graphcanvas.css">
+      <link rel="stylesheet" type="text/css" href="./css/sidebar.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/automata.css">
       <link rel="stylesheet" type="text/css" href="./css/login.css"/>
       <link rel="stylesheet" type="text/css" href="./css/register.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/normalize.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/skeleton.css"/>
    </head>
    <body>
+      <title>GRAPHIC ALGORITHM VISUALIZER</title>
+      <div id="nodeChangeModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Change Value: </br>
+               <input id="valueChangeInput" type="text"></input>
+            </p><br/>
+            <p>Change Weight: </br>
+               <input id="weightChangeInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="submitNodeChange">submit change</button>
+            <button type="button" id="deleteNode">delete node</button>
+         </div>
+      </div>
+      <div id="newNodeModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Enter Value: </br>
+               <input id="valueNewInput" type="text"></input>
+            </p><br/>
+            <p>Enter Weight: </br>
+               <input id="weightNewInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="submitNewNode">create node</button>
+         </div>
+      </div>
+
+      <div id="algorithmModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Start Node Value:</br>
+               <input id="startNodeInput" type="text"></input>
+            </p><br/>
+            <p>Goal Node Value:</br>
+               <input id="goalNodeInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="runAlgorithmButton">run algorithm</button>
+         </div>
+      </div>
+
+      <div id="edgeChangeModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose">&times;</span>
+            <p>Change Weight: </br>
+               <input id="edgeWeightChangeInput" type="text"></input>
+            </p><br/>
+            <button type="button" id="submitEdgeChange">submit change</button>
+            <button type="button" id="deleteEdge">delete edge</button>
+         </div>
+      </div>
+
+      <!-- top bar below GAV title -->
+      <!--
+      <div class="container" id="topBar">
+         <div class="row">
+            <div class="one-third column" id="toolBox">
+               <input type="image" id="upload-input" title="upload graph"
+               src="./images/upload-icon.png" alt="upload graph" class="tool"/>
+               <input type="image" id="download-input" title="download graph"
+               src="./images/download-icon.png" alt="download graph" class="tool"/>
+               <input type="image" id="delete-graph" title="delete graph"
+               src="./images/trash-icon.png" alt="delete graph" class="tool"/>
+            </div>
+            <div class="two-thirds column">
+               <p type="button" id="switchToAutomata">
+                  click here for the Automata Tool
+               </p>
+               <p type="button" id="switchToGraph">
+                  click here for the Graph Tool
+               </p>
+            </div>
+         </div>
+      </div>
+      -->
+
+
+   <div class="container" id="mainBox">
+         <div class="one-third column" id="sideColumn"></div>
+         <div class="two-thirds column" id="mainColumn"></div>
+   </div>
    </body>
 </html>

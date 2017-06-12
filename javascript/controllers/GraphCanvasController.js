@@ -1,23 +1,15 @@
 'use strict';
 
 var Utils = require('../Utils');
-var DOMParser = require('xmldom').DOMParser;
-var domParser = new DOMParser();
 var GraphSVGHandler = require('../GraphSVGHandler');
 var AutomataVisualizer = require('../AutomataVisualizer');
-
-var algorithms = [
-   "Depth-First Search",
-   "Breadth-First Search",
-   "Dijkstra's Algorithm"
-];
 
 function GraphCanvasController(userInfo){
    this.userInfo = userInfo;
 };
 
 GraphCanvasController.prototype.control = function(){
-   var graphSVGHandler = new GraphSVGHandler(algorithms);
+   var graphSVGHandler = new GraphSVGHandler();
    var automataVisualizer = new AutomataVisualizer("a*b");
 
    var initializeForwardReverseButtons = function(){
@@ -50,7 +42,7 @@ GraphCanvasController.prototype.control = function(){
 
    var intializeDirectedToggler = function(){
       var directionToggler = document.getElementById("directionToggler");
-      var directionText = document.getElementById("toggledText");
+      var directionText = document.getElementById("directionText");
       directionToggler.onclick = function(){
          if(graphSVGHandler.toggleDirection()){
             directionText.innerHTML = "directed";
@@ -65,47 +57,74 @@ GraphCanvasController.prototype.control = function(){
 
    };
 
-   var initializeAutomataSVG = function(automata_type){
-      var aut_id = (automata_type === "NFA") ? "NfaSVG" : "DfaSVG";
-      var cell = document.getElementById(aut_id);
-      var svgXML = automataVisualizer.generateNFA();
-      var doc = domParser.parseFromString(svgXML);
-      var svg = doc.getElementsByTagName('svg')[0];
-
-      cell.setAttribute("width", svg.getAttribute("width"));
-      cell.setAttribute("height", svg.getAttribute("height"));
-      cell.innerHTML = svg.getElementsByTagName("g")[0].toString();
-   };
-
    var initializeNodeModals = function(){
-      var modal = document.getElementById('nodeModal');
-      var modalX = document.getElementsByClassName("modalClose")[0];
-      modalX.onclick = function() {
-         modal.style.display = "none";
+      var nodeChangeModal = document.getElementById('nodeChangeModal');
+      var newNodeModal = document.getElementById('newNodeModal');
+      var edgeChangeModal = document.getElementById('edgeChangeModal');
+      var nodeChangeModalX = document.getElementsByClassName("modalClose")[0]
+      var newNodeModalX = document.getElementsByClassName("modalClose")[1];
+      var edgeChangeModalX = document.getElementsByClassName("modalClose")[3];
+
+      nodeChangeModalX.onclick = function() {
+         nodeChangeModal.style.display = "none";
+      };
+      newNodeModalX.onclick = function() {
+         newNodeModal.style.display = "none";
+      };
+      edgeChangeModalX.onclick = function(){
+         edgeChangeModal.style.display = "none";
       }
 
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
          if (event.target === modal) {
-            modal.style.display = "none";
+            nodeChangeModal.style.display = "none";
+            newNodeModal.style.display = "none";
          }
-      }
-      var valueInputTag = document.getElementById("valueChangeInput");
-      var weightInputTag = document.getElementById("weightChangeInput");
+      };
+      var valueChangeInputTag = document.getElementById("valueChangeInput");
+      var weightChangeInputTag = document.getElementById("weightChangeInput");
 
       var submitChangeButton = document.getElementById("submitNodeChange");
       submitChangeButton.onclick = function(){
-         if(Utils.submitNodeChanges(valueInputTag.value, weightInputTag.value)){
-            modal.style.display = "none";
+         if(Utils.submitNodeChanges(valueChangeInputTag.value, weightChangeInputTag.value)){
+            nodeChangeModal.style.display = "none";
             graphSVGHandler.updateCanvas();
          }
       };
+
+      var submitNewNodeButton = document.getElementById("submitNewNode");
+      submitNewNodeButton.onclick = function(){
+         if(Utils.submitNewNode()){
+            newNodeModal.style.display = "none";
+            graphSVGHandler.generateNewNode();
+         }
+      };
+
+      var deleteNodeButton = document.getElementById("deleteNode");
+      deleteNodeButton.onclick = function(){
+         var id = Utils.getChangingNodeID();
+         nodeChangeModal.style.display = "none";
+         graphSVGHandler.deleteNode(id);
+      }
+
+      var submitEdgeChangeButton = document.getElementById("submitEdgeChange");
+      submitEdgeChangeButton.onclick = function(){
+         edgeChangeModal.style.display = "none";
+         graphSVGHandler.editEdge();
+      }
+
+      var deleteEdgeButton = document.getElementById("deleteEdge");
+      deleteEdgeButton.onclick = function(){
+         edgeChangeModal.style.display = "none";
+         graphSVGHandler.deleteEdge();
+      }
    };
 
    var initializeAlgorithmModals = function(){
       var modal = document.getElementById('algorithmModal');
 
-      var modalX = document.getElementsByClassName("modalClose")[1];
+      var modalX = document.getElementsByClassName("modalClose")[2];
       modalX.onclick = function() {
          modal.style.display = "none";
       }
@@ -123,22 +142,27 @@ GraphCanvasController.prototype.control = function(){
       runAlgorithmButton.onclick = function(){
          if(graphSVGHandler.runAlgorithm()){
             modal.style.display = "none";
-            graphSVGHandler.updateCanvas();
             startInputTag.value = "";
             goalInputTag.value = "";
          }
       };
    };
 
+   var linkAlgorithmButtons = function(){
+      $('.algorithm').each(function(index, tag){
+         tag.onclick = function(){
+            graphSVGHandler.prepareAlgorithm(tag.innerHTML);
+         }
+      });
+   };
+
 
    //initialize buttons, togglers, and other things
    initializeForwardReverseButtons();
    intializeDirectedToggler();
-   initializeAutomataSVG("DFA");
-   initializeAutomataSVG("NFA");
-
    initializeNodeModals();
    initializeAlgorithmModals();
+   linkAlgorithmButtons();
 };
 
 module.exports = GraphCanvasController;

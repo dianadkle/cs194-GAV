@@ -7,59 +7,46 @@ var Utils = require('./Utils');
 
 
 var nodes = [
-   {x:20, y:300, id: 0, value: "Arlene", weight: 2, color: "yellow"},
-   {x:600, y:200, id: 1, value: "Brett", weight: 5, color: "yellow"},
-   {x:400, y:100, id: 2, value: "Cindy", weight: 3, color: "yellow"},
-   {x:200, y:500, id: 3, value: "Dennis", weight: 6, color: "yellow"},
-   {x:300, y:400, id: 4, value: "Emily", weight: 4, color: "yellow"},
-   {x:450, y:250, id: 5, value: "Frank", weight: 1, color: "yellow"},
-   {x:40, y:350, id: 6, value: "Gilbert", weight: 7, color: "yellow"},
-   {x:220, y:450, id: 7, value: "Harvey", weight: 9, color: "yellow"},
-   {x:140, y:550, id: 8, value: "Irene", weight: 8, color: "yellow"},
-   {x:700, y:50, id: 9, value: "Jose", weight: 11, color: "yellow"},
-   {x:600, y:150, id: 10, value: "Katrina", weight: 12, color: "yellow"},
-   {x:360, y:200, id: 11, value: "Lee", weight: 10, color: "yellow"},
-   {x:100, y:320, id: 12, value: "Maria", weight: 13, color: "yellow"}
+   //520 x //560
+   {x:280-10, y:50, id: 0, value: "Arlene", weight: 2, color: "yellow"},//1
+   {x:140-10, y:150, id: 1, value: "Brett", weight: 5, color: "yellow"},//2
+   {x:420-10, y:150, id: 2, value: "Cindy", weight: 3, color: "yellow"},//2
+   {x:70-10, y:250, id: 3, value: "Dennis", weight: 6, color: "yellow"},//3
+   {x:210-10, y:250, id: 4, value: "Emily", weight: 4, color: "yellow"},//3
+   {x:350-10, y:250, id: 5, value: "Frank", weight: 1, color: "yellow"},//3
+   {x:490-10, y:250, id: 6, value: "Gilbert", weight: 7, color: "yellow"},//3
+   {x:35-10, y:350, id: 7, value: "Harvey", weight: 9, color: "yellow"},//4
+   {x:105-10, y:350, id: 8, value: "Irene", weight: 8, color: "yellow"},//4
+   {x:175-10, y:350, id: 9, value: "Jose", weight: 11, color: "yellow"},//4
+   {x:245-10, y:350, id: 10, value: "Katrina", weight: 12, color: "yellow"},//4
+   {x:315-10, y:350, id: 11, value: "Lee", weight: 10, color: "yellow"},//4
+   {x:385-10, y:350, id: 12, value: "Maria", weight: 13, color: "yellow"},//4
+   {x:455-10, y:350, id: 13, value: "Nate", weight: 13, color: "yellow"},//4
+   {x:525-10, y:350, id: 14, value: "Ophelia", weight: 13, color: "yellow"}//4
+
 ];
 
 var links = [
-   {source: 2, target: 9},
-   {source: 0, target: 7},
-   {source: 1, target: 7},
-   {source: 1, target: 5},
-   {source: 7, target: 6},
-   {source: 4, target: 2},
-   {source: 11, target: 10},
-   {source: 5, target: 4},
-   {source: 2, target: 9},
-   {source: 8, target: 7},
-   {source: 5, target: 3},
-   {source: 5, target: 1},
-   {source: 9, target: 10},
-   {source: 10, target: 12}
+   {source:0, target: 1, weight:undefined},
+   {source:2, target: 0, weight:undefined},
+   {source:3, target: 1, weight:undefined},
+   {source:1, target: 4, weight:undefined},
+   {source:2, target: 5, weight:undefined},
+   {source:6, target: 2, weight:undefined},
+   {source:3, target: 7, weight:undefined},
+   {source:8, target: 3, weight:undefined},
+   {source:4, target: 9, weight:undefined},
+   {source:4, target: 10, weight:undefined},
+   {source:5, target: 11, weight:undefined},
+   {source:5, target: 12, weight:undefined},
+   {source:13, target: 6, weight:undefined},
+   {source:14, target: 6, weight:undefined}
 ];
 
-var contextMenu = [
-   {
-      title: 'Header',
-   },
-   {
-      title: 'Normal item',
-      action: function() {console.log("first item!");}
-   },
-   {
-      divider: true
-   },
-   {
-      title: 'Last item',
-      action: function() {console.log("last item!");}
-   }
-];
-
-function GraphSVGHandler(algorithms){
+function GraphSVGHandler(){
    var radius = 20;
    var selectedNode = null, selectedTag = null;
-   var clickWasOnNode = false, dblClickWasOnNode = false;
+   var clickWasOnNode = false, dblClickWasOnSVG = true;
    var directed = false;
 
    var svg = d3.select("#graphSVG")
@@ -78,12 +65,11 @@ function GraphSVGHandler(algorithms){
    .force("link", d3.forceLink().distance(radius * 7).id(function(d) { return d.id; }));
 
    //node and link svg data
-   var node = null, link = null;
+   var node = null, link = null, linkLabel = null;
 
    var graphCreator = new GraphCreator(false);
 
    importData();
-   initializeAlgorithmButtons();
 
    updateCanvas();
 
@@ -92,6 +78,7 @@ function GraphSVGHandler(algorithms){
 
       //clear SVG
       svg.selectAll("*").remove();
+      node = null, link = null, linkLabel = null;
 
       //define arrow marker
       svg.append("defs").append("marker")
@@ -112,9 +99,38 @@ function GraphSVGHandler(algorithms){
 
       //links consist of lines, classed "link"
       var linkGroup = svg.selectAll("link").data(links, function(d) { return d.target.id; })
-      linkGroup = linkGroup.enter().append("g");
+      linkGroup = linkGroup.enter().append("g").on("dblclick", dblClickedOnEdge);
       link = linkGroup.append("line").attr("class", "link")
       if(directed) link.attr("marker-end", "url(#arrow)");
+      link.append("text").attr('text-anchor', 'middle')
+      .attr("x", 0).attr("y", "0").text("function(d){return d.weight;}");
+      linkLabel = linkGroup.append("text")
+      .attr('text-anchor', 'middle')
+      .attr("x", (function(d, i){
+         var source = d['source'], target = d['target'];
+         var x1, x2;
+         if(typeof source === "number"){
+            x1 = nodes.find(node => source === node.id).x;
+            x2 = nodes.find(node => target === node.id).x;
+         } else {
+            x1 = source.x;
+            x2 = target.x;
+         }
+         return (x1 + x2) / 2;
+      }))
+      .attr("y", (function(d, i){
+         var source = d['source'], target = d['target'];
+         var y1, y2;
+         if(typeof source === "number"){
+            y1 = nodes.find(node => source === node.id).y;
+            y2 = nodes.find(node => target === node.id).y;
+         } else {
+            y1 = source.y;
+            y2 = target.y;
+         }
+         return (y1 + y2) / 2;
+      }))
+      .text(function(d) { return d.weight });
 
       //nodes are bound with nodes from the nodes array
       node = svg.selectAll("node").data(nodes, function(d) { return d.id; });
@@ -180,15 +196,21 @@ function GraphSVGHandler(algorithms){
          //TODO: update edges for direction
       }
       if(edges === undefined){
-         links.push({source: sourceID, target: targetID});
-         graphCreator.addEdge(sourceID, targetID);
+         links.push({source: sourceID, target: targetID, weight: 0, label: undefined});
+         graphCreator.addEdge(sourceID, targetID, 0);
       }
    }
 
    /* update state variables to prevent new nodes from being created on db click*/
    function dblClickedOnNode(d){
-      dblClickWasOnNode = true;
+      dblClickWasOnSVG = false;
       Utils.promptNodeChanges(nodes, d);
+   }
+
+   /* update state variables to prevent new nodes from being created on db click*/
+   function dblClickedOnEdge(d){
+      dblClickWasOnSVG = false;
+      Utils.promptEdgeChanges(links, d);
    }
 
    /*high level logic for handling SVG clicks*/
@@ -205,19 +227,23 @@ function GraphSVGHandler(algorithms){
 
    /* generate new node */
    function dblClickedOnSVG() {
-      if(dblClickWasOnNode){
-         dblClickWasOnNode = false;
+      if(!dblClickWasOnSVG){
+         dblClickWasOnSVG = true;
          return;
       }
 
       if(selectedNode !== null) return;
+      Utils.displayNewNodeModal(nodes, d3.mouse(this));
+   }
 
-      var weightVal = Utils.getWeightValueNewNode(nodes);
-      if(weightVal === null) return;
-      var weight = weightVal[0], value = weightVal[1];
+   function generateNewNode(){
+      var newNodeInfo = Utils.getNewNodeInfo();
+      if(newNodeInfo === null) return;
+      var weight = newNodeInfo[0],
+      value = newNodeInfo[1],
+      coords = newNodeInfo[2];
 
       //create circle
-      var coords = d3.mouse(this);
       var newNodeObj = graphCreator.addNode(value, weight, "yellow");
       var newNode= {
          x: Math.round( coords[0]),  // Takes the pixel number to convert to number
@@ -231,6 +257,10 @@ function GraphSVGHandler(algorithms){
       updateCanvas();
    }
 
+   GraphSVGHandler.prototype.generateNewNode = function(coords){
+      generateNewNode(coords);
+   };
+
    /** updating function, called every time canvas needs to be updated**/
    function ticked() {
       link
@@ -239,12 +269,20 @@ function GraphSVGHandler(algorithms){
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 
+      linkLabel
+      .attr("x", (function(d){
+         return (d.source.x + d.target.x) / 2;
+      }))
+      .attr("y", (function(d){
+         return (d.source.y + d.target.y) / 2;
+      }));
+
       node
       .attr("transform", function(d) { return "translate(" + d.x + ", " + d.y + ")"; });
    }
 
    function dragstarted(d) {
-      if (!d3.event.active) simulation.alphaTarget(0.3).restart()
+      if (!d3.event.active) simulation.alphaTarget(0.3).restart();
    }
 
    function dragged(d) {
@@ -293,31 +331,15 @@ function GraphSVGHandler(algorithms){
       links.forEach(function(edge){
          var source = edge['source'], target = edge['target'];
          if((typeof source) === "number"){
-            graphCreator.addEdge(source, target);
+            graphCreator.addEdge(source, target, 0);
          } else {
-            graphCreator.addEdge(source.id, target.id);
+            graphCreator.addEdge(source.id, target.id, 0);
          }
-      });
-   }
-
-   function initializeAlgorithmButtons(){
-      var pTags = algorithms.map(function(algorithm){
-         var elem = document.createElement('p');
-         elem.className = "algorithm";
-         elem.innerHTML = algorithm;
-         return elem;
-      });
-
-      var algColumn = document.getElementById("algorithmsColumn");
-      pTags.forEach(function(p){
-         var tag = algColumn.appendChild(p);
-         tag.onclick = function(){prepareAlgorithm(p.innerHTML)};
       });
    }
 
    function prepareAlgorithm(algorithm){
       clearNodeColors();
-      updateCanvas();
       current_algorithm = algorithm;
       Utils.promptAlgorithmInputs();
    }
@@ -377,6 +399,9 @@ function GraphSVGHandler(algorithms){
 
 
    /************************* To be used in Index.js *************************/
+   GraphSVGHandler.prototype.prepareAlgorithm = function(algorithm){
+      prepareAlgorithm(algorithm);
+   };
 
    GraphSVGHandler.prototype.runAlgorithm = function(){
       var startAndGoal = Utils.getStartAndGoalNodeIDs(nodes);
@@ -390,6 +415,7 @@ function GraphSVGHandler(algorithms){
          var start = startAndGoal[0], goal = startAndGoal[1];
          stateChanges = getStateChangeSequence(start, goal);
          current_state_change = -1;
+         updateCanvas();
          alert("start clicking the arrow buttons!");
          return true;
       }
@@ -407,6 +433,7 @@ function GraphSVGHandler(algorithms){
       if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
       if(current_state_change < stateChanges.length - 1){
          var change = stateChanges[++current_state_change];
+         console.log(change);
          changeNodeColors(change);
          updateWeights(change);
          // TODO: update other changes, console.log(change);
@@ -451,7 +478,51 @@ function GraphSVGHandler(algorithms){
       updateCanvas();
    };
 
-   GraphSVGHandler.prototype.updateCanvas = function(){
+   GraphSVGHandler.prototype.deleteNode = function (id){
+      var index = nodes.findIndex(node => node.id === id);
+      if(index === -1) return;
+      graphCreator.removeNode(id);
+      nodes.splice(index, 1);
+
+      links = links.filter(function(edge){
+         var source = edge['source'], target = edge['target'];
+         if((typeof source) === "number"){
+            return source !== id && target !== id;
+         } else {
+            return source.id !== id && target.id !== id;
+         }
+      });
+      updateCanvas();
+   };
+
+   GraphSVGHandler.prototype.editEdge = function (){
+      var edge = Utils.getChangingEdge();
+      var sID = edge.source.id, tID = edge.target.id;
+      var newWeight = Utils.getNewWeight();
+      if(newWeight !== null){
+         var index = links.findIndex(edge => edge.source.id === sID
+                                          && edge.target.id === tID);
+         if(index === -1) return;
+         graphCreator.removeEdge(sID, tID);
+         graphCreator.addEdge(sID, tID, newWeight);
+         links[index].weight = newWeight;
+         if(newWeight <= 0 || newWeight === undefined) {
+            links[index].weight = undefined;
+         } else {
+            links[index].weight = newWeight;
+         }
+         updateCanvas();
+      }
+   };
+
+   GraphSVGHandler.prototype.deleteEdge = function (){
+      var edge = Utils.getChangingEdge();
+      var sID = edge.source.id, tID = edge.target.id;
+      var index = links.findIndex(edge => edge.source.id === sID
+                                       && edge.target.id === tID);
+      if(index === -1) return;
+      graphCreator.removeEdge(sID, tID);
+      links.splice(index, 1);
       updateCanvas();
    };
 }

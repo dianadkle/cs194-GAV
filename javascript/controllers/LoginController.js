@@ -3,7 +3,7 @@ var Utils = require('../Utils');
 
 function LoginController(index){
    this.index = index;
-}
+};
 
 LoginController.prototype.control = function(){
    var index = this.index;
@@ -15,6 +15,7 @@ LoginController.prototype.control = function(){
       password = Utils.getCredential("password");
       //TODO: check registration credentials
       if(/*successful credentials*/true){
+         index.renderSideBar();
          index.renderGraphCanvas({
             username: username,
             user_id: 0

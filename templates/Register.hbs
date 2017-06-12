@@ -1,64 +1,31 @@
-<table id="registerTable">
-   <tr id="topBarRow">
-      <td id="gavTitle">
-         GRAPHIC ALGORITHM VISUALIZER
-      </td>
-   </tr>
-   <tr id="loginRow">
-      <td>
-         <table>
-            <tr>
-               <td>
-                  <p class="register_label" for="firstName">first name:</p>
-                  <input class="register_input" type="text" id="firstName"/>
-                  <p class="invalidError" id="firstNameError"> please enter a valid first name</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p class="register_label" for="lastName">last name:</p>
-                  <input class="register_input" type="text" id="lastName"/>
-                  <p class="invalidError" id="lastNameError"> please enter a valid last name</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p class="register_label" for="username">user name:</p>
-                  <input class="register_input" type="text" id="username"/>
-                  <p class="invalidError" id="usernameError"> please enter a valid, unused username</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p class="register_label" for="email">email:</p>
-                  <input class="register_input" type="text" id="email"/>
-                  <p class="invalidError" id="emailError"> please enter a valid, unused email address</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p class="register_label" for="password">password:</p>
-                  <input class="register_input" type="password" id="password"/>
-                  <p class="invalidError" id="passwordError"> please enter a valid password</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p class="register_label" for="confirmPassword">confirm password:</p>
-                  <input class="register_input" type="password" id="confirmPassword"/>
-                  <p class="invalidError" id="confirmPasswordError"> please make sure your passwords match up</p>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <button type="button" id="register">register</button>
-               </td>
-            </tr>
-            <tr>
-               <td>
-                  <p id="switchToLogin">click here for the log in page</p>
-               </td>
-            </tr>
-      </td>
-   </tr>
-</table>
+<div class="registerDiv">
+   <p class="register_label" for="firstName">first name:</p>
+   <input class="register_input" type="text" id="firstName"/>
+   <p class="invalidError" id="firstNameError"> please enter a valid first name</p>
+
+   <p class="register_label" for="username">user name:</p>
+   <input class="register_input" type="text" id="username"/>
+   <p class="invalidError" id="usernameError"> please enter a valid, unused username</p>
+
+   <p class="register_label" for="email">email:</p>
+   <input class="register_input" type="text" id="email"/>
+   <p class="invalidError" id="emailError"> please enter a valid, unused email address</p>
+
+   <p class="register_label" for="password">password:</p>
+   <input class="register_input" type="password" id="password"/>
+   <p class="invalidError" id="passwordError"> please enter a valid password</p>
+
+   <p class="register_label" for="confirmPassword">confirm password:</p>
+   <input class="register_input" type="password" id="confirmPassword"/>
+   <p class="invalidError" id="confirmPasswordError"> please make sure your passwords match up</p>
+   </br>
+   </br>
+   </br>
+   <button type="button" id="register">register</button>
+   </br>
+   </br>
+   </br>
+   <p id="switchToLogin">click here for the log in page</p>
+   <p id="switchToGuest" type="button"> continue as guest</p>
+
+</div>

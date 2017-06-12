@@ -1,0 +1,32 @@
+
+#DfaNfaInputRow{
+   height:15%;
+   width:100%
+}
+
+#DfaNfaInputTD, #DfaNfaTD{
+   border-style: solid;
+   border-width: 2px;
+}
+
+#DfaNfaTD{
+   width: 40%;
+   height:100%;
+}
+
+#DfaSVG, #NfaSVG{
+   width:100%;
+   height:50%;
+   border:"1px solid black";
+}
+
+#switchToGraph{
+   text-align:center;
+   font-family: futura;
+}
+
+#switchToGraph:hover{
+   cursor:pointer;
+   text-decoration: underline;
+   color:#000efe;
+}

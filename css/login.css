@@ -1,14 +1,11 @@
-#loginTable{
+.loginDiv{
    font-family: futura;
    font-size: 20;
    text-align: center;
 }
 
-#switchToRegister{
+#switchToRegister:hover, #switchToGuest:hover{
    cursor: pointer;
-}
-
-#switchToRegister:hover{
    text-decoration: underline;
    color:#000efe;
 }

@@ -1,4 +1,4 @@
-#registerTable{
+.registerDiv{
    font-family: futura;
    font-size: 20;
    text-align: center;
@@ -18,7 +18,7 @@
 }
 
 .register_input{
-   width: 30%;
+   width: 40%;
 }
 
 .invalidError{
