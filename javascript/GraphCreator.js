@@ -29,6 +29,9 @@ PriorityQueue.prototype.extractMin = function(){
             minindex = key;
         }
     }
+    if (minvalue === Infinity) {
+    	return -1;
+    }
     this.array.delete(minindex);
     return minindex;
 };
@@ -53,7 +56,7 @@ function GraphCreator(is_directed){
 
 
 // creates new node and adds it to graph
-GraphCreator.prototype.addNode = function(value, weight, color) {
+GraphCreator.prototype.addNode = function(value, weight, color = "yellow") {
         var node_to_add = new Node(value, weight, color, this.currentID);
 	this.nodes.set(this.currentID, node_to_add);
 	this.currentID++;
@@ -84,7 +87,6 @@ GraphCreator.prototype.removeNode = function(id) {
                 }
         }
 
-	// TODO: make sure right method call
 	this.nodes.delete(id);
 };
 
@@ -96,10 +98,7 @@ GraphCreator.prototype.getNode = function(id) {
 
 
 // adds an edge: start node -> end node
-// possible TODO: change params to node objs (opposed to node ids) if better
 GraphCreator.prototype.addEdge = function(start_id, end_id, weight, color) {
-//        var start_node = this.nodes[start_id];
- //       var end_node = this.nodes[end_id];
 	var start_node = this.nodes.get(start_id);
 	var end_node = this.nodes.get(end_id);
         var new_edge = new Edge(start_node, end_node, weight, color);
@@ -117,15 +116,12 @@ GraphCreator.prototype.addEdge = function(start_id, end_id, weight, color) {
 };
 
 // removes an edge given start and end node IDs
-// possible TODO: change params to node objs (opposed to node ids) if better
 GraphCreator.prototype.removeEdge = function(start_id, end_id) {
-        //var start_node = this.nodes[start_id];
 	var start_node = this.nodes.get(start_id);
         if(!start_node.out_edges.has(end_id)) {
                 console.log("Error: edge cannot be removed (does not exist)");
                 return;
         }
-        //var end_node = this.nodes[end_id];
         var end_node = this.nodes.get(end_id);
         start_node.out_neighbors.delete(end_node);
         start_node.out_edges.delete(end_id);
@@ -140,9 +136,171 @@ GraphCreator.prototype.removeEdge = function(start_id, end_id) {
 
 };
 
+/* "Canonical" pseudocode
+ * 1 stack.push(root)
+ * 2 while (stack is not empty)
+ * 3	current_node = stack.pop()
+ * 4	if (current_node = goal_node) return
+ * 5 	for (let n = unvisited neighbors of current_node): stack.push(n)
+ */
+GraphCreator.prototype.c_dfs = function(start_id, goal_id){
+	var start = this.nodes.get(start_id);
+	var goal = this.nodes.get(goal_id);
+        var stack = [];
+        var stateChanges = [];
+
+        stack.push(start);
+        var change = new StateChange();
+        change.addChangedNode(start, "green");
+	change.addComment("Pushing root node \"" + start.value + "\" to stack");
+	change.lopc(1);
+        stateChanges.push(change);
+
+	if(stack.length > 0) {
+		change = new StateChange();
+		change.addComment("Stack size (" + stack.length + ") is greater than 0; execute loop");
+		change.lopc(2);
+		stateChanges.push(change);
+	}
+
+        while (stack.length > 0) {
+                var current = stack.pop();
+                change = new StateChange();
+                change.addChangedNode(current, "red");
+		change.addComment("Popping node \"" + current.value + "\" from stack");
+		change.lopc(3);
+		stateChanges.push(change);
+                current.color = "red";
+                if (current.id === goal.id) {
+			change = new StateChange();
+			change.addComment("Goal node \"" + goal.value + "\" has been reached; end execution");
+			change.lopc(4);
+                        stateChanges.push(change);
+                        for (let node of this.nodes.values()){
+	    		    node.visited = false;
+                            node.color = "yellow";
+                        }
+                        return stateChanges;
+                } else {
+			change = new StateChange();
+			change.addComment("Goal node \"" + goal.value + "\" not reached; continue execution");
+			change.lopc(4);
+                        stateChanges.push(change);
+
+		}
+                if (!current.visited) {
+			change = new StateChange();
+                        current.visited = true;
+			var num_added = 0;
+                        for (let node of current.out_neighbors) {
+                                if (node.color === "yellow") {
+					num_added++;
+					stack.push(node);
+					node.color = "green";
+					change.addChangedNode(node, "green");
+				}
+                        }
+			change.addComment("Pushing " + num_added + " unvisited neighbor nodes to stack");
+			change.lopc(5);
+                	stateChanges.push(change);
+                }
+
+		if(stack.length > 0) {
+			change = new StateChange();
+			change.addComment("Stack size (" + stack.length + ") is greater than 0; execute loop");
+			change.lopc(2);
+			stateChanges.push(change);
+		}
+        }
+
+        for (let node of this.nodes.values()){
+            node.color = "yellow";
+	    node.visited = false;
+        }
+        return stateChanges;
+};
+
+/* "Canonical" pseudocode
+ * 1 queue.push(root)
+ * 2 while (queue is not empty)
+ * 3	current_node = queue.pop()
+ * 4	if (current_node = goal_node) return
+ * 5 	for (let n = unvisited neighbors of current_node): queue.push(n)
+ */
+GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
+	var q = [];
+	var stateChanges = [];
+
+	var start = this.nodes.get(start_id);
+	var goal = this.nodes.get(goal_id);
+
+	q.push(start);
+	start.visited = true;
+
+	var change = new StateChange();
+	change.addComment("Enqueuing root node \"" + start.value + "\"");
+	change.addChangedNode(start, "green");
+	change.lopc(1);
+	stateChanges.push(change);
+
+	if(q.length > 0) {
+		change = new StateChange();
+		change.addComment("Queue size (" + q.length + ") is greater than 0; execute loop");
+		change.lopc(2);
+		stateChanges.push(change);
+	}
+
+	while (q.length > 0) {
+		var current = q.shift();
+		change = new StateChange();
+        	current.color = "red";
+		change.addChangedNode(current, "red");
+		change.addComment("Dequeuing node \"" + current.value + "\"");
+		change.lopc(3);
+		stateChanges.push(change);
+		
+
+		if (current.id === goal.id){
+			change = new StateChange();
+			change.addComment("Goal node \"" + goal.value + "\" has been reached; end execution");
+			change.lopc(4);
+			stateChanges.push(change);
+            		for (let node of this.nodes.values()) {
+	   			node.visited = false;
+                		node.color = "yellow";
+        		}
+			return stateChanges;
+		} else {
+			change = new StateChange();
+			change.addComment("Goal node \"" + goal.value + "\" not reached; continue execution");
+			change.lopc(4);
+			stateChanges.push(change);
+			
+		}
+
+		change = new StateChange();
+		var num_added = 0;
+		for (let neighbor of current.out_neighbors) {
+			if (neighbor.color === "yellow") {
+				num_added++;
+				q.push(neighbor);
+                		neighbor.color = "green";
+				change.addChangedNode(neighbor, "green");
+			}
+		}
+		change.addComment("Enqueuing " + num_added + " unvisited neighbor nodes");
+		change.lopc(5);
+		stateChanges.push(change);
+	}
+
+	for (let node of this.nodes.values()){
+	    	node.visited = false;
+        	node.color = "yellow";
+	}
+	return stateChanges;
+};
+
 GraphCreator.prototype.dfs = function(start_id, goal_id){
-        //var start = this.nodes[start_id];
-        //var goal = this.nodes[goal_id];
 	var start = this.nodes.get(start_id);
 	var goal = this.nodes.get(goal_id);
         var stack = [];
@@ -161,98 +319,38 @@ GraphCreator.prototype.dfs = function(start_id, goal_id){
                 if (current.id === goal.id) {
                         stateChanges.push(change);
                         for (let node of this.nodes.values()){
+	    		    node.visited = false;
                             node.color = "yellow";
                         }
                         return stateChanges;
                 }
                 if (!current.visited) {
-		console.log(current.value + " being visited for first time ");
                         current.visited = true;
                         for (let node of current.out_neighbors) {
-				// TODO: remove visited field from nodes, move to var local to alg
-				if(!node.visited) {
+                                if (node.color === "yellow"){
 					stack.push(node);
 					node.color = "green";
 					change.addChangedNode(node, "green");
 				}
-			// TODO: 
-			/*
-                                if (node.color === "yellow"){
-                                    stack.push(node);
-                                    node.color = "green";
-                                    change.addChangedNode(node, "green");
-                                }
-				*/
                         }
-                } else {
-		console.log(current.label + " already visisted");
-		}
+                }
+
                 stateChanges.push(change);
         }
 
         for (let node of this.nodes.values()){
             node.color = "yellow";
+	    node.visited = false;
         }
         return stateChanges;
 };
 
-
-
-/*
-GraphCreator.prototype.dijkstras = function(start_id){
-    var dist = [];
-    var prev = [];
-    var q = new PriorityQueue();
-
-    // initialize graph values
-    dist[start_id] = 0;
-    for (let node of this.nodes) {
-        if (node.id !== start_id) {
-                dist[node.id] = Infinity;
-                prev[node.id] = undefined;
-        }
-        q.insert(node.id, dist[node.id]);
-    }
-
-    var change = new StateChange();
-    change.addChangedNode(this.nodes[start_id], "green");
-    var stateChanges = [];
-    stateChanges.push(change);
-
-    // TODO: unconnected graph (minimum = Infinity)
-    while (q.minimum()) {
-        var current_id = q.extractMin();
-        change = new StateChange();
-        change.addChangedNode(this.nodes[current_id], "red");
-        for (let edge of this.nodes[current_id].out_edges.values()) {
-            var neighbor = edge.end;
-            var alt = dist[current_id] + edge.weight;
-            if (alt < dist[neighbor.id]) {
-                dist[neighbor.id] = alt;
-                prev[neighbor.id] = current_id;
-                q.decreaseKey(neighbor.id, alt);
-                change.changeNodeWeight(neighbor, alt);
-            }
-            change.addChangedNode(neighbor, "green");
-        }
-        stateChanges.push(change);
-    }
-    for (let node of this.nodes){
-        node.color = "yellow";
-    }
-    return stateChanges;
-};
-
-
-//requires start_id and goal_id
 GraphCreator.prototype.bfs = function(start_id, goal_id){
-	// var set = new Set([]);
 	var q = [];
 
-	var start = this.nodes[start_id];
-	var goal = this.nodes[goal_id];
+	var start = this.nodes.get(start_id);
+	var goal = this.nodes.get(goal_id);
 
-	// set.add(start);
 	q.push(start);
 	start.visited = true;
 
@@ -267,28 +365,131 @@ GraphCreator.prototype.bfs = function(start_id, goal_id){
 		change.addChangedNode(current, "red");
 		if (current.id === goal.id){
 			stateChanges.push(change);
-            for (let node of this.nodes){
+            for (let node of this.nodes.values()){
+	    	node.visited = false;
                 node.color = "yellow";
             }
 			return stateChanges;
 		}
 		for (let neighbor of current.out_neighbors){
 			if (neighbor.color === "yellow") {
-				// set.add(neighbor);
 				q.push(neighbor);
 				// neighbor.parent = current;
-                neighbor.color = "green";
+                		neighbor.color = "green";
 				change.addChangedNode(neighbor, "green");
 			}
 		}
 		stateChanges.push(change);
 	}
 
-	for (let node of this.nodes){
-        node.color = "yellow";
-    }
+	for (let node of this.nodes.values()){
+	    	node.visited = false;
+        	node.color = "yellow";
+	}
 	return stateChanges;
 };
+
+// TODO: implement (same as regular dijkstras atm)
+GraphCreator.prototype.c_dijkstras = function(start_id){
+    var dist = [];
+    var prev = [];
+    var q = new PriorityQueue();
+
+    // initialize graph values
+    dist[start_id] = 0;
+    for (let node of this.nodes.values()) {
+        if (node.id !== start_id) {
+                dist[node.id] = Infinity;
+                prev[node.id] = undefined;
+        }
+        q.insert(node.id, dist[node.id]);
+    }
+
+    var change = new StateChange();
+    change.addChangedNode(this.nodes.get(start_id), "green");
+    var stateChanges = [];
+    stateChanges.push(change);
+
+    while (q.minimum()) {
+        var current_id = q.extractMin();
+	if (current_id === -1){
+		break;
+	}
+	var cur_node = this.nodes.get(current_id);
+        change = new StateChange();
+        change.addChangedNode(cur_node, "red");
+        for (let edge of cur_node.out_edges.values()) {
+            var neighbor = edge.end;
+            var alt = dist[current_id] + edge.weight;
+            if (alt < dist[neighbor.id]) {
+                dist[neighbor.id] = alt;
+                prev[neighbor.id] = current_id;
+                q.decreaseKey(neighbor.id, alt);
+                change.changeNodeWeight(neighbor, alt);
+            }
+            change.addChangedNode(neighbor, "green");
+        }
+        stateChanges.push(change);
+    }
+    for (let node of this.nodes.values()){
+        node.color = "yellow";
+    }
+    return stateChanges;
+};
+
+GraphCreator.prototype.dijkstras = function(start_id){
+    var dist = [];
+    var prev = [];
+    var q = new PriorityQueue();
+
+    // initialize graph values
+    dist[start_id] = 0;
+    for (let node of this.nodes.values()) {
+        if (node.id !== start_id) {
+                dist[node.id] = Infinity;
+                prev[node.id] = undefined;
+        }
+        q.insert(node.id, dist[node.id]);
+    }
+
+    var change = new StateChange();
+    change.addChangedNode(this.nodes.get(start_id), "green");
+    var stateChanges = [];
+    stateChanges.push(change);
+
+    while (q.minimum()) {
+        var current_id = q.extractMin();
+	if (current_id === -1){
+		break;
+	}
+	var cur_node = this.nodes.get(current_id);
+        change = new StateChange();
+        change.addChangedNode(cur_node, "red");
+        for (let edge of cur_node.out_edges.values()) {
+            var neighbor = edge.end;
+            var alt = dist[current_id] + edge.weight;
+            if (alt < dist[neighbor.id]) {
+                dist[neighbor.id] = alt;
+                prev[neighbor.id] = current_id;
+                q.decreaseKey(neighbor.id, alt);
+                change.changeNodeWeight(neighbor, alt);
+            }
+            change.addChangedNode(neighbor, "green");
+        }
+        stateChanges.push(change);
+    }
+    for (let node of this.nodes.values()){
+        node.color = "yellow";
+    }
+    return stateChanges;
+};
+
+
+
+/*
+
+
+//requires start_id and goal_id
 
 GraphCreator.prototype.prims = function(start) {
 	var dist = {};
@@ -580,14 +781,21 @@ GraphCreator.prototype.toString = function() {
    // edge format: "start ID" "end ID" properties...
    for (let node of this.nodes.values()) {
       for (let edge of node.out_edges.values()) {
+	 if(edge.visited) continue;	// only print edges one
          str_rep += edge.start.id + " " + edge.end.id + " " + edge.weight + " " + edge.color + "\n";
+	 edge.visited = true;
+      }
+   }
+   // reset
+   for (let node of this.nodes.values()) {
+      for (let edge of node.out_edges.values()) {
+      	 edge.visited = false;
       }
    }
    return str_rep.slice(0, -1);
 };
 
 // constructs graph from string
-// TODO: fix implementation for directed graphs (edges appear twice)
 GraphCreator.prototype.fromString = function(graph_str) {
 	var strings = graph_str.split("\n---\n");
 	// populate graph properties (directed, current ID)
@@ -604,7 +812,6 @@ GraphCreator.prototype.fromString = function(graph_str) {
 
 	// add nodes to graph
 	var node_list = strings[1].split("\n");
-	//console.log(node_list);
 	for (let node_str of node_list) {
 		let node_split = node_str.split(" ");
 
@@ -633,17 +840,16 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-/* test code
+/*
 let x_graph = new GraphCreator(true);
 
-x_graph.addNode("A0", 2, "black");
-x_graph.addNode("B1", 4, "black");
-x_graph.addNode("C2", 8, "black");
-x_graph.addNode("D3", 16, "black");
-x_graph.addNode("E4", 32, "black");
-x_graph.addNode("F5", 64, "black");
-x_graph.addNode("G6", 128, "black");
-
+x_graph.addNode("A0", 2, "yellow");
+x_graph.addNode("B1", 4, "yellow");
+x_graph.addNode("C2", 8, "yellow");
+x_graph.addNode("D3", 16, "yellow");
+x_graph.addNode("E4", 32, "yellow");
+x_graph.addNode("F5", 64, "yellow");
+x_graph.addNode("G6", 128, "yellow");
 
 x_graph.addEdge(0, 1, 7, "red");
 x_graph.addEdge(0, 2, 9, "red");
@@ -655,12 +861,11 @@ x_graph.addEdge(2, 5, 11, "red");
 x_graph.addEdge(2, 6, 2, "red");
 
 x_graph.addEdge(4, 5, 6, "red");
-
+//x_graph.removeNode(2);
 
 var graph_str = x_graph.toString();
 console.log(graph_str);
 
-console.log("###########");
-
-console.log(x_graph.dfs(0, 3));
+console.log(x_graph.c_bfs(0,3));
 */
+
