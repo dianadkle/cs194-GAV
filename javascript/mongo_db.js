@@ -67,7 +67,19 @@ function addUser(user_name, pass_word) {
 	    description: '',
 	    username: user_name,
 	    password: returnHMACSHA1(pass_word),
-	    salt: '',
+	    achievements: [{
+	    	one_graph: false,
+	    	five_graphs: false,
+	    	ten_graphs: false,
+	    	twenty_five_graphs: false,
+	    	make_account: true,
+	    	update_account: false,
+	    	save_graph: false,
+	    	load_graph: false,
+	    	run_algorithm: false,
+	    	run_nfadfa: false,
+	    	one_quiz_correct: false
+	    }],
 	    graphs: []
 	});
 
@@ -79,7 +91,7 @@ function addUser(user_name, pass_word) {
 		console.log("2");
 		console.log('User saved.');
 		User.findOne(query, function (err, user) {
-			console.log(user);
+			console.log(user.achievements);
 		})
 	});
 	console.log("3");
@@ -106,11 +118,12 @@ function updateUser(user_name, update) {
 	console.log(update.get("first_name"));
 	User.findOne(query, function (err, user) {
 		if (err) throw err;
+		if (user === null) return;
 		user.first_name = update.get("first_name");
     	user.last_name = update.get("last_name");
     	user.description = update.get("description");
     	user.password = returnHMACSHA1(update.get("password"));
-
+    	user.achievements[update_account] = true;
     	user.save(function(err) {
 			if (err){
 				console.log(err);
@@ -140,6 +153,19 @@ function saveGraph(user_name, nodes) {
 		user.graphs.push(nodesDB);
 		// console.log(nodesDB);
 		user.markModified('graphs');
+		user.achievements[save_graph] = true;
+		if (user.graphs.length === 1){
+			user.achievements[one_graph] = true;
+		}
+		if (user.graphs.length === 5){
+			user.achievemetns[five_graphs] = true;
+		}
+		if (user.graphs.length === 10){
+			user.achievements[ten_graphs] = true;
+		}
+		if (user.graphs.length === 25){
+			user.achievements[twenty_five_graphs] = true;
+		}
 
     	user.save(function(err) {
 			if (err) throw err;
@@ -166,6 +192,13 @@ function loadGraph(user_name, index) {
 			nodes.set(node.id, node);
 		}
 		updateNodes(nodes, graph);
+
+		if (user.achievements[load_graph] === false){
+			user.achievements[load_graph] = true;
+			user.save(function(err) {
+				if (err) throw err;
+			});
+		}
 		// console.log(nodes);
 		return nodes;
 	});
@@ -294,7 +327,7 @@ function test(){
 // deleteUser('diana');
 // deleteUser('diana');
 // deleteUser('diana');
-// addUser('diana', 'blah');
+addUser('diana', 'blah');
 
 // var query = { 'username': 'diana' };
 // var changes = new Map([]);

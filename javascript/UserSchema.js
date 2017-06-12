@@ -16,7 +16,19 @@ var userSchema = new mongoose.Schema({
     description: String,  // A brief user description
     username: {type:String},    // username of the user
     password: String,   // Password Digest of the user
-    // salt: String,   // Salt associated with password
+    achievements: [{
+    	one_graph: Boolean,
+    	five_graphs: Boolean,
+    	ten_graphs: Boolean,
+    	twenty_five_graphs: Boolean,
+    	make_account: Boolean,
+    	update_account: Boolean,
+    	save_graph: Boolean,
+    	load_graph: Boolean,
+    	run_algorithm: Boolean,
+    	run_nfadfa: Boolean,
+    	one_quiz_correct: Boolean
+    }],
     // graphs: [[{type: mongoose.Schema.Types.ObjectId, ref: 'NodeDB'}]]
     graphs: [[NodeDB.schema]]
 });
