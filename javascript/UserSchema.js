@@ -14,10 +14,11 @@ var userSchema = new mongoose.Schema({
     first_name: String, // First name of the user.
     last_name: String,  // Last name of the user.
     description: String,  // A brief user description
-    username: String,    // username of the user
+    username: {type:String},    // username of the user
     password: String,   // Password Digest of the user
-    salt: String,   // Salt associated with password
-    graphs: [[{type: mongoose.Schema.Types.ObjectId, ref: 'NodeDB'}]]
+    // salt: String,   // Salt associated with password
+    // graphs: [[{type: mongoose.Schema.Types.ObjectId, ref: 'NodeDB'}]]
+    graphs: [[NodeDB.schema]]
 });
 
 // the schema is useless so far

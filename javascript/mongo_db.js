@@ -2,16 +2,21 @@
 /*jslint node: true */
 
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/userDB');
-mongoose.connect('mongodb://127.0.0.1/userDB');
+mongoose.connect('mongodb://localhost/userDB');
+// mongoose.connect('mongodb://127.0.0.1/userDB');
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function callback () {
   console.log("Connected");
 });
 
+
 var Node = require('./Node');
 var Edge = require('./Edge');
+var Graph = require('./GraphCreator')
+
+var g = new Graph();
+g.addNode('0', 3, 'yellow');
 
 var User = require('./userSchema');
 var NodeDB = require('./nodeSchema');
@@ -48,7 +53,7 @@ function loginUser(user_name, password) {
 }
 
 function addUser(user_name, pass_word) {
-	var query = { username: user_name };
+	var query = { 'username': user_name };
 	User.findOne(query, function (err, docs) {
 		if (docs !== null) {
 			console.log('Username already taken.');
@@ -66,18 +71,27 @@ function addUser(user_name, pass_word) {
 	    graphs: []
 	});
 
+	console.log("1");
 	newUser.save(function(err) {
-		if (err) throw err;
+		if (err) {
+			console.log(err);
+		}
+		console.log("2");
 		console.log('User saved.');
+		User.findOne(query, function (err, user) {
+			console.log(user);
+		})
 	});
+	console.log("3");
 }
 
 function deleteUser(user_name) {
-	var query = { username: user_name };
+	var query = { 'username': user_name };
 	User.findOneAndRemove(query, function (err, user) {
 		if (err) throw err;
 
 		if (user) {
+			console.log(user);
 			console.log('User deleted.');
 		}
 		else {
@@ -87,40 +101,51 @@ function deleteUser(user_name) {
 }
 
 function updateUser(user_name, update) {
-	var query = { username: user_name };
+	var query = { 'username': user_name };
+	console.log(update);
+	console.log(update.get("first_name"));
 	User.findOne(query, function (err, user) {
 		if (err) throw err;
-
 		user.first_name = update.get("first_name");
     	user.last_name = update.get("last_name");
     	user.description = update.get("description");
     	user.password = returnHMACSHA1(update.get("password"));
 
     	user.save(function(err) {
-			if (err) throw err;
+			if (err){
+				console.log(err);
+			}
+			// User.findOne(query, function (err, user) {
+			// 	console.log(user);
+			// })
 			console.log('User updated.');
 		});
 	});
 }
 
 function saveGraph(user_name, nodes) {
-	var nodesDB = [];
-
-	var node;
-	Object.keys(nodes).forEach(function(key) {
-	    node = nodes[key];
-	    nodesDB.push(convertNodeToNodeDB(node));
-	});
 
 	var query = { username: user_name };
 	User.findOne(query, function (err, user) {
 		if (err) throw err;
+		var nodesDB = [];
 
+		var node;
+		nodes.forEach(function(value, key, map) {
+			// console.log(key);
+		    node = value;
+		    nodesDB.push(convertNodeToNodeDB(node));
+		});
+		// console.log('hi');
 		user.graphs.push(nodesDB);
+		// console.log(nodesDB);
 		user.markModified('graphs');
 
     	user.save(function(err) {
 			if (err) throw err;
+			// User.findOne(query, function (err, user) {
+			// 	console.log(user.graphs[0]);
+			// })
 			console.log('Graph saved.');
 		});
 	});
@@ -132,6 +157,7 @@ function loadGraph(user_name, index) {
 		if (err) throw err;
 
 		var graph = user.graphs[index];
+		// console.log(graph);
 		var nodes = new Map([]);
 
 		for (var i = 0; i < graph.length; i++) {
@@ -140,7 +166,7 @@ function loadGraph(user_name, index) {
 			nodes.set(node.id, node);
 		}
 		updateNodes(nodes, graph);
-
+		// console.log(nodes);
 		return nodes;
 	});
 }
@@ -157,7 +183,7 @@ function convertNodeToNodeDB(node) {
 	    out_neighbors: nodesToIds(node.out_neighbors),
 	    in_edges: edgesToIds(node.in_edges, true),
 	    out_edges: edgesToIds(node.out_edges, false),
-	    parent: node.parent.id
+	    // parent: node.parent.id
 	});
 
 	return newNode;
@@ -249,14 +275,28 @@ function idsToEdges(nodes, id, edgesDB, isInEdge) {
 	return edges;
 }
 
-addUser('diana', 'blah');
-var query = { username: 'diana' };
-User.findOne(query, function (err, user) {
-	console.log(user);
-})
-var changes = new Map([]);
-changes.set('first_name', 'Diana');
-updateUser('diana', changes);
-User.findOne(query, function (err, user) {
-	console.log(user);
-});
+function test(){
+	// g.addNode('1', 4, 'yellow');
+	// g.addEdge(0, 1, 1, 'red');
+	console.log(g.nodes);
+	saveGraph('diana', g.nodes);
+}
+// deleteUser('diana');
+// var g = new Graph();
+// g.addNode('0', 3, 'yellow');
+// g.addNode('1', 4, 'yellow');
+// g.addEdge(0, 1, 1, 'red');
+// test()
+// var nodes = loadGraph('diana', 0);
+// console.log(nodes);
+// deleteUser('diana');
+// deleteUser('diana');
+// deleteUser('diana');
+// deleteUser('diana');
+// deleteUser('diana');
+// addUser('diana', 'blah');
+
+// var query = { 'username': 'diana' };
+// var changes = new Map([]);
+// changes.set("first_name", "Diana");
+// updateUser('diana', changes);

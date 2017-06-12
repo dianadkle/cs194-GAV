@@ -19,7 +19,7 @@ var nodeSchema = new mongoose.Schema({
     out_neighbors: [Number],
     in_edges: [[ Number, EdgeDB ]],
     out_edges: [[ Number, EdgeDB ]],
-    parent: Number
+    // parent: Number
 });
 
 // the schema is useless so far
