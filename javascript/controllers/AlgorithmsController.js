@@ -1,6 +1,6 @@
 'use strict';
 
-function SideBarController(algorithms){
+function AlgorithmsController(algorithms){
    this.algorithms = algorithms;
 };
 
@@ -13,9 +13,9 @@ function createAlgorithmButtons(algorithms){
    });
 }
 
-SideBarController.prototype.control = function(){
+AlgorithmsController.prototype.control = function(){
    createAlgorithmButtons(this.algorithms);
 
 };
 
-module.exports = SideBarController;
+module.exports = AlgorithmsController;

@@ -4,11 +4,11 @@ var Utils = require('../Utils');
 var GraphSVGHandler = require('../GraphSVGHandler');
 var AutomataVisualizer = require('../AutomataVisualizer');
 
-function GraphCanvasController(userInfo){
+function GraphController(userInfo){
    this.userInfo = userInfo;
 };
 
-GraphCanvasController.prototype.control = function(){
+GraphController.prototype.control = function(){
    var graphSVGHandler = new GraphSVGHandler();
    var automataVisualizer = new AutomataVisualizer("a*b");
 
@@ -154,6 +154,7 @@ GraphCanvasController.prototype.control = function(){
             graphSVGHandler.prepareAlgorithm(tag.innerHTML);
          }
       });
+      //TODO: find a way to make this trigger a graph template rendering
    };
 
 
@@ -165,4 +166,4 @@ GraphCanvasController.prototype.control = function(){
    linkAlgorithmButtons();
 };
 
-module.exports = GraphCanvasController;
+module.exports = GraphController;

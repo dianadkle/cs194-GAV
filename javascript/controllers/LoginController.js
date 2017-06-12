@@ -16,7 +16,7 @@ LoginController.prototype.control = function(){
       //TODO: check registration credentials
       if(/*successful credentials*/true){
          index.renderSideBar();
-         index.renderGraphCanvas({
+         index.renderGraph({
             username: username,
             user_id: 0
          });
