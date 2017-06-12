@@ -8,6 +8,7 @@ function Edge(start, end, weight, color){
    this.end = end;
    this.weight = weight;
    this.color = color;
+   this.visited = false;
 }
 
 // NOTE: the switchDirection operation is local to the edge structure.

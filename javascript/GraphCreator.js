@@ -581,7 +581,15 @@ GraphCreator.prototype.toString = function() {
    // edge format: "start ID" "end ID" properties...
    for (let node of this.nodes.values()) {
       for (let edge of node.out_edges.values()) {
+	 if(edge.visited) continue;	// only print edges one
          str_rep += edge.start.id + " " + edge.end.id + " " + edge.weight + " " + edge.color + "\n";
+	 edge.visited = true;
+      }
+   }
+   // reset
+   for (let node of this.nodes.values()) {
+      for (let edge of node.out_edges.values()) {
+      	 edge.visited = false;
       }
    }
    return str_rep.slice(0, -1);
@@ -634,7 +642,7 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-let x_graph = new GraphCreator(true);
+let x_graph = new GraphCreator(false);
 
 x_graph.addNode("A0", 2, "yellow");
 x_graph.addNode("B1", 4, "yellow");
@@ -656,14 +664,5 @@ x_graph.addEdge(2, 6, 2, "red");
 x_graph.addEdge(4, 5, 6, "red");
 x_graph.removeNode(2);
 
-
 var graph_str = x_graph.toString();
 console.log(graph_str);
-
-console.log("###########");
-
-console.log(x_graph.dfs(0, 3));
-console.log("###########");
-//console.log(x_graph.dijkstras(0));
-console.log("###########");
-console.log(x_graph.bfs(0, 3));
