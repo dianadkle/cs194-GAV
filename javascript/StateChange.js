@@ -3,7 +3,7 @@
 // must be given an array of nodes, and an array of edges or null for both
 function StateChange(type_str){
    this.nodesChanged = {};
-   this.edgesChanged= new Set([]);
+   this.edgesChanged= new Map();
    this.nodeWeightsChanged = {};
    this.edgeWeightsChanged = {};
    this.comment = "";
@@ -22,8 +22,8 @@ StateChange.prototype.getChangedNodes = function() {
 	return this.nodesChanged;
 };
 
-StateChange.prototype.addChangedEdge = function(edge) {
-	this.edgesChanged.add(node);
+StateChange.prototype.addChangedEdge = function(edge, color) {
+	this.edgesChanged.set(edge, color);
 };
 
 StateChange.prototype.getChangedEdges = function() {

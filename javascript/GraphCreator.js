@@ -184,6 +184,12 @@ GraphCreator.prototype.c_dfs = function(start_id, goal_id) {
 		change.lopc(2);
 		change.struct(qsToString(stack));
 		stateChanges.push(change);
+	} else {
+		change = new StateChange("stack");
+		change.addComment("Stack size is 0; end execution");
+		change.lopc(2);
+		change.struct(qsToString(stack));
+		stateChanges.push(change);
 	}
 
         while (stack.length > 0) {
@@ -238,6 +244,12 @@ GraphCreator.prototype.c_dfs = function(start_id, goal_id) {
 			change.lopc(2);
 			change.struct(qsToString(stack));
 			stateChanges.push(change);
+		} else {
+			change = new StateChange("stack");
+			change.addComment("Stack size is 0; end execution");
+			change.lopc(2);
+			change.struct(qsToString(stack));
+			stateChanges.push(change);
 		}
         }
 
@@ -277,6 +289,12 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 		change.addComment("Queue size (" + q.length + ") is greater than 0; execute loop");
 		change.lopc(2);
 		change.struct(qsToString(q));
+		stateChanges.push(change);
+	} else {
+		change = new StateChange("queue");
+		change.addComment("Queue size is 0; end execution");
+		change.lopc(2);
+		change.struct(qsToString(stack));
 		stateChanges.push(change);
 	}
 
@@ -324,6 +342,20 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 		change.lopc(5);
 		change.struct(qsToString(q));
 		stateChanges.push(change);
+
+		if(q.length > 0) {
+			change = new StateChange("queue");
+			change.addComment("Queue size (" + q.length + ") is greater than 0; execute loop");
+			change.lopc(2);
+			change.struct(qsToString(q));
+			stateChanges.push(change);
+		} else {
+			change = new StateChange("queue");
+			change.addComment("Queue size is 0; end execution");
+			change.lopc(2);
+			change.struct(qsToString(stack));
+			stateChanges.push(change);
+		}
 	}
 
 	for (let node of this.nodes.values()){
@@ -482,7 +514,6 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 		stateChanges.push(change);
 	}
 
-
 	while (q.nonEmpty()) {
 		var current_id = q.extractMin();
 		change = new StateChange("priority queue");
@@ -507,6 +538,7 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 				prev[neighbor.id] = current_id;
 				q.decreaseKey(neighbor.id, alt);
 				change.changeNodeWeight(neighbor, alt);
+				change.addChangedEdge(edge, "red");
 			}
 			change.addChangedNode(neighbor, "green");
 		}
@@ -514,6 +546,7 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 		change.struct(pqToString(this, q));
 		change.addComment("Relaxing neighbor node distances");
 		stateChanges.push(change);
+
 		if(q.nonEmpty()) {
 			change = new StateChange("priority queue")
 			change.addComment("Priority queue size (" + q.array.size + ") is greater than 0; execute loop");
@@ -933,7 +966,6 @@ GraphCreator.prototype.fromString = function(graph_str) {
 module.exports = GraphCreator;
 let x_graph = new GraphCreator(true);
 
-/*
 x_graph.addNode("A0", 2, "yellow");
 x_graph.addNode("B1", 4, "yellow");
 x_graph.addNode("C2", 8, "yellow");
@@ -958,4 +990,3 @@ var graph_str = x_graph.toString();
 console.log(graph_str);
 
 console.log(x_graph.c_dijkstras(0));
-*/
