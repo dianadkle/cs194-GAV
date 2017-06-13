@@ -81,7 +81,7 @@ function Index(){
       };
 
       document.getElementById('graphBar').onclick = function(){
-         index.renderGraph();
+         index.renderGraph(null);
       };
 
       document.getElementById('savedGraphsBar').onclick = function(){
@@ -102,7 +102,7 @@ function Index(){
    };
 
    //GraphCanvas Rendering stuff
-   Index.prototype.renderGraph = function(){
+   Index.prototype.renderGraph = function(given_graph){
       var userInfo = this.userInfo;
       mainDIV.html(graphTemplate(userInfo));
 
@@ -114,7 +114,7 @@ function Index(){
       $('#savedGraphsButton').css("background-color", "#55ACF0");
       $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
-      graphController.control(algorithms);
+      graphController.control(algorithms, given_graph);
    };
 
    //GraphCanvas Rendering stuff
@@ -161,6 +161,7 @@ function Index(){
    };
 
    Index.prototype.renderSavedGraphs = function(){
+      var index = this;
       var userInfo = this.userInfo;
       mainDIV.html(savedGraphsTemplate(userInfo));
 
@@ -171,7 +172,7 @@ function Index(){
       $('#savedGraphsButton').css("background-color", "#ffffff");
       $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
-      savedGraphController.control();
+      savedGraphController.control(index);
    };
 };
 

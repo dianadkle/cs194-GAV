@@ -43,7 +43,7 @@ var links = [
    {source:14, target: 6, color: 'blue', weight:undefined}
 ];
 
-function GraphSVGHandler(){
+function GraphSVGHandler(loadedGraph){
    var radius = 20;
    var selectedNode = null, selectedTag = null;
    var clickWasOnNode = false, dblClickWasOnSVG = true;
@@ -68,6 +68,16 @@ function GraphSVGHandler(){
    var node = null, link = null, linkLabel = null;
 
    var graphCreator = new GraphCreator(false);
+   if(loadedGraph !== null){
+      // graphCreator.fromString(loadedGraph);
+      // var importNodes = graphCreator.nodes;
+      // var newNodes = [];
+      // for (var id of importNodes.keys()){
+      //    var newNode = importNodes[id];
+      //    newNodes.push(newNode);
+      // }
+      // console.log(newNodes);
+   }
 
    importData();
 

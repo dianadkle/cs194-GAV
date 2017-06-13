@@ -7,9 +7,9 @@ function GraphController(userInfo){
    this.userInfo = userInfo;
 };
 
-GraphController.prototype.control = function(algorithmsParam){
+GraphController.prototype.control = function(algorithmsParam, loadedGraph){
    var algorithms = algorithmsParam;
-   var graphSVGHandler = new GraphSVGHandler();
+   var graphSVGHandler = new GraphSVGHandler(loadedGraph);
 
    var createAlgorithmButtons = function(){
       var algOpenTag = "<p class='algorithm'>";
