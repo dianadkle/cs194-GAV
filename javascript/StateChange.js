@@ -1,14 +1,16 @@
 "use strict";
 
 // must be given an array of nodes, and an array of edges or null for both
-function StateChange(){
+function StateChange(type_str){
    this.nodesChanged = {};
-   this.edgesChanged= new Set([]);
+   this.edgesChanged= new Map();
    this.nodeWeightsChanged = {};
    this.edgeWeightsChanged = {};
    this.comment = "";
    // Line Of PseudoCode corresponding to algorithm execution (0 = no line)
    this.executed_lopc = 0;
+   this.structure_type = type_str;
+   this.data_structure = null;
 }
 
 // given a Node, adds to the graph
@@ -20,8 +22,8 @@ StateChange.prototype.getChangedNodes = function() {
 	return this.nodesChanged;
 };
 
-StateChange.prototype.addChangedEdge = function(edge) {
-	this.edgesChanged.add(node);
+StateChange.prototype.addChangedEdge = function(edge, color) {
+	this.edgesChanged.set(edge, color);
 };
 
 StateChange.prototype.getChangedEdges = function() {
@@ -42,6 +44,10 @@ StateChange.prototype.addComment = function(str_comment) {
 
 StateChange.prototype.lopc = function(line_no) {
 	this.executed_lopc = line_no;
+}
+
+StateChange.prototype.struct = function(struc) {
+	this.data_structure = struc;
 }
 
 module.exports = StateChange;

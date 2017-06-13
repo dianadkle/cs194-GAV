@@ -22,28 +22,46 @@ LoginController.prototype.control = function(){
          index.renderRegister();
    };
    document.getElementById("login").onclick = function(){
-      var username = document.getElementById("username").value,
+      var user_name = document.getElementById("username").value,
       password = document.getElementById("password").value;
-       var success = true;
+       var success = false;
       //var success = Database.checkUser(username, password);
 
       // if (!success){
       //    $('#loginError').css("display", 'block');
       // }
-
-      if(success){
-         var userInfo = {
-            //TODO: edit to reflect appropriate first name, last name, etc.
-            firstName: 'Donald',
-            lastName: 'Trump',
-            username: username,
-            email: 'donald@trump.whitehouse.gov',
-            achievements:'none. ever.',
-         };
-         index.setUserInfo(userInfo);
-         index.renderSideBar();
-         index.renderGraph();
-      }
+      var user;
+      $.get("http://127.0.0.1:3000", function (data) {
+         console.log(data);
+         console.log(user_name);
+         for (var i = 0; i < data.length; i++){
+            console.log(data[i].username);
+            console.log(data[i].username.localeCompare(user_name));
+            if (data[i].username.localeCompare(user_name) === 0){
+                if (data[i].password.localeCompare(password) === 0) {
+                   user = data[i];
+                    success = true;
+                    break;
+                }
+            }
+         }
+         if(success){
+            var userInfo = {
+               //TODO: edit to reflect appropriate first name, last name, etc.
+               firstName: user.firstname,
+               lastName: 'Trump',
+               username: user.username,
+               email: 'donald@trump.whitehouse.gov',
+               achievements:'none. ever.',
+            };
+            index.setUserInfo(userInfo);
+             index.renderSideBar();
+             index.renderGraph({
+                username: username,
+                user_id: 0
+             });
+          }
+      });
    };
 }
 
