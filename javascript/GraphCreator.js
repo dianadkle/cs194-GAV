@@ -301,7 +301,7 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 	while (q.length > 0) {
 		var current = q.shift();
 		change = new StateChange("queue");
-        	current.color = "red";
+     //   	current.color = "red";
 		change.addChangedNode(current, "red");
 		change.addComment("Dequeuing node \"" + current.value + "\"");
 		change.lopc(3);
@@ -334,7 +334,7 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 			if (neighbor.color === "yellow") {
 				num_added++;
 				q.push(neighbor);
-                		neighbor.color = "green";
+      //          		neighbor.color = "green";
 				change.addChangedNode(neighbor, "green");
 			}
 		}
@@ -534,6 +534,7 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 			var neighbor = edge.end;
 			var alt = dist[current_id] + edge.weight;
 			if (alt < dist[neighbor.id]) {
+				change.changeNodeWeight(neighbor, alt, dist[neighbor.id]);
 				dist[neighbor.id] = alt;
 				if(prev[neighbor.id] !== undefined) {
 					let old_previous = this.nodes.get(prev[neighbor.id]);
@@ -542,7 +543,6 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 				}
 				prev[neighbor.id] = current_id;
 				q.decreaseKey(neighbor.id, alt);
-				change.changeNodeWeight(neighbor, alt);
 				change.addChangedEdge(edge, "red");
 			}
 			change.addChangedNode(neighbor, "green");
@@ -969,7 +969,6 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-/*
 let x_graph = new GraphCreator(true);
 
 x_graph.addNode("A0", 2, "yellow");
@@ -996,4 +995,3 @@ var graph_str = x_graph.toString();
 console.log(graph_str);
 
 console.log(x_graph.c_dijkstras(0));
-*/
