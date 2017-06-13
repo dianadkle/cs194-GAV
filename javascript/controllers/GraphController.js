@@ -159,6 +159,8 @@ GraphController.prototype.control = function(algorithmsParam){
                   method: "PUT",
                   data: {
                      'firstname': user.firstname,
+                     'lastname': user.lastname,
+                     'email': user.email,
                      'password': user.password,
                      'achievements': new_achievements,
                      'num_graphs': new_num_graphs,
