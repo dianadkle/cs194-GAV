@@ -301,7 +301,6 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 	while (q.length > 0) {
 		var current = q.shift();
 		change = new StateChange("queue");
-     //   	current.color = "red";
 		change.addChangedNode(current, "red");
 		change.addComment("Dequeuing node \"" + current.value + "\"");
 		change.lopc(3);
@@ -334,7 +333,6 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 			if (neighbor.color === "yellow") {
 				num_added++;
 				q.push(neighbor);
-      //          		neighbor.color = "green";
 				change.addChangedNode(neighbor, "green");
 			}
 		}
@@ -364,110 +362,6 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 	}
 	return stateChanges;
 };
-
-GraphCreator.prototype.dfs = function(start_id, goal_id){
-	var start = this.nodes.get(start_id);
-	var goal = this.nodes.get(goal_id);
-        var stack = [];
-
-        stack.push(start);
-        var change = new StateChange();
-        change.addChangedNode(start, "green");
-        var stateChanges = [];
-        stateChanges.push(change);
-
-        while (stack.length > 0) {
-                var current = stack.pop();
-                change = new StateChange();
-                change.addChangedNode(current, "red");
-                current.color = "red";
-                if (current.id === goal.id) {
-                        stateChanges.push(change);
-                        for (let node of this.nodes.values()){
-	    		    node.visited = false;
-                            node.color = "yellow";
-                        }
-                        return stateChanges;
-                }
-                if (!current.visited) {
-                        current.visited = true;
-                        for (let node of current.out_neighbors) {
-                                if (node.color === "yellow"){
-					stack.push(node);
-					node.color = "green";
-					change.addChangedNode(node, "green");
-				}
-                        }
-                }
-
-                stateChanges.push(change);
-        }
-
-        for (let node of this.nodes.values()){
-            node.color = "yellow";
-	    node.visited = false;
-        }
-        return stateChanges;
-};
-
-GraphCreator.prototype.bfs = function(start_id, goal_id){
-	var q = [];
-
-	var start = this.nodes.get(start_id);
-	var goal = this.nodes.get(goal_id);
-
-	q.push(start);
-	start.visited = true;
-
-	var change = new StateChange("queue");
-	change.addChangedNode(start, "green");
-	var stateChanges = [];
-	change.struct(qsToString(q));
-	stateChanges.push(change);
-	while (q.length > 0) {
-		var current = q.shift();
-		change = new StateChange("queue");
-        	current.color = "red";
-		change.addChangedNode(current, "red");
-		if (current.id === goal.id){
-			change.struct(qsToString(q));
-			stateChanges.push(change);
-            for (let node of this.nodes.values()){
-	    	node.visited = false;
-                node.color = "yellow";
-            }
-			return stateChanges;
-		}
-		for (let neighbor of current.out_neighbors){
-			if (neighbor.color === "yellow") {
-				q.push(neighbor);
-				// neighbor.parent = current;
-                		neighbor.color = "green";
-				change.addChangedNode(neighbor, "green");
-			}
-		}
-		change.struct(qsToString(q));
-		stateChanges.push(change);
-	}
-
-	for (let node of this.nodes.values()){
-	    	node.visited = false;
-        	node.color = "yellow";
-	}
-	return stateChanges;
-};
-
-function pqToString(graph, pq) {
-	var retval = "";
-	if(pq.array.size === 0) return retval;
-
-	for(let key of pq.array.keys()) {
-		retval += graph.nodes.get(key).value + ": ";
-		retval += pq.array.get(key) + ", ";
-	}
-
-	return retval.slice(0, -2);
-}
 
 /* canonical pseudocode
  * 1 for every node, n, in graph:
@@ -565,55 +459,6 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 	}
 	return stateChanges;
 };
-
-GraphCreator.prototype.dijkstras = function(start_id){
-    var dist = [];
-    var prev = [];
-    var q = new PriorityQueue();
-
-    // initialize graph values
-    dist[start_id] = 0;
-    for (let node of this.nodes.values()) {
-        if (node.id !== start_id) {
-                dist[node.id] = Infinity;
-                prev[node.id] = undefined;
-        }
-        q.insert(node.id, dist[node.id]);
-    }
-
-    var change = new StateChange("priority queue");
-    change.addChangedNode(this.nodes.get(start_id), "green");
-    var stateChanges = [];
-    stateChanges.push(change);
-
-    while (q.minimum()) {
-        var current_id = q.extractMin();
-	if (current_id === -1){
-		break;
-	}
-	var cur_node = this.nodes.get(current_id);
-        change = new StateChange("priority queue");
-        change.addChangedNode(cur_node, "red");
-        for (let edge of cur_node.out_edges.values()) {
-            var neighbor = edge.end;
-            var alt = dist[current_id] + edge.weight;
-            if (alt < dist[neighbor.id]) {
-                dist[neighbor.id] = alt;
-                prev[neighbor.id] = current_id;
-                q.decreaseKey(neighbor.id, alt);
-                change.changeNodeWeight(neighbor, alt);
-            }
-            change.addChangedNode(neighbor, "green");
-        }
-        stateChanges.push(change);
-    }
-    for (let node of this.nodes.values()){
-        node.color = "yellow";
-    }
-    return stateChanges;
-};
-
-
 
 /*
 
@@ -969,29 +814,31 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-// let x_graph = new GraphCreator(true);
-//
-// x_graph.addNode("A0", 2, "yellow");
-// x_graph.addNode("B1", 4, "yellow");
-// x_graph.addNode("C2", 8, "yellow");
-// x_graph.addNode("D3", 16, "yellow");
-// x_graph.addNode("E4", 32, "yellow");
-// x_graph.addNode("F5", 64, "yellow");
-// x_graph.addNode("G6", 128, "yellow");
-//
-// x_graph.addEdge(0, 1, 7, "blue");
-// x_graph.addEdge(0, 2, 9, "blue");
-//
-// x_graph.addEdge(1, 4, 10, "blue");
-// x_graph.addEdge(1, 3, 15, "blue");
-//
-// x_graph.addEdge(2, 5, 11, "blue");
-// x_graph.addEdge(2, 6, 2, "blue");
-//
-// x_graph.addEdge(4, 5, 6, "blue");
-// x_graph.removeNode(2);
-//
-// var graph_str = x_graph.toString();
-// console.log(graph_str);
-//
-// console.log(x_graph.c_dijkstras(0));
+/*
+let x_graph = new GraphCreator(true);
+
+x_graph.addNode("A0", 2, "yellow");
+x_graph.addNode("B1", 4, "yellow");
+x_graph.addNode("C2", 8, "yellow");
+x_graph.addNode("D3", 16, "yellow");
+x_graph.addNode("E4", 32, "yellow");
+x_graph.addNode("F5", 64, "yellow");
+x_graph.addNode("G6", 128, "yellow");
+
+x_graph.addEdge(0, 1, 7, "blue");
+x_graph.addEdge(0, 2, 9, "blue");
+
+x_graph.addEdge(1, 4, 10, "blue");
+x_graph.addEdge(1, 3, 15, "blue");
+
+x_graph.addEdge(2, 5, 11, "blue");
+x_graph.addEdge(2, 6, 2, "blue");
+
+x_graph.addEdge(4, 5, 6, "blue");
+x_graph.removeNode(2);
+
+var graph_str = x_graph.toString();
+console.log(graph_str);
+
+console.log(x_graph.c_dijkstras(0));
+*/
