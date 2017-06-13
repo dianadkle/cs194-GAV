@@ -437,7 +437,20 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 
 		change = new StateChange("priority queue");
 		for (let edge of cur_node.out_edges.values()) {
-			var neighbor = edge.end;
+			var neighbor;
+			if(this.directed) {
+				neighbor = edge.end;
+			} else {
+				if (edge.end.id === cur_node.id) {
+					neighbor = edge.start;
+				}  else {
+					neighbor = edge.end;
+				}
+			}
+
+			// skip fully processed nodes
+			if(neighbor.color === "red") continue;
+
 			var alt = dist[current_id] + edge.weight;
 			if (alt < dist[neighbor.id]) {
 				change.changeNodeWeight(neighbor, alt, dist[neighbor.id]);
@@ -826,6 +839,7 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
+
 /*
 let x_graph = new GraphCreator(true);
 
