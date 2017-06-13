@@ -1,16 +1,19 @@
 <div class="row">
    <h1 class="heading">What is an NFA?</h1>
-   <br> Every DFA is an NFA.</br>
+   An NFA, or nondeterministic finite automata, can be thought of as a "machine" that consumes a string of input symbols and is made up of several states.  These states have transitions between them.  When an NFA takes in an input, it continually transitions to a new state until all of the input symbols have been consumed or until it can not longer transition.  Given a string, an NFA can either accept the string or reject it.  It will only accept it if there is some set of transitions that will take it to a accepting state.
 </div>
 <div class="row">
    <h1 class="heading">How do you construct an NFA?</h1>
+   Thompson's construction is the standard in constructing an NFA from a regular expression.  Essentially, the algorithm works recursively bt splitting an expression into its constitutent subexprssions, which are then constructed into an NFA using a set of rules.  Here's a great video that gives a step-by-step process on how to convert a regular expression into an NFA.
+   <iframe width="560" height="315" src="https://www.youtube.com/embed/RYNN-tb9WxI" frameborder="0" allowfullscreen></iframe> 
 </div>
 <div class="row">
    <h1 class="heading">What is a DFA?</h1>
-   <br> "A deterministic finite automaton (DFA) is a finite-state machine that accepts and rejects strings of symbols and only produces a unique computation (or run) of the automaton for each input string." [1] The two main rules of DFAs are that each of its transitions is uniquely determined by its source state and input symbol, and that reading an input symbol is required for each state transition.</br>
+   A DFA, or deterministic finite automaton (DFA), is a finite-state machine that accepts and rejects strings of symbols and only produces a unique computation (or run) of the automaton for each input string." [1]  A DFA must obey both of these conditions while an NFA does not.  So, a DFA has ONE unique set of transitions for each input while an NFA can have multiple for each input.  It is also important to note that DFAs are a subset of NFAs so every DFA is an NFA! 
 </div>
 <div class="row">
    <h1 class="heading">How do you construct a DFA from an NFA?</h1>
+   One of the main differences between an NFA and a DFA is the existence of the epsilon transitions; NFAs have them, but DFAs don't.  Thus the process of creating a DFA from an NFA is attempting to find the transitions that will replace all of the epsilon transitions.  Here's a great video that gives a step-by-step proces on how to convert from an NFA to a DFA.  
    <iframe width="560" height="315" src="https://www.youtube.com/embed/taClnxU-nao" frameborder="0" allowfullscreen></iframe>
 </div>
 <div class="row">
