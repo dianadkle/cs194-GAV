@@ -6,6 +6,7 @@ var Utils = require('./Utils');
 
 var LoginController = require('./controllers/LoginController');
 var RegisterController = require('./controllers/RegisterController');
+var ProfileController = require('./controllers/ProfileController');
 var GraphController = require('./controllers/GraphController');
 var AutomataController = require('./controllers/AutomataController');
 /***********************************Index.js***********************************/
@@ -16,13 +17,12 @@ var algorithms = [
    "Dijkstra's Algorithm"
 ];
 
+
 function Index(){
    var mainDIV = $('#mainDIV');
    var sideColumn = $('#sideColumn');
 
    /*templates*/
-   var graphCanvasTemplate = Templates.getTemplate('GraphCanvas');
-   var automataTemplate = Templates.getTemplate('Automata');
    var loginTemplate = Templates.getTemplate('Login');
    var registerTemplate = Templates.getTemplate('Register');
    var sideBarTemplate = Templates.getTemplate('SideBar');
@@ -60,15 +60,21 @@ function Index(){
       registerController.control();
    };
 
+   Index.prototype.setUserInfo = function(userInfo){
+      this.userInfo = userInfo;
+   };
+
 
    /*must be called before renderGraphCanvas or renderAutomata*/
    Index.prototype.renderSideBar = function(){
+      var userInfo = this.userInfo;
       //TODO: get user info
-      var userInfo = {name: 'Angel'};
       sideColumn.html(sideBarTemplate(userInfo));
 
       document.getElementById('profileBar').onclick = function(){
-         //TODO
+         mainDIV.html(profileTemplate(userInfo));
+         var profileController = new ProfileController(userInfo);
+         profileController.control();
       };
 
       document.getElementById('graphBar').onclick = function(){
@@ -90,7 +96,8 @@ function Index(){
    };
 
    //GraphCanvas Rendering stuff
-   Index.prototype.renderGraph = function(userInfo){
+   Index.prototype.renderGraph = function(){
+      var userInfo = this.userInfo;
       mainDIV.html(graphTemplate(userInfo));
 
       var graphController = new GraphController(userInfo);
@@ -98,14 +105,12 @@ function Index(){
       $('#toolBox').css("display", "inline");
       $('#sideBar').css("display", "inline");
 
-      $('#switchToAutomata').css("visibility", "hidden");
-      $('#switchToGraph').css("visibility", "visible");
-
       graphController.control(algorithms);
    };
 
    //GraphCanvas Rendering stuff
-   Index.prototype.renderAutomata = function(userInfo){
+   Index.prototype.renderAutomata = function(){
+      var userInfo = this.userInfo;
       mainDIV.html(automataTemplate({}));
 
       var automataController = new AutomataController(userInfo);
@@ -113,10 +118,19 @@ function Index(){
       $('#toolBox').css("display", "inline");
       $('#sideBar').css("display", "inline");
 
-      $('#switchToAutomata').css("visibility", "visible");
-      $('#switchToGraph').css("visibility", "hidden");
-
       automataController.control();
+   };
+
+   Index.prototype.renderProfile = function(){
+      var userInfo = this.userInfo;
+      mainDIV.html(profileTemplate(userInfo));
+
+      var profileController = new ProfileController(userInfo);
+
+      $('#toolBox').css("display", "inline");
+      $('#sideBar').css("display", "inline");
+
+      profileController.control();
    };
 };
 

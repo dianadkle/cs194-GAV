@@ -8,21 +8,21 @@ var Utils = require('./Utils');
 
 var nodes = [
    //520 x //560
-   {x:280-10, y:50, id: 0, value: "Arlene", weight: 2, color: "yellow"},//1
-   {x:140-10, y:150, id: 1, value: "Brett", weight: 5, color: "yellow"},//2
-   {x:420-10, y:150, id: 2, value: "Cindy", weight: 3, color: "yellow"},//2
-   {x:70-10, y:250, id: 3, value: "Dennis", weight: 6, color: "yellow"},//3
-   {x:210-10, y:250, id: 4, value: "Emily", weight: 4, color: "yellow"},//3
-   {x:350-10, y:250, id: 5, value: "Frank", weight: 1, color: "yellow"},//3
-   {x:490-10, y:250, id: 6, value: "Gilbert", weight: 7, color: "yellow"},//3
-   {x:35-10, y:350, id: 7, value: "Harvey", weight: 9, color: "yellow"},//4
-   {x:105-10, y:350, id: 8, value: "Irene", weight: 8, color: "yellow"},//4
-   {x:175-10, y:350, id: 9, value: "Jose", weight: 11, color: "yellow"},//4
-   {x:245-10, y:350, id: 10, value: "Katrina", weight: 12, color: "yellow"},//4
-   {x:315-10, y:350, id: 11, value: "Lee", weight: 10, color: "yellow"},//4
-   {x:385-10, y:350, id: 12, value: "Maria", weight: 13, color: "yellow"},//4
-   {x:455-10, y:350, id: 13, value: "Nate", weight: 13, color: "yellow"},//4
-   {x:525-10, y:350, id: 14, value: "Ophelia", weight: 13, color: "yellow"}//4
+   {x:280-10, y:10, id: 0, value: "Arlene", weight: 2, color: "yellow"},//1
+   {x:140-10, y:110, id: 1, value: "Brett", weight: 5, color: "yellow"},//2
+   {x:420-10, y:110, id: 2, value: "Cindy", weight: 3, color: "yellow"},//2
+   {x:70-10, y:210, id: 3, value: "Dennis", weight: 6, color: "yellow"},//3
+   {x:210-10, y:150, id: 4, value: "Emily", weight: 4, color: "yellow"},//3
+   {x:350-10, y:210, id: 5, value: "Frank", weight: 1, color: "yellow"},//3
+   {x:490-10, y:210, id: 6, value: "Gilbert", weight: 7, color: "yellow"},//3
+   {x:35-10, y:310, id: 7, value: "Harvey", weight: 9, color: "yellow"},//4
+   {x:105-10, y:310, id: 8, value: "Irene", weight: 8, color: "yellow"},//4
+   {x:175-10, y:310, id: 9, value: "Jose", weight: 11, color: "yellow"},//4
+   {x:245-10, y:310, id: 10, value: "Katrina", weight: 12, color: "yellow"},//4
+   {x:315-10, y:310, id: 11, value: "Lee", weight: 10, color: "yellow"},//4
+   {x:385-10, y:310, id: 12, value: "Maria", weight: 13, color: "yellow"},//4
+   {x:455-10, y:310, id: 13, value: "Nate", weight: 13, color: "yellow"},//4
+   {x:525-10, y:310, id: 14, value: "Ophelia", weight: 13, color: "yellow"}//4
 
 ];
 
@@ -196,7 +196,7 @@ function GraphSVGHandler(){
          //TODO: update edges for direction
       }
       if(edges === undefined){
-         links.push({source: sourceID, target: targetID, weight: 0, label: undefined});
+         links.push({source: sourceID, target: targetID, weight: undefined});
          graphCreator.addEdge(sourceID, targetID, 0);
       }
    }
@@ -357,7 +357,7 @@ function GraphSVGHandler(){
       var weightChanges = change["nodeWeightsChanged"];
       Object.keys(weightChanges).forEach(function(d){
          var id = Number(d);
-         var weight = weightChanges[d];
+         var weight = Number(weightChanges[d]);
          var index = nodes.findIndex(node => node.id === id);
          nodes[index].weight = weight;
       });

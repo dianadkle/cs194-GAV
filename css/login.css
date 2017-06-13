@@ -2,6 +2,7 @@
    font-family: futura;
    font-size: 20;
    text-align: center;
+   background-color:#55ACF0;
 }
 
 #switchToRegister:hover, #switchToGuest:hover{

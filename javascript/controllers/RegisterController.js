@@ -13,6 +13,7 @@ RegisterController.prototype.control = function(){
 
    function clearErrors(){
       $('#firstNameError').css("display", 'none');
+      $('#lastNameError').css("display", 'none');
       $('#emailError').css("display", 'none');
       $('#usernameError').css("display", 'none');
       $('#passwordError').css("display", 'none');
@@ -22,6 +23,7 @@ RegisterController.prototype.control = function(){
    document.getElementById("register").onclick = function(){
       clearErrors();
       var firstName = Utils.getCredential("firstName"),
+      lastName = Utils.getCredential("lastName"),
       username = Utils.getCredential("username"),
       email = Utils.getCredential("email"),
       password = Utils.getCredential("password"),
@@ -30,6 +32,10 @@ RegisterController.prototype.control = function(){
 
       if(firstName === null || firstName === ""){
          $('#firstNameError').css("display", 'block');
+         successful = false;
+      }
+      if(lastName === null || lastName === ""){
+         $('#lastNameError').css("display", 'block');
          successful = false;
       }
 
@@ -51,15 +57,19 @@ RegisterController.prototype.control = function(){
          successful = false;
       }
 
-      //TODO: check registration credentials
-
 
       if(successful){
          /*TODO: maybe bring to a welcome page instead??*/
-         index.renderGraphCanvas({
+         var userInfo = {
+            firstName: firstName,
+            lastName: lastName,
             username: username,
-            user_id: 0
-         });
+            email: email,
+            achievements:'none. ever.',
+         };
+         index.setUserInfo(userInfo);
+         index.renderSideBar();
+         index.renderGraph();
       }
    };
 };
