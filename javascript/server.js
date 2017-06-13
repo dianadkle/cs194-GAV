@@ -57,6 +57,8 @@ app.put('/', (req, res) => {
 	db.collection('users').findOneAndUpdate({name: req.body.username}, {
 		$set: {
 			firstname: req.body.firstname,
+			lastname: req.body.lastname,
+			email: req.body.email,
 			password: req.body.password,
 			num_graphs: req.body.num_graphs,
 			graphs: req.body.graphs,

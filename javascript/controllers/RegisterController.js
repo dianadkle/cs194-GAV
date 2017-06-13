@@ -62,6 +62,8 @@ RegisterController.prototype.control = function(){
          /*TODO: maybe bring to a welcome page instead??*/
          $.post("http://127.0.0.1:3000", {
             'firstname': firstName,
+            'lastname': lastName,
+            'email': email,
             'username': username,
             'password': password,
             'graphs': {"key": "value"},

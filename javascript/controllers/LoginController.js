@@ -50,10 +50,10 @@ LoginController.prototype.control = function(){
             var userInfo = {
                //TODO: edit to reflect appropriate first name, last name, etc.
                firstName: user.firstname,
-               lastName: 'Trump',
+               lastName: user.lastname,
                username: user.username,
-               email: 'donald@trump.whitehouse.gov',
-               achievements:'none. ever.',
+               email: user.email,
+               achievements:'',
             };
             index.setUserInfo(userInfo);
              index.renderSideBar();
