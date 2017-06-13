@@ -24,7 +24,7 @@ LoginController.prototype.control = function(){
    document.getElementById("login").onclick = function(){
       var username = document.getElementById("username").value,
       password = document.getElementById("password").value;
-       var success = true;
+       var success = false;
       //var success = Database.checkUser(username, password);
 
       // if (!success){
