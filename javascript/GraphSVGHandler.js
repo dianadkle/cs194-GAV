@@ -27,20 +27,20 @@ var nodes = [
 ];
 
 var links = [
-   {source:0, target: 1, weight:undefined},
-   {source:2, target: 0, weight:undefined},
-   {source:3, target: 1, weight:undefined},
-   {source:1, target: 4, weight:undefined},
-   {source:2, target: 5, weight:undefined},
-   {source:6, target: 2, weight:undefined},
-   {source:3, target: 7, weight:undefined},
-   {source:8, target: 3, weight:undefined},
-   {source:4, target: 9, weight:undefined},
-   {source:4, target: 10, weight:undefined},
-   {source:5, target: 11, weight:undefined},
-   {source:5, target: 12, weight:undefined},
-   {source:13, target: 6, weight:undefined},
-   {source:14, target: 6, weight:undefined}
+   {source:0, target: 1, color: 'blue', weight:undefined},
+   {source:2, target: 0, color: 'blue', weight:undefined},
+   {source:3, target: 1, color: 'blue', weight:undefined},
+   {source:1, target: 4, color: 'blue', weight:undefined},
+   {source:2, target: 5, color: 'blue', weight:undefined},
+   {source:6, target: 2, color: 'blue', weight:undefined},
+   {source:3, target: 7, color: 'blue', weight:undefined},
+   {source:8, target: 3, color: 'blue', weight:undefined},
+   {source:4, target: 9, color: 'blue', weight:undefined},
+   {source:4, target: 10, color: 'blue', weight:undefined},
+   {source:5, target: 11, color: 'blue', weight:undefined},
+   {source:5, target: 12, color: 'blue', weight:undefined},
+   {source:13, target: 6, color: 'blue', weight:undefined},
+   {source:14, target: 6, color: 'blue', weight:undefined}
 ];
 
 function GraphSVGHandler(){
@@ -101,9 +101,11 @@ function GraphSVGHandler(){
       var linkGroup = svg.selectAll("link").data(links, function(d) { return d.target.id; })
       linkGroup = linkGroup.enter().append("g").on("dblclick", dblClickedOnEdge);
       link = linkGroup.append("line").attr("class", "link")
+      .raise().classed("edgeBlue", function(d){return d.color === "blue"})
+      .raise().classed("edgeRed", function(d){return d.color === "red"});
       if(directed) link.attr("marker-end", "url(#arrow)");
       link.append("text").attr('text-anchor', 'middle')
-      .attr("x", 0).attr("y", "0").text("function(d){return d.weight;}");
+      .attr("x", 0).attr("y", "0").text("function(d){return d.weight;}")
       linkLabel = linkGroup.append("text")
       .attr('text-anchor', 'middle')
       .attr("x", (function(d, i){
@@ -130,7 +132,7 @@ function GraphSVGHandler(){
          }
          return (y1 + y2) / 2;
       }))
-      .text(function(d) { return d.weight });
+      .text(function(d) { return d.weight })
 
       //nodes are bound with nodes from the nodes array
       node = svg.selectAll("node").data(nodes, function(d) { return d.id; });
@@ -193,10 +195,9 @@ function GraphSVGHandler(){
       var edges = links.find(link => link.source.id === sourceID && link.target.id === targetID);
       if(!directed && edges === undefined){
          edges = links.find(link => link.source.id === targetID && link.target.id === sourceID);
-         //TODO: update edges for direction
       }
       if(edges === undefined){
-         links.push({source: sourceID, target: targetID, weight: undefined});
+         links.push({source: sourceID, target: targetID, color: 'blue', weight: undefined});
          graphCreator.addEdge(sourceID, targetID, 0);
       }
    }
@@ -340,15 +341,16 @@ function GraphSVGHandler(){
 
    function prepareAlgorithm(algorithm){
       clearNodeColors();
+      clearEdgeColors();
       current_algorithm = algorithm;
       Utils.promptAlgorithmInputs();
    }
 
    function getStateChangeSequence(start, goal){
       switch(current_algorithm){
-         case "Breadth-First Search": return graphCreator.bfs(start, goal);
-         case "Depth-First Search": return graphCreator.dfs(start, goal);
-         case "Dijkstra's Algorithm": return graphCreator.dijkstras(start, goal);
+         case "Breadth-First Search": return graphCreator.c_bfs(start, goal);
+         case "Depth-First Search": return graphCreator.c_dfs(start, goal);
+         case "Dijkstra's Algorithm": return graphCreator.c_dijkstras(start, goal);
       }
       return null;
    }
@@ -361,6 +363,43 @@ function GraphSVGHandler(){
          var index = nodes.findIndex(node => node.id === id);
          nodes[index].weight = weight;
       });
+   }
+
+   function reverseWeights(change){
+      var weightChanges = change["nodePrevWeights"];
+
+      // Object.keys(weightChanges).forEach(function(d){
+      //    console.log(d);
+      //    // var id = Number(d);
+      //    // var weight = Number(weightChanges[d]);
+      //    // var index = nodes.findIndex(node => node.id === id);
+      //    // nodes[index].weight = weight;
+      // });
+   }
+
+   function updateEdgeColors(change){
+
+      var edges = change['edgesChanged'];
+
+      for (var edge of edges.keys()){
+         var sourceID = edge.start.id, targetID = edge.end.id,
+         newColor = edges.get(edge);
+         var index = links.findIndex(link => link.source.id === sourceID && link.target.id === targetID);
+         links[index].color = newColor;
+      }
+   }
+
+   function reverseEdgeColors(change){
+      var edges = change['edgesChanged'];
+
+      for (var edge of edges.keys()){
+         var sourceID = edge.start.id, targetID = edge.end.id,
+         newColor = edges.get(edge);
+         if(newColor === 'red'){
+            var index = links.findIndex(link => link.source.id === sourceID && link.target.id === targetID);
+            links[index].color = 'blue';
+         }
+      }
    }
 
    function reverseNodeColors(change){
@@ -393,6 +432,11 @@ function GraphSVGHandler(){
    function clearNodeColors(){
       for(var i = 0; i < nodes.length; i++){
          nodes[i].color = "yellow";
+      }
+   }
+   function clearEdgeColors(){
+      for(var i = 0; i < links.length; i++){
+         links[i].color = "blue";
       }
    }
 
@@ -433,14 +477,13 @@ function GraphSVGHandler(){
       if(stateChanges === null || stateChanges === undefined) return 'FAILURE';
       if(current_state_change < stateChanges.length - 1){
          var change = stateChanges[++current_state_change];
-         console.log(change);
          changeNodeColors(change);
          updateWeights(change);
-         // TODO: update other changes, console.log(change);
-         // updateEdges(change);
+         updateEdgeColors(change);
+         // TODO:
          // updateEdgeWeights(change);
          updateCanvas();
-         if(current_state_change < stateChanges.length) return 'SUCCESS';
+         if(current_state_change < stateChanges.length) return change.comment;
       }
       return 'END';
    };
@@ -450,8 +493,10 @@ function GraphSVGHandler(){
       if(current_state_change  > 0){
          var change = stateChanges[current_state_change--];
          reverseNodeColors(change);
+         reverseWeights(change);
+         reverseEdgeColors(change);
          updateCanvas();
-         if(current_state_change < stateChanges.length) return 'SUCCESS';
+         if(current_state_change < stateChanges.length) return change.comment;
       }
       return 'END';
    };
