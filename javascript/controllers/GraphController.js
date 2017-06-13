@@ -122,6 +122,7 @@ GraphController.prototype.control = function(algorithmsParam){
             var user_name = userInfo.username;
             var user;
             var graphs;
+            var new_achievements;
             $.get("http://127.0.0.1:3000", function (data) {
                for (var i = 0; i < data.length; i++){
                   if (data[i].username.localeCompare(user_name) === 0){
@@ -130,8 +131,23 @@ GraphController.prototype.control = function(algorithmsParam){
                      break;
                   }
                }
+               new_achievements = user.achievements;
+               new_achievements.save_graph = true;
+               new_achievements.one_graph = true;
 
                graphs[graphName] = graph;
+
+               var new_num_graphs = parseInt(user.num_graphs,10) + 1;
+
+               if (new_num_graphs >= 5){
+                  new_achievements.five_graphs = true;
+               }
+               if (new_num_graphs >= 10){
+                  new_achievements.ten_graphs = true;
+               }
+               if (new_num_graphs >= 25){
+                  new_achievements.twenty_five_graphs = true;
+               }
 
                $.ajax({
                   url: "http://127.0.0.1:3000",
@@ -139,16 +155,14 @@ GraphController.prototype.control = function(algorithmsParam){
                   data: {
                      'firstname': user.firstname, 
                      'password': user.password,
-                     'achievements': user.achievements,
+                     'achievements': new_achievements,
+                     'num_graphs': new_num_graphs,
                      'graphs': graphs},
                   success: function(response) {
                      console.log(response.body);
                   }
                });
             });
-
-
-
 
             //use graphName
             //TODO: do HTTP request here

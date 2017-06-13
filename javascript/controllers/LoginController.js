@@ -45,6 +45,7 @@ LoginController.prototype.control = function(){
                 }
             }
          }
+         console.log(user);
          if(success){
             var userInfo = {
                //TODO: edit to reflect appropriate first name, last name, etc.

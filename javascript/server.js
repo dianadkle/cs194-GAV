@@ -53,10 +53,12 @@ app.post('/', (req, res) => {
 app.put('/', (req, res) => {
 	console.log('hello');
 	console.log(req.body);
+	console.log(req.num_graphs);
 	db.collection('users').findOneAndUpdate({name: req.body.username}, {
 		$set: {
 			firstname: req.body.firstname,
 			password: req.body.password,
+			num_graphs: req.body.num_graphs,
 			graphs: req.body.graphs,
 			achievements: req.body.achievements
 		}
