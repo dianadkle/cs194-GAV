@@ -363,6 +363,18 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 	return stateChanges;
 };
 
+function pqToString(graph, pq) {
+	var retval = "";
+	if (pq.array.size === 0) return retval;
+
+	for (let key of pq.array.keys()) {
+		retval+= graph.nodes.get(key).value + ": ";
+		retval+= pq.array.get(key) + ", ";
+	}
+
+	return retval.slice(0, -2);
+}
+
 /* canonical pseudocode
  * 1 for every node, n, in graph:
  * 2	dist[n] = infnity;
