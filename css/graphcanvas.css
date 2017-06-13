@@ -76,22 +76,28 @@
 
 /**************************** directional buttons ****************************/
 
-#reverseButton{
+#saveButton{
    position: absolute;
    top: 90%;
    left:1%
 }
 
+#reverseButton{
+   position: absolute;
+   top: 90%;
+   left:44%
+}
+
 #clearButton{
    position: absolute;
    top: 90%;
-   left: 7%
+   left: 50%
 }
 
 #forwardButton{
    position: absolute;
    top: 90%;
-   left: 13%
+   left: 56%
 }
 
 #directionTogglerLabel{

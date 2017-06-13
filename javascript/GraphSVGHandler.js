@@ -525,6 +525,10 @@ function GraphSVGHandler(){
       links.splice(index, 1);
       updateCanvas();
    };
+
+   GraphSVGHandler.prototype.downloadGraph = function(){
+      return graphCreator.toString();
+   }
 }
 
 module.exports = GraphSVGHandler;
