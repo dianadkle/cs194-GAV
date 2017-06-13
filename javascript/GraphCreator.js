@@ -49,7 +49,7 @@ function GraphCreator(is_directed){
                 this.directed = false;
         }
 	// map: node ID -> node
-	this.nodes = new Map();
+this.nodes = new Map();
         this.currentID = 0;
         this.selectedNode = null;
 };
@@ -57,9 +57,8 @@ function GraphCreator(is_directed){
 
 // creates new node and adds it to graph
 GraphCreator.prototype.addNode = function(value, weight, color = "yellow") {
-
 	if(!/^[\w]+$/.test(value)) {
-		console.log("Error: invalid node name (must consist of alphanumeric characters or underscores)");
+		console.log("Error: invalid node name (must consist of alphanumeric characters and underscores)");
 		return;
 	}
         var node_to_add = new Node(value, weight, color, this.currentID);
@@ -73,6 +72,7 @@ GraphCreator.prototype.removeNode = function(id) {
         var to_remove = this.nodes.get(id);
         if (to_remove === undefined) {
                 console.log("Error: node cannot be removed (does not exist)");
+		return;
         }
 
         if(this.directed) {
@@ -535,6 +535,11 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 			var alt = dist[current_id] + edge.weight;
 			if (alt < dist[neighbor.id]) {
 				dist[neighbor.id] = alt;
+				if(prev[neighbor.id] !== undefined) {
+					let old_previous = this.nodes.get(prev[neighbor.id]);
+					let old_edge = old_previous.out_edges.get(neighbor.id);
+					change.addChangedEdge(old_edge, "blue");
+				}
 				prev[neighbor.id] = current_id;
 				q.decreaseKey(neighbor.id, alt);
 				change.changeNodeWeight(neighbor, alt);
@@ -964,6 +969,7 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
+/*
 let x_graph = new GraphCreator(true);
 
 x_graph.addNode("A0", 2, "yellow");
@@ -990,3 +996,4 @@ var graph_str = x_graph.toString();
 console.log(graph_str);
 
 console.log(x_graph.c_dijkstras(0));
+*/
