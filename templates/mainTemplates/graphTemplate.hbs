@@ -1,14 +1,22 @@
-<div id="graphDiv">
-   <svg id="graphSVG"/>
-   <input type="image" id="reverseButton" title="next step"
-   src="./images/reverse-icon.png" alt="next step" width="30"/>
-   <input type="image" id="clearButton" title="clear algorithm"
-   src="./images/clear-icon.png" alt="clear algorithm" width="30"/>
-   <input type="image" id="forwardButton" title="previous step"
-   src="./images/forward-icon.png" alt="previous step" width="30"/>
-   <label class="switch" id="directionTogglerLabel">
-      <input type="checkbox" id="directionToggler">
-      <div class="slider round"></div>
-   </label>
-   <p class="toggledText" id="directionText">undirected</p>
+<div class="two-thirds row" id="graphDiv">
+      <svg id="graphSVG"/>
+      <input type="image" id="reverseButton" title="next step"
+      src="./images/reverse-icon.png" alt="next step" width="30"/>
+      <input type="image" id="clearButton" title="clear algorithm"
+      src="./images/clear-icon.png" alt="clear algorithm" width="30"/>
+      <input type="image" id="forwardButton" title="previous step"
+      src="./images/forward-icon.png" alt="previous step" width="30"/>
+      <label class="switch" id="directionTogglerLabel">
+         <input type="checkbox" id="directionToggler">
+         <div class="slider round"></div>
+      </label>
+      <p class="toggledText" id="directionText">undirected</p>
+   </div>
+<div class="container one-third row">
+   <div class="one-half column" id="algorithmsRow">
+         <p id="algorithmsHeader">Algorithms</p>
+   </div>
+   <div class="one-half column" id="tipsRow">
+         <p id="pseudocodeHeader">Pseudocode</p>
+   </div>
 </div>

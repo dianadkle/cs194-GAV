@@ -11,17 +11,27 @@ button{
 }
 
 #algorithmsHeader{
-   font-family: Futura;
-   font-size:200%;
+   font-family: "Gill Sans";
+   font-size:150%;
+   text-decoration: underline;
+}
+#pseudocodeHeader{
+   text-align:center;
+   font-family: "Gill Sans";
+   font-size:150%;
    text-decoration: underline;
 }
 
-title {
+#titleDIV {
    font-family: "Gill Sans";
-   font-size:350%;
+   font-size:250%;
    display:block;
    text-align:center;
    horizontal-align:middle;
+}
+
+#mainDIV{
+   height:70%;
 }
 
 #mainTable{
@@ -62,7 +72,6 @@ title {
 /******************************** Canvas Stuff *********************************/
 
 #canvasRow{
-   border-style: solid;
    border-width: 2px;
    height:85%;
    width:100%

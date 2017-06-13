@@ -1,8 +1,19 @@
 'use strict';
 var Utils = require('../Utils');
+var mongoose = require('mongoose');
+var Database = require('../mongo_db.js');
+
+// var mongoose = require('mongoose');
+// mongoose.connect('mongodb://localhost/userDB');
+// // mongoose.connect('mongodb://127.0.0.1/userDB');
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'connection error:'));
+// db.once('open', function callback () {
+//   console.log("Connected");
+// });
 
 function LoginController(index){
-   this.index = index;
+   this.index = index;http
 };
 
 LoginController.prototype.control = function(){
@@ -13,8 +24,14 @@ LoginController.prototype.control = function(){
    document.getElementById("login").onclick = function(){
       var username = Utils.getCredential("username").value,
       password = Utils.getCredential("password");
-      //TODO: check registration credentials
-      if(/*successful credentials*/true){
+      // var success = true;
+      var success = Database.checkUser(username, password);
+
+      // if (!success){
+      //    $('#loginError').css("display", 'block');
+      // }
+
+      if(success){
          index.renderSideBar();
          index.renderGraph({
             username: username,

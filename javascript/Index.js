@@ -7,7 +7,6 @@ var Utils = require('./Utils');
 var LoginController = require('./controllers/LoginController');
 var RegisterController = require('./controllers/RegisterController');
 var GraphController = require('./controllers/GraphController');
-var AlgorithmsController = require('./controllers/AlgorithmsController');
 var AutomataController = require('./controllers/AutomataController');
 /***********************************Index.js***********************************/
 
@@ -18,7 +17,7 @@ var algorithms = [
 ];
 
 function Index(){
-   var mainColumn = $('#mainColumn');
+   var mainDIV = $('#mainDIV');
    var sideColumn = $('#sideColumn');
 
    /*templates*/
@@ -31,7 +30,6 @@ function Index(){
    var graphTemplate = Templates.getTemplate('mainTemplates/graphTemplate');
    var automataTemplate = Templates.getTemplate('mainTemplates/automataTemplate');
    var profileTemplate = Templates.getTemplate('mainTemplates/profileTemplate');
-   var algorithmsTemplate = Templates.getTemplate('mainTemplates/algorithmsTemplate');
 
     // how to get template HTML
     /*
@@ -42,7 +40,7 @@ function Index(){
 
 
    Index.prototype.renderLogin = function(){
-      mainColumn.html(loginTemplate({}));
+      mainDIV.html(loginTemplate({}));
       var loginController = new LoginController(this);
 
       $('#toolBox').css("display", "none");
@@ -53,7 +51,7 @@ function Index(){
 
    //GraphCanvas Rendering stuff
    Index.prototype.renderRegister = function(){
-      mainColumn.html(registerTemplate({}));
+      mainDIV.html(registerTemplate({}));
       var registerController = new RegisterController(this);
 
       $('#toolBox').css("display","none");
@@ -73,19 +71,14 @@ function Index(){
          //TODO
       };
 
-      document.getElementById('algorithmsBar').onclick = function(){
-         mainColumn.html(algorithmsTemplate(userInfo));
-         var algorithmsController = new AlgorithmsController(algorithms);
-         algorithmsController.control()
-      };
       document.getElementById('graphBar').onclick = function(){
-         mainColumn.html(graphTemplate(userInfo));
+         mainDIV.html(graphTemplate(userInfo));
          var graphController = new GraphController(userInfo);
-         graphController.control();
+         graphController.control(algorithms);
       };
 
       document.getElementById('automataBar').onclick = function(){
-         mainColumn.html(automataTemplate(userInfo));
+         mainDIV.html(automataTemplate(userInfo));
          var automataController = new AutomataController();
          automataController.control();
       };
@@ -98,7 +91,8 @@ function Index(){
 
    //GraphCanvas Rendering stuff
    Index.prototype.renderGraph = function(userInfo){
-      mainColumn.html(graphTemplate({}));
+      mainDIV.html(graphTemplate(userInfo));
+
       var graphController = new GraphController(userInfo);
 
       $('#toolBox').css("display", "inline");
@@ -107,12 +101,12 @@ function Index(){
       $('#switchToAutomata').css("visibility", "hidden");
       $('#switchToGraph').css("visibility", "visible");
 
-      graphController.control();
+      graphController.control(algorithms);
    };
 
    //GraphCanvas Rendering stuff
    Index.prototype.renderAutomata = function(userInfo){
-      mainColumn.html(automataTemplate({}));
+      mainDIV.html(automataTemplate({}));
 
       var automataController = new AutomataController(userInfo);
 

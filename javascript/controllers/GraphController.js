@@ -8,9 +8,19 @@ function GraphController(userInfo){
    this.userInfo = userInfo;
 };
 
-GraphController.prototype.control = function(){
+GraphController.prototype.control = function(algorithmsParam){
+   var algorithms = algorithmsParam;
    var graphSVGHandler = new GraphSVGHandler();
    var automataVisualizer = new AutomataVisualizer("a*b");
+
+   var createAlgorithmButtons = function(){
+      var algOpenTag = "<p class='algorithm'>";
+      var algCloseTag = "</p>"
+      algorithms.map(function(algorithm){
+         var elem = algOpenTag + algorithm + algCloseTag;
+         $('#algorithmsRow').append(elem);
+      });
+   };
 
    var initializeForwardReverseButtons = function(){
       var reverseButton = document.getElementById("reverseButton");
@@ -159,6 +169,7 @@ GraphController.prototype.control = function(){
 
 
    //initialize buttons, togglers, and other things
+   createAlgorithmButtons();
    initializeForwardReverseButtons();
    intializeDirectedToggler();
    initializeNodeModals();

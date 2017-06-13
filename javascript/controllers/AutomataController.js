@@ -27,8 +27,17 @@ AutomataController.prototype.control = function(){
       initializeAutomataSVG("DFA");
       initializeAutomataSVG("NFA");
    }
+
    inputNewRegex("a*b");
-   
+
+   document.getElementById('inputRegex').onclick = function(){
+      var regex = document.getElementById('regexInput').value;
+      try {
+          inputNewRegex(regex);
+      } catch(e) {
+          alert("Invalid regular expression");
+      }
+   };
 };
 
 module.exports = AutomataController;
