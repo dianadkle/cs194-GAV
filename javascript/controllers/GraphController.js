@@ -47,7 +47,7 @@ GraphController.prototype.control = function(algorithmsParam){
 
       clearButton.onclick = function(){
          graphSVGHandler.clearAlgorithm();
-         document.getElementById('comment').html('');
+         document.getElementById('comment').innerHTML = '';
       };
 
       forwardButton.onclick = function(){

@@ -8,21 +8,21 @@ var Utils = require('./Utils');
 
 var nodes = [
    //520 x //560
-   {x:280-10, y:10, id: 0, value: "Arlene", weight: 2, color: "yellow"},//1
-   {x:140-10, y:110, id: 1, value: "Brett", weight: 5, color: "yellow"},//2
-   {x:420-10, y:110, id: 2, value: "Cindy", weight: 3, color: "yellow"},//2
-   {x:70-10, y:210, id: 3, value: "Dennis", weight: 6, color: "yellow"},//3
-   {x:210-10, y:150, id: 4, value: "Emily", weight: 4, color: "yellow"},//3
-   {x:350-10, y:210, id: 5, value: "Frank", weight: 1, color: "yellow"},//3
-   {x:490-10, y:210, id: 6, value: "Gilbert", weight: 7, color: "yellow"},//3
-   {x:35-10, y:310, id: 7, value: "Harvey", weight: 9, color: "yellow"},//4
-   {x:105-10, y:310, id: 8, value: "Irene", weight: 8, color: "yellow"},//4
-   {x:175-10, y:310, id: 9, value: "Jose", weight: 11, color: "yellow"},//4
-   {x:245-10, y:310, id: 10, value: "Katrina", weight: 12, color: "yellow"},//4
-   {x:315-10, y:310, id: 11, value: "Lee", weight: 10, color: "yellow"},//4
-   {x:385-10, y:310, id: 12, value: "Maria", weight: 13, color: "yellow"},//4
-   {x:455-10, y:310, id: 13, value: "Nate", weight: 13, color: "yellow"},//4
-   {x:525-10, y:310, id: 14, value: "Ophelia", weight: 13, color: "yellow"}//4
+   {x:280-10, y:10, id: 0, value: "Arlene", weight: Infinity, color: "yellow"},//1
+   {x:140-10, y:110, id: 1, value: "Brett", weight: Infinity, color: "yellow"},//2
+   {x:420-10, y:110, id: 2, value: "Cindy", weight: Infinity, color: "yellow"},//2
+   {x:70-10, y:210, id: 3, value: "Dennis", weight: Infinity, color: "yellow"},//3
+   {x:210-10, y:150, id: 4, value: "Emily", weight: Infinity, color: "yellow"},//3
+   {x:350-10, y:210, id: 5, value: "Frank", weight: Infinity, color: "yellow"},//3
+   {x:490-10, y:210, id: 6, value: "Gilbert", weight: Infinity, color: "yellow"},//3
+   {x:35-10, y:310, id: 7, value: "Harvey", weight: Infinity, color: "yellow"},//4
+   {x:105-10, y:310, id: 8, value: "Irene", weight: Infinity, color: "yellow"},//4
+   {x:175-10, y:310, id: 9, value: "Jose", weight: Infinity, color: "yellow"},//4
+   {x:245-10, y:310, id: 10, value: "Katrina", weight: Infinity, color: "yellow"},//4
+   {x:315-10, y:310, id: 11, value: "Lee", weight: Infinity, color: "yellow"},//4
+   {x:385-10, y:310, id: 12, value: "Maria", weight: Infinity, color: "yellow"},//4
+   {x:455-10, y:310, id: 13, value: "Nate", weight: Infinity, color: "yellow"},//4
+   {x:525-10, y:310, id: 14, value: "Ophelia", weight: Infinity, color: "yellow"}//4
 
 ];
 
@@ -350,7 +350,14 @@ function GraphSVGHandler(){
       switch(current_algorithm){
          case "Breadth-First Search": return graphCreator.c_bfs(start, goal);
          case "Depth-First Search": return graphCreator.c_dfs(start, goal);
-         case "Dijkstra's Algorithm": return graphCreator.c_dijkstras(start, goal);
+         case "Dijkstra's Algorithm": {
+            for (var i = 0; i < nodes.length; i++){
+               nodes[i].weight = Infinity;
+            }
+            var index = nodes.findIndex(node => node.id === start);
+            nodes[index].weight = 0;
+            return graphCreator.c_dijkstras(start, goal);
+         }
       }
       return null;
    }
@@ -366,17 +373,13 @@ function GraphSVGHandler(){
    }
 
    function reverseWeights(change){
-      console.log(change);
       var weightChanges = change["nodePrevWeights"];
-      console.log(weightChanges);
-
-      // Object.keys(weightChanges).forEach(function(d){
-      //    console.log(d);
-      //    // var id = Number(d);
-      //    // var weight = Number(weightChanges[d]);
-      //    // var index = nodes.findIndex(node => node.id === id);
-      //    // nodes[index].weight = weight;
-      // });
+      Object.keys(weightChanges).forEach(function(d){
+         var id = Number(d);
+         var weight = Number(weightChanges[d]);
+         var index = nodes.findIndex(node => node.id === id);
+         nodes[index].weight = weight;
+      });
    }
 
    function updateEdgeColors(change){
