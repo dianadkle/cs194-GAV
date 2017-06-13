@@ -64,6 +64,7 @@ RegisterController.prototype.control = function(){
             'firstname': firstName,
             'username': username,
             'password': password,
+            'graphs': {"key": "value"},
             'achievements': {
                'one_graph': false,
                'five_graphs': false,

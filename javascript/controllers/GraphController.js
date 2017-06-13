@@ -74,7 +74,7 @@ GraphController.prototype.control = function(algorithmsParam){
 
    };
 
-   var initializeNodeModals = function(){
+   var initializeNodeModals = function(userInfo){
       var nodeChangeModal = document.getElementById('nodeChangeModal');
       var newNodeModal = document.getElementById('newNodeModal');
       var edgeChangeModal = document.getElementById('edgeChangeModal');
@@ -118,6 +118,38 @@ GraphController.prototype.control = function(algorithmsParam){
             alert("please name your graph!");
          } else {
             var graph = graphSVGHandler.downloadGraph();
+            //console.log(this.userInfo);
+            var user_name = userInfo.username;
+            var user;
+            var graphs;
+            $.get("http://127.0.0.1:3000", function (data) {
+               for (var i = 0; i < data.length; i++){
+                  if (data[i].username.localeCompare(user_name) === 0){
+                     var user = data[i];
+                     graphs = data[i].graphs;
+                     break;
+                  }
+               }
+
+               graphs[graphName] = graph;
+
+               $.ajax({
+                  url: "http://127.0.0.1:3000",
+                  method: "PUT",
+                  data: {
+                     'firstname': user.firstname, 
+                     'password': user.password,
+                     'achievements': user.achievements,
+                     'graphs': graphs},
+                  success: function(response) {
+                     console.log(response.body);
+                  }
+               });
+            });
+
+
+
+
             //use graphName
             //TODO: do HTTP request here
             saveGraphModal.style.display = "none";
@@ -199,7 +231,7 @@ GraphController.prototype.control = function(algorithmsParam){
    createAlgorithmButtons();
    initializeForwardReverseButtons();
    intializeDirectedToggler();
-   initializeNodeModals();
+   initializeNodeModals(this.userInfo);
    initializeAlgorithmModals();
    linkAlgorithmButtons();
    initializeSaveButton();
