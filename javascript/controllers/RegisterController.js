@@ -89,7 +89,7 @@ RegisterController.prototype.control = function(){
             lastName: lastName,
             username: username,
             email: email,
-            achievements:'none. ever.',
+            achievements:'',
          };
          index.setUserInfo(userInfo);
          index.renderSideBar();

@@ -17,6 +17,7 @@ ProfileController.prototype.control = function(){
          }
       }
       console.log(user);
+      $('#newbie').css('display', 'inline');
       if (user.achievements.save_graph === "true"){
          $('#save_graph').css('display', 'inline');
          $('#saveGraphText').css('display', 'inline');
