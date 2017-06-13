@@ -348,8 +348,8 @@ function GraphSVGHandler(){
 
    function getStateChangeSequence(start, goal){
       switch(current_algorithm){
-         case "Breadth-First Search": return graphCreator.bfs(start, goal);
-         case "Depth-First Search": return graphCreator.dfs(start, goal);
+         case "Breadth-First Search": return graphCreator.c_bfs(start, goal);
+         case "Depth-First Search": return graphCreator.c_dfs(start, goal);
          case "Dijkstra's Algorithm": return graphCreator.c_dijkstras(start, goal);
       }
       return null;
@@ -366,13 +366,15 @@ function GraphSVGHandler(){
    }
 
    function reverseWeights(change){
-      var weightChanges = change["nodeWeightsChanged"];
-      Object.keys(weightChanges).forEach(function(d){
-         // var id = Number(d);
-         // var weight = Number(weightChanges[d]);
-         // var index = nodes.findIndex(node => node.id === id);
-         // nodes[index].weight = weight;
-      });
+      var weightChanges = change["nodePrevWeights"];
+
+      // Object.keys(weightChanges).forEach(function(d){
+      //    console.log(d);
+      //    // var id = Number(d);
+      //    // var weight = Number(weightChanges[d]);
+      //    // var index = nodes.findIndex(node => node.id === id);
+      //    // nodes[index].weight = weight;
+      // });
    }
 
    function updateEdgeColors(change){

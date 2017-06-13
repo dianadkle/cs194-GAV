@@ -969,29 +969,29 @@ GraphCreator.prototype.fromString = function(graph_str) {
 };
 
 module.exports = GraphCreator;
-let x_graph = new GraphCreator(true);
-
-x_graph.addNode("A0", 2, "yellow");
-x_graph.addNode("B1", 4, "yellow");
-x_graph.addNode("C2", 8, "yellow");
-x_graph.addNode("D3", 16, "yellow");
-x_graph.addNode("E4", 32, "yellow");
-x_graph.addNode("F5", 64, "yellow");
-x_graph.addNode("G6", 128, "yellow");
-
-x_graph.addEdge(0, 1, 7, "blue");
-x_graph.addEdge(0, 2, 9, "blue");
-
-x_graph.addEdge(1, 4, 10, "blue");
-x_graph.addEdge(1, 3, 15, "blue");
-
-x_graph.addEdge(2, 5, 11, "blue");
-x_graph.addEdge(2, 6, 2, "blue");
-
-x_graph.addEdge(4, 5, 6, "blue");
-x_graph.removeNode(2);
-
-var graph_str = x_graph.toString();
-console.log(graph_str);
-
-console.log(x_graph.c_dijkstras(0));
+// let x_graph = new GraphCreator(true);
+//
+// x_graph.addNode("A0", 2, "yellow");
+// x_graph.addNode("B1", 4, "yellow");
+// x_graph.addNode("C2", 8, "yellow");
+// x_graph.addNode("D3", 16, "yellow");
+// x_graph.addNode("E4", 32, "yellow");
+// x_graph.addNode("F5", 64, "yellow");
+// x_graph.addNode("G6", 128, "yellow");
+//
+// x_graph.addEdge(0, 1, 7, "blue");
+// x_graph.addEdge(0, 2, 9, "blue");
+//
+// x_graph.addEdge(1, 4, 10, "blue");
+// x_graph.addEdge(1, 3, 15, "blue");
+//
+// x_graph.addEdge(2, 5, 11, "blue");
+// x_graph.addEdge(2, 6, 2, "blue");
+//
+// x_graph.addEdge(4, 5, 6, "blue");
+// x_graph.removeNode(2);
+//
+// var graph_str = x_graph.toString();
+// console.log(graph_str);
+//
+// console.log(x_graph.c_dijkstras(0));
