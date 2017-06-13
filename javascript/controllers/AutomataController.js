@@ -35,9 +35,38 @@ AutomataController.prototype.control = function(){
    }
 
    inputNewRegex("a*b");
+   var user_name = this.userInfo.username;
 
    document.getElementById('inputRegex').onclick = function(){
       var regex = document.getElementById('regexInput').value;
+      var new_achievements;
+      $.get("http://127.0.0.1:3000", function (data) {
+         for (var i = 0; i < data.length; i++){
+            if (data[i].username.localeCompare(user_name) === 0){
+               var user = data[i];
+               break;
+            }
+         }
+         new_achievements = user.achievements;
+         console.log("new achievement: " + new_achievements.run_nfadfa);
+         new_achievements.run_nfadfa = true;
+
+         $.ajax({
+            url: "http://127.0.0.1:3000",
+            method: "PUT",
+            data: {
+               'firstname': user.firstname,
+               'lastname': user.lastname,
+               'email': user.email,
+               'password': user.password,
+               'achievements': new_achievements,
+               'num_graphs': user.num_graphs,
+               'graphs': user.graphs},
+            success: function(response) {
+               console.log(response.body);
+            }
+         });
+      });
       try {
           inputNewRegex(regex);
       } catch(e) {

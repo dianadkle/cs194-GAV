@@ -29,7 +29,7 @@ GraphController.prototype.control = function(algorithmsParam){
       }
    };
 
-   var initializeForwardReverseButtons = function(){
+   var initializeForwardReverseButtons = function(userInfo){
       var reverseButton = document.getElementById("reverseButton");
       var clearButton = document.getElementById("clearButton");
       var forwardButton = document.getElementById("forwardButton");
@@ -57,6 +57,34 @@ GraphController.prototype.control = function(algorithmsParam){
          } else if(nextComment === 'END'){
             alert("You've already reached the last step of the algorithm");
          } else {
+            var new_achievements;
+            var user_name = userInfo.username;
+            $.get("http://127.0.0.1:3000", function (data) {
+               for (var i = 0; i < data.length; i++){
+                  if (data[i].username.localeCompare(user_name) === 0){
+                     var user = data[i];
+                     break;
+                  }
+               }
+               new_achievements = user.achievements;
+               new_achievements.run_algorithm = true;
+
+               $.ajax({
+                  url: "http://127.0.0.1:3000",
+                  method: "PUT",
+                  data: {
+                     'firstname': user.firstname,
+                     'lastname': user.lastname,
+                     'email': user.email,
+                     'password': user.password,
+                     'achievements': new_achievements,
+                     'num_graphs': user.num_graphs,
+                     'graphs': user.graphs},
+                  success: function(response) {
+                     console.log(response.body);
+                  }
+               });
+            });
             document.getElementById('comment').innerHTML = nextComment;
          }
       };
@@ -250,7 +278,7 @@ GraphController.prototype.control = function(algorithmsParam){
 
    //initialize buttons, togglers, and other things
    createAlgorithmButtons();
-   initializeForwardReverseButtons();
+   initializeForwardReverseButtons(this.userInfo);
    intializeDirectedToggler();
    initializeNodeModals(this.userInfo);
    initializeAlgorithmModals();
