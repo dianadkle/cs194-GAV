@@ -20,6 +20,15 @@ GraphController.prototype.control = function(algorithmsParam){
       });
    };
 
+   var initializeSaveButton = function(){
+      var saveButton = document.getElementById("saveButton");
+      saveButton.onclick = function(){
+         var graph = graphSVGHandler.downloadGraph();
+         var modal = document.getElementById('saveGraphModal');
+         modal.style.display = "block";
+      }
+   };
+
    var initializeForwardReverseButtons = function(){
       var reverseButton = document.getElementById("reverseButton");
       var clearButton = document.getElementById("clearButton");
@@ -69,9 +78,11 @@ GraphController.prototype.control = function(algorithmsParam){
       var nodeChangeModal = document.getElementById('nodeChangeModal');
       var newNodeModal = document.getElementById('newNodeModal');
       var edgeChangeModal = document.getElementById('edgeChangeModal');
+      var saveGraphModal = document.getElementById('saveGraphModal');
       var nodeChangeModalX = document.getElementById('closeNodeChangeModal');
       var newNodeModalX = document.getElementById('closeNewNodeModal');
       var edgeChangeModalX = document.getElementById('closeEdgeChangeModal');
+      var saveGraphModalX = document.getElementById('closeSaveGraphModal');
 
       nodeChangeModalX.onclick = function() {
          nodeChangeModal.style.display = "none";
@@ -81,19 +92,38 @@ GraphController.prototype.control = function(algorithmsParam){
       };
       edgeChangeModalX.onclick = function(){
          edgeChangeModal.style.display = "none";
-      }
+      };
+      saveGraphModalX.onclick = function(){
+         saveGraphModal.style.display = "none";
+      };
 
       // When the user clicks anywhere outside of the modal, close it
       window.onclick = function(event) {
          if (event.target === modal) {
             nodeChangeModal.style.display = "none";
             newNodeModal.style.display = "none";
+            edgeChangeModal.style.display = "none";
+            saveGraphModal.style.display = "none";
          }
       };
       var valueChangeInputTag = document.getElementById("valueChangeInput");
       var weightChangeInputTag = document.getElementById("weightChangeInput");
-
+      var graphNameInputTag = document.getElementById("graphNameInput");
       var submitChangeButton = document.getElementById("submitNodeChange");
+      var saveGraphButton = document.getElementById("saveGraph");
+
+      saveGraphButton.onclick = function(){
+         var graphName = graphNameInputTag.value;
+         if(graphName === null || graphName === "" || graphName === undefined){
+            alert("please name your graph!");
+         } else {
+            var graph = graphSVGHandler.downloadGraph();
+            //use graphName
+            //TODO: do HTTP request here
+            saveGraphModal.style.display = "none";
+         }
+      };
+
       submitChangeButton.onclick = function(){
          if(Utils.submitNodeChanges(valueChangeInputTag.value, weightChangeInputTag.value)){
             nodeChangeModal.style.display = "none";
@@ -172,6 +202,7 @@ GraphController.prototype.control = function(algorithmsParam){
    initializeNodeModals();
    initializeAlgorithmModals();
    linkAlgorithmButtons();
+   initializeSaveButton();
 };
 
 module.exports = GraphController;

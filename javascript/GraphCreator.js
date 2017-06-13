@@ -307,7 +307,7 @@ GraphCreator.prototype.c_bfs = function(start_id, goal_id) {
 		change.lopc(3);
 		change.struct(qsToString(q));
 		stateChanges.push(change);
-		
+
 
 		if (current.id === goal.id){
 			change = new StateChange("queue");
@@ -470,8 +470,8 @@ function pqToString(graph, pq) {
 }
 
 /* canonical pseudocode
- * 1 for every node, n, in graph: 
- * 2	dist[n] = infnity; 
+ * 1 for every node, n, in graph:
+ * 2	dist[n] = infnity;
  * 3	prev[n] = null
  * 4 distance[source] = 0
  * 5 for every node, n, in graph
@@ -932,7 +932,7 @@ GraphCreator.prototype.fromString = function(graph_str) {
 	this.currentID = graph_properties[1];
 
 	// initialize list as empty nodes
-	this.nodes = new Map(); 
+	this.nodes = new Map();
 
 	// add nodes to graph
 	var node_list = strings[1].split("\n");
