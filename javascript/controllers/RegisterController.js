@@ -22,12 +22,12 @@ RegisterController.prototype.control = function(){
 
    document.getElementById("register").onclick = function(){
       clearErrors();
-      var firstName = Utils.getCredential("firstName"),
-      lastName = Utils.getCredential("lastName"),
-      username = Utils.getCredential("username"),
-      email = Utils.getCredential("email"),
-      password = Utils.getCredential("password"),
-      confirmPassword = Utils.getCredential("confirmPassword");
+      var firstName = document.getElementById("firstName").value,
+      lastName = document.getElementById("lastName").value,
+      username = document.getElementById("username").value,
+      email = document.getElementById("email").value,
+      password = document.getElementById("password").value,
+      confirmPassword = document.getElementById("confirmPassword").value;
       var successful = true;
 
       if(firstName === null || firstName === ""){

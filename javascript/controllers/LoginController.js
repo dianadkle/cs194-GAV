@@ -22,8 +22,8 @@ LoginController.prototype.control = function(){
          index.renderRegister();
    };
    document.getElementById("login").onclick = function(){
-      var username = Utils.getCredential("username").value,
-      password = Utils.getCredential("password").value;
+      var username = document.getElementById("username").value,
+      password = document.getElementById("password").value;
        var success = true;
       //var success = Database.checkUser(username, password);
 

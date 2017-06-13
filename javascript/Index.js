@@ -69,25 +69,20 @@ function Index(){
    Index.prototype.renderSideBar = function(){
       $('body').css("background-color", "#ffffff");
       var userInfo = this.userInfo;
+      var index = this;
       //TODO: get user info
       sideColumn.html(sideBarTemplate(userInfo));
 
       document.getElementById('profileBar').onclick = function(){
-         mainDIV.html(profileTemplate(userInfo));
-         var profileController = new ProfileController(userInfo);
-         profileController.control();
+         index.renderProfile();
       };
 
       document.getElementById('graphBar').onclick = function(){
-         mainDIV.html(graphTemplate(userInfo));
-         var graphController = new GraphController(userInfo);
-         graphController.control(algorithms);
+         index.renderGraph();
       };
 
       document.getElementById('automataBar').onclick = function(){
-         mainDIV.html(automataTemplate(userInfo));
-         var automataController = new AutomataController();
-         automataController.control();
+         index.renderAutomata();
       };
 
       $('#sideColumn').css('display', 'inline');
