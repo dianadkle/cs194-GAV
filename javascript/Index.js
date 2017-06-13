@@ -30,6 +30,7 @@ function Index(){
 
    var graphTemplate = Templates.getTemplate('mainTemplates/graphTemplate');
    var automataTemplate = Templates.getTemplate('mainTemplates/automataTemplate');
+   var aboutAutomataTemplate = Templates.getTemplate('mainTemplates/aboutAutomataTemplate');
    var profileTemplate = Templates.getTemplate('mainTemplates/profileTemplate');
    var savedGraphsTemplate = Templates.getTemplate('mainTemplates/savedGraphsTemplate');
 
@@ -90,6 +91,9 @@ function Index(){
       document.getElementById('automataBar').onclick = function(){
          index.renderAutomata();
       };
+      document.getElementById('aboutAutomataBar').onclick = function(){
+         index.renderAboutAutomata();
+      };
 
       $('#sideColumn').css('display', 'inline');
       if(/*TODO: user logged in*/true){
@@ -104,13 +108,11 @@ function Index(){
 
       var graphController = new GraphController(userInfo);
 
-      $('#toolBox').css("display", "inline");
-      $('#sideBar').css("display", "inline");
-
       $('#graphButton').css("background-color", "#ffffff");
       $('#automataButton').css("background-color", "#55ACF0");
       $('#profileButton').css("background-color", "#55ACF0");
       $('#savedGraphsButton').css("background-color", "#55ACF0");
+      $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
       graphController.control(algorithms);
    };
@@ -122,15 +124,25 @@ function Index(){
 
       var automataController = new AutomataController(userInfo);
 
-      $('#toolBox').css("display", "inline");
-      $('#sideBar').css("display", "inline");
-
       $('#graphButton').css("background-color", "#55ACF0");
       $('#automataButton').css("background-color", "#ffffff");
       $('#profileButton').css("background-color", "#55ACF0");
       $('#savedGraphsButton').css("background-color", "#55ACF0");
+      $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
       automataController.control();
+   };
+
+   Index.prototype.renderAboutAutomata = function(){
+      var userInfo = this.userInfo;
+      mainDIV.html(aboutAutomataTemplate({}));
+
+      $('#graphButton').css("background-color", "#55ACF0");
+      $('#aboutAutomataButton').css("background-color", "#ffffff");
+      $('#automataButton').css("background-color", "#55ACF0");
+      $('#profileButton').css("background-color", "#55ACF0");
+      $('#savedGraphsButton').css("background-color", "#55ACF0");
+
    };
 
    Index.prototype.renderProfile = function(){
@@ -142,9 +154,8 @@ function Index(){
       $('#automataButton').css("background-color", "#55ACF0");
       $('#profileButton').css("background-color", "#ffffff");
       $('#savedGraphsButton').css("background-color", "#55ACF0");
+      $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
-      $('#toolBox').css("display", "inline");
-      $('#sideBar').css("display", "inline");
 
       profileController.control();
    };
@@ -158,9 +169,7 @@ function Index(){
       $('#automataButton').css("background-color", "#55ACF0");
       $('#profileButton').css("background-color", "#55ACF0");
       $('#savedGraphsButton').css("background-color", "#ffffff");
-
-      $('#toolBox').css("display", "inline");
-      $('#sideBar').css("display", "inline");
+      $('#aboutAutomataButton').css("background-color", "#55ACF0");
 
       savedGraphController.control();
    };

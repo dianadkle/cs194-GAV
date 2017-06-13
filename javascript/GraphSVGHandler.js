@@ -366,7 +366,9 @@ function GraphSVGHandler(){
    }
 
    function reverseWeights(change){
+      console.log(change);
       var weightChanges = change["nodePrevWeights"];
+      console.log(weightChanges);
 
       // Object.keys(weightChanges).forEach(function(d){
       //    console.log(d);
@@ -403,19 +405,12 @@ function GraphSVGHandler(){
    }
 
    function reverseNodeColors(change){
-      var colorChanges = change["nodesChanged"];
+      var colorChanges = change["nodesPrev"];
       Object.keys(colorChanges).forEach(function(d){
          var id = Number(d);
          var color = colorChanges[d];
-         if(color === "green"){
-            var index = nodes.findIndex(node => node.id === id);
-            nodes[index].color = "yellow";
-         }
-
-         if(color === "red"){
-            var index = nodes.findIndex(node => node.id === id);
-            nodes[index].color = "green";
-         }
+         var index = nodes.findIndex(node => node.id === id);
+         nodes[index].color = color;
       });
    }
 
