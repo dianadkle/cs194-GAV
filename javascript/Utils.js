@@ -49,6 +49,10 @@ module.exports = {
       var value = valueNewInputTag.value, weight = weightNewInputTag.value;
 
       if (value !== null){
+         if(!value.match(/^[0-9a-zA-Z]+$/)){
+            alert('Only use alphanumeric characters!');
+            return false;
+         }
          var nodeID = this.getNodeIDByValue(value, this.nodes);
          if(nodeID !== -1){
             alert("That value is already taken. Please enter a different value.");

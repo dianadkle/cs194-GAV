@@ -14,13 +14,15 @@
       <link rel="stylesheet" type="text/css" href="./css/automata.css">
       <link rel="stylesheet" type="text/css" href="./css/login.css"/>
       <link rel="stylesheet" type="text/css" href="./css/register.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/profile.css"/>
+      <link rel="stylesheet" type="text/css" href="./css/savedgraphs.css"/>
       <link rel="stylesheet" type="text/css" href="./css/normalize.css"/>
       <link rel="stylesheet" type="text/css" href="./css/skeleton.css"/>
    </head>
    <body>
       <div id="nodeChangeModal" class="modal">
          <div class="modal-content">
-            <span class="modalClose">&times;</span>
+            <span class="modalClose" id="closeNodeChangeModal">&times;</span>
             <p>Change Value: </br>
                <input id="valueChangeInput" type="text"></input>
             </p><br/>
@@ -33,7 +35,7 @@
       </div>
       <div id="newNodeModal" class="modal">
          <div class="modal-content">
-            <span class="modalClose">&times;</span>
+            <span class="modalClose" id="closeNewNodeModal">&times;</span>
             <p>Enter Value: </br>
                <input id="valueNewInput" type="text"></input>
             </p><br/>
@@ -46,7 +48,7 @@
 
       <div id="algorithmModal" class="modal">
          <div class="modal-content">
-            <span class="modalClose">&times;</span>
+            <span class="modalClose" id="closeAlgorithmModal">&times;</span>
             <p>Start Node Value:</br>
                <input id="startNodeInput" type="text"></input>
             </p><br/>
@@ -59,12 +61,19 @@
 
       <div id="edgeChangeModal" class="modal">
          <div class="modal-content">
-            <span class="modalClose">&times;</span>
+            <span class="modalClose" id="closeEdgeChangeModal">&times;</span>
             <p>Change Weight: </br>
                <input id="edgeWeightChangeInput" type="text"></input>
             </p><br/>
             <button type="button" id="submitEdgeChange">submit change</button>
             <button type="button" id="deleteEdge">delete edge</button>
+         </div>
+      </div>
+      <div id="newAchievementModal" class="modal">
+         <div class="modal-content">
+            <span class="modalClose" id="closeAchievementModal">&times;</span>
+            <h1>You earned a new achievement!</h1></br>
+            <p id="newAchievement"></p>
          </div>
       </div>
 

@@ -8,6 +8,7 @@ var LoginController = require('./controllers/LoginController');
 var RegisterController = require('./controllers/RegisterController');
 var ProfileController = require('./controllers/ProfileController');
 var GraphController = require('./controllers/GraphController');
+var SavedGraphController = require('./controllers/SavedGraphController');
 var AutomataController = require('./controllers/AutomataController');
 /***********************************Index.js***********************************/
 
@@ -30,6 +31,7 @@ function Index(){
    var graphTemplate = Templates.getTemplate('mainTemplates/graphTemplate');
    var automataTemplate = Templates.getTemplate('mainTemplates/automataTemplate');
    var profileTemplate = Templates.getTemplate('mainTemplates/profileTemplate');
+   var savedGraphsTemplate = Templates.getTemplate('mainTemplates/savedGraphsTemplate');
 
     // how to get template HTML
     /*
@@ -81,6 +83,10 @@ function Index(){
          index.renderGraph();
       };
 
+      document.getElementById('savedGraphsBar').onclick = function(){
+         index.renderSavedGraphs();
+      };
+
       document.getElementById('automataBar').onclick = function(){
          index.renderAutomata();
       };
@@ -101,6 +107,11 @@ function Index(){
       $('#toolBox').css("display", "inline");
       $('#sideBar').css("display", "inline");
 
+      $('#graphButton').css("background-color", "#ffffff");
+      $('#automataButton').css("background-color", "#55ACF0");
+      $('#profileButton').css("background-color", "#55ACF0");
+      $('#savedGraphsButton').css("background-color", "#55ACF0");
+
       graphController.control(algorithms);
    };
 
@@ -114,6 +125,11 @@ function Index(){
       $('#toolBox').css("display", "inline");
       $('#sideBar').css("display", "inline");
 
+      $('#graphButton').css("background-color", "#55ACF0");
+      $('#automataButton').css("background-color", "#ffffff");
+      $('#profileButton').css("background-color", "#55ACF0");
+      $('#savedGraphsButton').css("background-color", "#55ACF0");
+
       automataController.control();
    };
 
@@ -122,11 +138,31 @@ function Index(){
       mainDIV.html(profileTemplate(userInfo));
 
       var profileController = new ProfileController(userInfo);
+      $('#graphButton').css("background-color", "#55ACF0");
+      $('#automataButton').css("background-color", "#55ACF0");
+      $('#profileButton').css("background-color", "#ffffff");
+      $('#savedGraphsButton').css("background-color", "#55ACF0");
 
       $('#toolBox').css("display", "inline");
       $('#sideBar').css("display", "inline");
 
       profileController.control();
+   };
+
+   Index.prototype.renderSavedGraphs = function(){
+      var userInfo = this.userInfo;
+      mainDIV.html(savedGraphsTemplate(userInfo));
+
+      var savedGraphController = new SavedGraphController(userInfo);
+      $('#graphButton').css("background-color", "#55ACF0");
+      $('#automataButton').css("background-color", "#55ACF0");
+      $('#profileButton').css("background-color", "#55ACF0");
+      $('#savedGraphsButton').css("background-color", "#ffffff");
+
+      $('#toolBox').css("display", "inline");
+      $('#sideBar').css("display", "inline");
+
+      savedGraphController.control();
    };
 };
 

@@ -227,7 +227,7 @@ input:checked + .slider:before {
 .modal-content {
     text-align: center;
     font-family:futura;
-    background-color: #c0fefe;
+    background-color: #55ACF0;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
     border: 1px solid #888;

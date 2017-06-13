@@ -2,7 +2,6 @@
 
 var Utils = require('../Utils');
 var GraphSVGHandler = require('../GraphSVGHandler');
-var AutomataVisualizer = require('../AutomataVisualizer');
 
 function GraphController(userInfo){
    this.userInfo = userInfo;
@@ -11,7 +10,6 @@ function GraphController(userInfo){
 GraphController.prototype.control = function(algorithmsParam){
    var algorithms = algorithmsParam;
    var graphSVGHandler = new GraphSVGHandler();
-   var automataVisualizer = new AutomataVisualizer("a*b");
 
    var createAlgorithmButtons = function(){
       var algOpenTag = "<p class='algorithm'>";
@@ -71,9 +69,9 @@ GraphController.prototype.control = function(algorithmsParam){
       var nodeChangeModal = document.getElementById('nodeChangeModal');
       var newNodeModal = document.getElementById('newNodeModal');
       var edgeChangeModal = document.getElementById('edgeChangeModal');
-      var nodeChangeModalX = document.getElementsByClassName("modalClose")[0]
-      var newNodeModalX = document.getElementsByClassName("modalClose")[1];
-      var edgeChangeModalX = document.getElementsByClassName("modalClose")[3];
+      var nodeChangeModalX = document.getElementById('closeNodeChangeModal');
+      var newNodeModalX = document.getElementById('closeNewNodeModal');
+      var edgeChangeModalX = document.getElementById('closeEdgeChangeModal');
 
       nodeChangeModalX.onclick = function() {
          nodeChangeModal.style.display = "none";
@@ -133,8 +131,7 @@ GraphController.prototype.control = function(algorithmsParam){
 
    var initializeAlgorithmModals = function(){
       var modal = document.getElementById('algorithmModal');
-
-      var modalX = document.getElementsByClassName("modalClose")[2];
+      var modalX = document.getElementById('closeAlgorithmModal');
       modalX.onclick = function() {
          modal.style.display = "none";
       }
