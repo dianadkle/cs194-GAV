@@ -11,6 +11,12 @@
    text-decoration: underline;
 }
 
+#quizHeader{
+   font-family: "Gill Sans";
+   font-size:150%;
+   text-decoration: underline;
+}
+
 #graphDiv{
    width: 100%;
    height:80%;

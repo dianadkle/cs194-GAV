@@ -571,7 +571,47 @@ function GraphSVGHandler(){
 
    GraphSVGHandler.prototype.downloadGraph = function(){
       return graphCreator.toString();
+   };
+
+   function findID(name){
+      for (var i = 0; i < nodes.length; i++){
+         var node = nodes[i];
+         console.log(node);
+         if (node.value === name){
+            return node.id;
+         }
+      }
    }
+
+   GraphSVGHandler.prototype.checkQuizAnswer = function(response){
+      var next_state_change_index = current_state_change + 1;
+      var next_state_change = stateChanges[next_state_change_index];
+      console.log(next_state_change);
+      var correct_answer = next_state_change["nodesChanged"];
+      console.log(correct_answer);
+      var split_nodes = response.split(',');
+      console.log(split_nodes);
+      for (var i = 0; i < split_nodes.length; i++){
+         var node = split_nodes[i];
+         var arr = node.split(':');
+         var name_id = arr[0].trim();
+         var id = findID(name_id);
+         console.log("id is " + id);
+         var color = arr[1].trim();
+         console.log("color is "+ color);
+         console.log(correct_answer);
+         if (correct_answer.hasOwnProperty(id) === false){
+            console.log("here");
+            return false;
+         } else {
+            if (correct_answer[id] !== color){
+               console.log("no here");
+               return false;
+            }
+         }
+      }
+      return true;
+   };
 }
 
 module.exports = GraphSVGHandler;

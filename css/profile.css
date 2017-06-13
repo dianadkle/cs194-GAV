@@ -1,9 +1,11 @@
 .image{
    width:50px
+   display: none;
 }
 .award{
    width:50px;
    text-align: center;
+   display: none;
 }
 .awardText{
    font-family: futura;
