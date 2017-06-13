@@ -60,6 +60,26 @@ RegisterController.prototype.control = function(){
 
       if(successful){
          /*TODO: maybe bring to a welcome page instead??*/
+         $.post("http://127.0.0.1:3000", {
+            'firstname': firstName,
+            'username': username,
+            'password': pass_word,
+            'achievements': {
+               'one_graph': false,
+               'five_graphs': false,
+               'ten_graphs': false,
+               'twenty_five_graphs': false,
+               'make_account': true,
+               'update_account': false,
+               'save_graph': false,
+               'load_graph': false,
+               'run_algorithm': false,
+               'run_nfadfa': false,
+               'one_quiz_correct': false
+            }
+         }, 
+             function(data, status){ console.log("data: "+data);
+         });
          var userInfo = {
             firstName: firstName,
             lastName: lastName,
