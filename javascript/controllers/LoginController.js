@@ -22,7 +22,7 @@ LoginController.prototype.control = function(){
          index.renderRegister();
    };
    document.getElementById("login").onclick = function(){
-      var username = document.getElementById("username").value,
+      var user_name = document.getElementById("username").value,
       password = document.getElementById("password").value;
        var success = false;
       //var success = Database.checkUser(username, password);

@@ -63,7 +63,7 @@ RegisterController.prototype.control = function(){
          $.post("http://127.0.0.1:3000", {
             'firstname': firstName,
             'username': username,
-            'password': pass_word,
+            'password': password,
             'achievements': {
                'one_graph': false,
                'five_graphs': false,
