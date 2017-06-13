@@ -35,24 +35,29 @@ GraphController.prototype.control = function(algorithmsParam){
       var forwardButton = document.getElementById("forwardButton");
 
       reverseButton.onclick = function(){
-         var runPreviousStep = graphSVGHandler.runPreviousAlgorithmStep();
-         if(runPreviousStep === 'FAILURE'){
+         var previousComment = graphSVGHandler.runPreviousAlgorithmStep();
+         if(previousComment === 'FAILURE'){
             alert("You haven't selected an algorithm to run");
-         } else if (runPreviousStep === 'END'){
+         } else if (previousComment === 'END'){
             alert("You've reached the first step of the algorithm");
+         } else {
+            document.getElementById('comment').innerHTML = previousComment;
          }
       };
 
       clearButton.onclick = function(){
          graphSVGHandler.clearAlgorithm();
+         document.getElementById('comment').html('');
       };
 
       forwardButton.onclick = function(){
-         var runNextStep = graphSVGHandler.runNextAlgorithmStep();
-         if(runNextStep === 'FAILURE'){
+         var nextComment = graphSVGHandler.runNextAlgorithmStep();
+         if(nextComment === 'FAILURE'){
             alert("You haven't selected an algorithm to run");
-         } else if(runNextStep === 'END'){
+         } else if(nextComment === 'END'){
             alert("You've already reached the last step of the algorithm");
+         } else {
+            document.getElementById('comment').innerHTML = nextComment;
          }
       };
    };
@@ -153,7 +158,7 @@ GraphController.prototype.control = function(algorithmsParam){
                   url: "http://127.0.0.1:3000",
                   method: "PUT",
                   data: {
-                     'firstname': user.firstname, 
+                     'firstname': user.firstname,
                      'password': user.password,
                      'achievements': new_achievements,
                      'num_graphs': new_num_graphs,

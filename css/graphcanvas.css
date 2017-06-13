@@ -24,6 +24,11 @@
    border:"1px solid black";
 }
 
+#comment{
+   text-align: center;
+   font-family: "Gill Sans";
+}
+
 #switchToAutomata{
    text-align:center;
    font-family: futura;
@@ -39,8 +44,14 @@
 
 .link{
   fill: none;
-  stroke: steelblue;
   stroke-width: 2px;
+}
+
+.edgeRed{
+   stroke:red;
+}
+.edgeBlue{
+   stroke:steelblue;
 }
 
 .active {
