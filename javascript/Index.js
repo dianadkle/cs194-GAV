@@ -67,6 +67,7 @@ function Index(){
 
    /*must be called before renderGraphCanvas or renderAutomata*/
    Index.prototype.renderSideBar = function(){
+      $('body').css("background-color", "#ffffff");
       var userInfo = this.userInfo;
       //TODO: get user info
       sideColumn.html(sideBarTemplate(userInfo));
@@ -137,4 +138,5 @@ function Index(){
 window.onload = function(){
    var index = new Index();
    index.renderLogin();
+   $('body').css("background-color", "#55ACF0");
 };
