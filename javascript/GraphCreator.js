@@ -536,7 +536,8 @@ GraphCreator.prototype.c_dijkstras = function(start_id){
 			if (alt < dist[neighbor.id]) {
 				dist[neighbor.id] = alt;
 				if(prev[neighbor.id] !== undefined) {
-					let old_edge = cur_node.out_edges.get(prev[neighbor.id]);
+					let old_previous = this.nodes.get(prev[neighbor.id]);
+					let old_edge = old_previous.out_edges.get(neighbor.id);
 					change.addChangedEdge(old_edge, "blue");
 				}
 				prev[neighbor.id] = current_id;
