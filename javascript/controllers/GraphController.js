@@ -20,6 +20,19 @@ GraphController.prototype.control = function(algorithmsParam, loadedGraph){
       });
    };
 
+   var quizMe = function(){
+      var quizButton = document.getElementById("quizHeader");
+      quizButton.onclick = function (){
+         var response = prompt("Please list the node names and the colors that have changed, with each node separated by a comma:", "Arlene:red, Lee:green");
+         var correct = graphSVGHandler.checkQuizAnswer(response);
+         if (correct){
+            alert("You got it! Congratulations!");
+         } else {
+            alert("Hmmm, try again.");
+         }
+      }
+   };
+
    var initializeSaveButton = function(){
       var saveButton = document.getElementById("saveButton");
       saveButton.onclick = function(){
@@ -284,6 +297,7 @@ GraphController.prototype.control = function(algorithmsParam, loadedGraph){
    initializeAlgorithmModals();
    linkAlgorithmButtons();
    initializeSaveButton();
+   quizMe();
 };
 
 module.exports = GraphController;
